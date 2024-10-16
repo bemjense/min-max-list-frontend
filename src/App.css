@@ -1,0 +1,127 @@
+/* Ensure the entire to-do list is centered within the viewport */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Center vertically */
+    width: 100vw; /* Center horizontally */
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.input-container {
+    margin-bottom: 20px;
+}
+
+input {
+    padding: 10px;
+    width: 70%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Ensure the Add Task button is not greyed out */
+button {
+    padding: 10px;
+    margin-left: 10px;
+    background-color: #007BFF; /* Bright blue, not greyed out */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 1; /* Ensure no transparency */
+}
+
+    button:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }
+
+    button:active {
+        background-color: #004080; /* Even darker blue when clicked */
+    }
+
+    button:disabled {
+        background-color: #007BFF; /* Keep same color if button is disabled */
+        opacity: 1; /* Ensure button remains visible */
+        cursor: not-allowed; /* Optional: show disabled cursor */
+    }
+
+.task-list {
+    list-style-type: none;
+    padding: 0;
+    width: 100%; /* Take full width of parent */
+    max-width: 500px; /* Optional: Set a max width */
+}
+
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+    .task.completed span {
+        text-decoration: line-through;
+        color: grey;
+    }
+
+/* Ensure task text wraps properly */
+.task-text {
+    flex-grow: 1; /* Make the text take available space */
+    word-wrap: break-word; /* Add word wrap for long text */
+    margin-right: 10px; /* Add spacing between text and buttons */
+    max-width: 70%; /* Prevent text from pushing buttons too far */
+}
+
+/* Container to group edit and delete buttons together */
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn, .delete-btn, .save-btn, .cancel-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+    .edit-btn:hover {
+        background-color: #218838;
+    }
+
+.delete-btn {
+    background-color: red;
+}
+
+    .delete-btn:hover {
+        background-color: darkred;
+    }
+
+.save-btn {
+    background-color: #007BFF;
+}
+
+    .save-btn:hover {
+        background-color: #0056b3;
+    }
+
+.cancel-btn {
+    background-color: #6c757d;
+}
+
+    .cancel-btn:hover {
+        background-color: #5a6268;
+    }
