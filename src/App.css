@@ -1,11 +1,10 @@
-/* Ensure the entire to-do list is centered within the viewport */
 .app-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Center vertically */
-    width: 100vw; /* Center horizontally */
+    min-height: 100vh;
+    width: 100vw;
     text-align: center;
     font-family: Arial, sans-serif;
     padding: 20px;
@@ -19,6 +18,8 @@ h1 {
 
 .input-container {
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
 }
 
 input {
@@ -28,37 +29,11 @@ input {
     border-radius: 4px;
 }
 
-/* Ensure the Add Task button is not greyed out */
-button {
-    padding: 10px;
-    margin-left: 10px;
-    background-color: #007BFF; /* Bright blue, not greyed out */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    opacity: 1; /* Ensure no transparency */
-}
-
-    button:hover {
-        background-color: #0056b3; /* Darker blue on hover */
-    }
-
-    button:active {
-        background-color: #004080; /* Even darker blue when clicked */
-    }
-
-    button:disabled {
-        background-color: #007BFF; /* Keep same color if button is disabled */
-        opacity: 1; /* Ensure button remains visible */
-        cursor: not-allowed; /* Optional: show disabled cursor */
-    }
-
 .task-list {
     list-style-type: none;
     padding: 0;
-    width: 100%; /* Take full width of parent */
-    max-width: 500px; /* Optional: Set a max width */
+    width: 100%;
+    max-width: 500px;
 }
 
 .task {
@@ -69,6 +44,7 @@ button {
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
+    cursor: pointer;
 }
 
     .task.completed span {
@@ -76,52 +52,32 @@ button {
         color: grey;
     }
 
-/* Ensure task text wraps properly */
 .task-text {
-    flex-grow: 1; /* Make the text take available space */
-    word-wrap: break-word; /* Add word wrap for long text */
-    margin-right: 10px; /* Add spacing between text and buttons */
-    max-width: 70%; /* Prevent text from pushing buttons too far */
+    flex-grow: 1;
+    word-wrap: break-word;
+    margin-right: 10px;
 }
 
-/* Container to group edit and delete buttons together */
-.button-group {
-    display: flex;
-    gap: 10px;
+.context-menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
-.edit-btn, .delete-btn, .save-btn, .cancel-btn {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 5px;
-    cursor: pointer;
-}
-
-    .edit-btn:hover {
-        background-color: #218838;
+    .context-menu ul {
+        list-style: none;
+        margin: 0;
+        padding: 10px 0;
     }
 
-.delete-btn {
-    background-color: red;
-}
-
-    .delete-btn:hover {
-        background-color: darkred;
+    .context-menu li {
+        padding: 10px 20px;
+        cursor: pointer;
+        white-space: nowrap;
     }
 
-.save-btn {
-    background-color: #007BFF;
-}
-
-    .save-btn:hover {
-        background-color: #0056b3;
-    }
-
-.cancel-btn {
-    background-color: #6c757d;
-}
-
-    .cancel-btn:hover {
-        background-color: #5a6268;
-    }
+        .context-menu li:hover {
+            background-color: #f0f0f0;
+        }

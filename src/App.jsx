@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import './App.css'; // Assuming you want some custom styling
 
 const App = () => {
@@ -6,8 +6,9 @@ const App = () => {
     const [newTask, setNewTask] = useState('');
     const [editingIndex, setEditingIndex] = useState(null);
     const [editTaskText, setEditTaskText] = useState('');
+    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, taskIndex: null });
 
-    // Function to add a task either by button click or Enter key
+    // Function to add a task either by Enter key
     const addTask = () => {
         if (newTask.trim() !== '') {
             setTasks([...tasks, { text: newTask, isCompleted: false }]);
@@ -25,6 +26,7 @@ const App = () => {
     const deleteTask = (index) => {
         const updatedTasks = tasks.filter((_, i) => i !== index);
         setTasks(updatedTasks);
+        hideContextMenu();
     };
 
     const toggleTaskCompletion = (index) => {
@@ -32,11 +34,13 @@ const App = () => {
             i === index ? { ...task, isCompleted: !task.isCompleted } : task
         );
         setTasks(updatedTasks);
+        hideContextMenu();
     };
 
     const startEditingTask = (index) => {
         setEditingIndex(index);
         setEditTaskText(tasks[index].text);
+        hideContextMenu();
     };
 
     const saveEditedTask = (index) => {
@@ -48,8 +52,29 @@ const App = () => {
         setEditTaskText('');
     };
 
+    const handleRightClick = (e, index) => {
+        e.preventDefault();
+        setContextMenu({
+            visible: true,
+            x: e.pageX,
+            y: e.pageY,
+            taskIndex: index,
+        });
+    };
+
+    const hideContextMenu = () => {
+        setContextMenu({ visible: false, x: 0, y: 0, taskIndex: null });
+    };
+
+    const handleContextMenuAction = (action) => {
+        const index = contextMenu.taskIndex;
+        if (action === 'edit') startEditingTask(index);
+        else if (action === 'delete') deleteTask(index);
+        else if (action === 'toggle') toggleTaskCompletion(index);
+    };
+
     return (
-        <div className="app-container">
+        <div className="app-container" onClick={hideContextMenu}>
             <h1>To-Do List</h1>
             <div className="input-container">
                 <input
@@ -59,11 +84,14 @@ const App = () => {
                     onKeyPress={handleKeyPress} // Listen for Enter key
                     placeholder="Add a new task"
                 />
-                <button onClick={addTask}>Add Task</button>
             </div>
             <ul className="task-list">
                 {tasks.map((task, index) => (
-                    <li key={index} className={`task ${task.isCompleted ? 'completed' : ''}`}>
+                    <li
+                        key={index}
+                        className={`task ${task.isCompleted ? 'completed' : ''}`}
+                        onContextMenu={(e) => handleRightClick(e, index)}
+                    >
                         {editingIndex === index ? (
                             <>
                                 <input
@@ -71,21 +99,28 @@ const App = () => {
                                     value={editTaskText}
                                     onChange={(e) => setEditTaskText(e.target.value)}
                                 />
-                                <button onClick={() => saveEditedTask(index)} className="save-btn">Save</button>
-                                <button onClick={() => setEditingIndex(null)} className="cancel-btn">Cancel</button>
+                                <button onClick={() => saveEditedTask(index)}>Save</button>
                             </>
                         ) : (
-                            <>
-                                <span onClick={() => toggleTaskCompletion(index)} className="task-text">{task.text}</span>
-                                <div className="button-group">
-                                    <button onClick={() => startEditingTask(index)} className="edit-btn">Edit</button>
-                                    <button onClick={() => deleteTask(index)} className="delete-btn">Delete</button>
-                                </div>
-                            </>
+                            <span className="task-text">{task.text}</span>
                         )}
                     </li>
                 ))}
             </ul>
+            {contextMenu.visible && (
+                <div
+                    className="context-menu"
+                    style={{ top: contextMenu.y, left: contextMenu.x }}
+                >
+                    <ul>
+                        <li onClick={() => handleContextMenuAction('edit')}>Edit</li>
+                        <li onClick={() => handleContextMenuAction('delete')}>Delete</li>
+                        <li onClick={() => handleContextMenuAction('toggle')}>
+                            {tasks[contextMenu.taskIndex].isCompleted ? 'Undo Complete' : 'Mark as Complete'}
+                        </li>
+                    </ul>
+                </div>
+            )}
         </div>
     );
 };
