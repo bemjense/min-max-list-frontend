@@ -52,6 +52,13 @@ const App = () => {
         setEditTaskText('');
     };
 
+    // Function to handle Enter key during editing
+    const handleEditKeyPress = (e, index) => {
+        if (e.key === 'Enter') {
+            saveEditedTask(index);
+        }
+    };
+
     const handleRightClick = (e, index) => {
         e.preventDefault();
         setContextMenu({
@@ -89,7 +96,7 @@ const App = () => {
                 {tasks.map((task, index) => (
                     <li
                         key={index}
-                        className={`task ${task.isCompleted ? 'completed' : ''}`}
+                        className={`task ${task.isCompleted ? 'completed' : ''}`} // Add the 'completed' class
                         onContextMenu={(e) => handleRightClick(e, index)}
                     >
                         {editingIndex === index ? (
@@ -98,6 +105,7 @@ const App = () => {
                                     type="text"
                                     value={editTaskText}
                                     onChange={(e) => setEditTaskText(e.target.value)}
+                                    onKeyPress={(e) => handleEditKeyPress(e, index)} // Listen for Enter key during editing
                                 />
                                 <button onClick={() => saveEditedTask(index)}>Save</button>
                             </>
@@ -109,14 +117,18 @@ const App = () => {
             </ul>
             {contextMenu.visible && (
                 <div
-                    className="context-menu"
+                    className="context-menu fade-in"
                     style={{ top: contextMenu.y, left: contextMenu.x }}
                 >
                     <ul>
-                        <li onClick={() => handleContextMenuAction('edit')}>Edit</li>
-                        <li onClick={() => handleContextMenuAction('delete')}>Delete</li>
-                        <li onClick={() => handleContextMenuAction('toggle')}>
-                            {tasks[contextMenu.taskIndex].isCompleted ? 'Undo Complete' : 'Mark as Complete'}
+                        <li className="edit" onClick={() => handleContextMenuAction('edit')}>
+                            ✏️ Edit
+                        </li>
+                        <li className="complete" onClick={() => handleContextMenuAction('toggle')}>
+                            ✅ {tasks[contextMenu.taskIndex].isCompleted ? 'Undo Complete' : 'Mark as Complete'}
+                        </li>
+                        <li className="delete" onClick={() => handleContextMenuAction('delete')}>
+                            🗑️ Delete
                         </li>
                     </ul>
                 </div>
