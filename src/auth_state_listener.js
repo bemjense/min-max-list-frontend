@@ -1,4 +1,4 @@
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
 const auth = getAuth();
 onAuthStateChanged(auth, (user) => {
