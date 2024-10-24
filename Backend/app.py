@@ -46,10 +46,10 @@ async def create_task(task: Task):
     user_db.create_task(task.task_desc)
 
     all_tasks = user_db.read_all_tasks()
-    return JSONResponse(content={
-        "message": "Task created successfully","task_id": all_tasks[-1][0],
-          "task_desc": task.task_desc, "task_is_completed": False,
-          }, status_code=201)
+    most_recent_task = helper_tuple_to_task_base_model(all_tasks)[-1]
+
+    # return most recent id of task to keep track of id in front end
+    return most_recent_task
 
 # tasks/?is_completed=True
 # tasks/?is_completed=false
