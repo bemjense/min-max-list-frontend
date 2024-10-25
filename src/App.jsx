@@ -41,7 +41,7 @@ const App = () => {
                 const newTaskData = response.data; // Assuming response contains the created task with ID
                 // Insert the new task in the correct order by ID
                 setTasks((prevTasks) => {
-                    // Create a new array including the new task
+                    // Create a new array with previous tasks also including the new task
                     const updatedTasks = [...prevTasks, newTaskData];
                     
                     // Sort the tasks by ID
@@ -72,7 +72,7 @@ const App = () => {
             {/* creates a new taskArray by getting rid of any tasks by filtering any with the same index*/}
             const updatedTasks = tasks.filter((_, i) => i !== index);
             {/*Updates the tasks array with the updated tasks then closes the context menu from right click*/}
-            setTasks(updatedTasks);
+            setTasks(updatedTasks.sort((a, b) => a.task_id - b.task_id));
             hideContextMenu();
         } catch (error) {
             console.error("Error deleting task:", error);
@@ -162,7 +162,7 @@ const App = () => {
                 />
             </div>
             <ul className="task-list">
-                {tasks.sort((a, b) => a.task_id - b.task_id).map((task, index) => (
+                {tasks.map((task, index) => (
                     <li
                         key={task.task_id}
                         className={`task ${task.task_is_completed ? 'completed' : ''}`}
