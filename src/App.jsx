@@ -66,9 +66,7 @@ const App = () => {
 
     return (
         <div className="app-container" onClick={hideContextMenu}>
-
             <div class ="filler">
-
             </div>
 
             <div class = "canvas-container">

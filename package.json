@@ -13,7 +13,11 @@
     "axios": "^1.7.7",
     "firebase": "^10.14.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "chartjs-chart-matrix": "^2.0.0",
+    "chart.js": "^3.5.0",
+    "@kurkle/color": "^0.3.2",
+    "react-chartjs-2": "^4.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",

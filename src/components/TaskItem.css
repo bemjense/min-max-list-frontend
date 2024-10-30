@@ -1,15 +1,8 @@
-.task-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%; /* Ensure it takes full width */
-}
 
 .task {
     border-radius: 25px;
     padding: 10px;
     z-index: 1;
-    transition: transform 0.3s ease;
     background-color: #1C1C1C;
     color: #f0f0f0;
 }
