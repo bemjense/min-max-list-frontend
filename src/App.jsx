@@ -66,14 +66,12 @@ const App = () => {
 
     return (
         <div className="app-container" onClick={hideContextMenu}>
-            <div class ="filler">
-            </div>
+            <div class ="filler"></div>
 
             <div class = "canvas-container">
                 <h1 class = "header-title">To-Do List</h1>
                 {/*Component where user enters information */}
                 {/*3 Arguments/ props */}
-                <TaskInput newTask={newTask} setNewTask={setNewTask} onAddTask={handleCreateTask} />
 
                 {/*Component Tasklist*/}
                 <TaskList className = "task-list"
@@ -98,10 +96,10 @@ const App = () => {
                         isCompleted={tasks[contextMenu.taskIndex]?.task_is_completed}
                     />
                 )}
+                <TaskInput newTask={newTask} setNewTask={setNewTask} onAddTask={handleCreateTask} />
             </div>
-            <div class ="filler">
 
-            </div>
+            <div class ="filler"></div>
         </div>
     );
 };
