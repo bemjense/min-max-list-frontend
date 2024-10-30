@@ -1,211 +1,98 @@
 ﻿import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import TaskInput from './components/TaskInput';
+import TaskList from './components/TaskList';
+import ContextMenu from './components/ContextMenu';
+import { readTasks, createTask, deleteTask, updateTask } from './services/api';
 import './App.css';
 
 const App = () => {
     const [tasks, setTasks] = useState([]);
+    // Store userinput for creating a new task
     const [newTask, setNewTask] = useState('');
+    // Index of task being editted
     const [editingIndex, setEditingIndex] = useState(null);
+    //Holds the text of the task being edited.
     const [editTaskText, setEditTaskText] = useState('');
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, taskIndex: null });
 
-    {/*On startup attempt to connect to fastapi and get a list of tasks if not output an error*/}
     useEffect(() => {
-        {/* Function to retreive tasks and insert them into tasks list*/}
-        const fetchTasks = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/tasks/');
-                {/*Sorts by ascending ID number*/}
-                const sortedTasks = response.data.sort((a, b) => a.task_id - b.task_id);
-                {/*updates tasks list with retreived tasks*/}
-                setTasks(sortedTasks);
-            } catch (error) {
-                console.error("Error fetching tasks:", error);
-            }
+        const loadTasks = async () => {
+            const loadedTasks = await readTasks();
+            setTasks(loadedTasks);
         };
-        {/*is called once*/}
-        fetchTasks();
+        loadTasks();
     }, []);
 
-    {/* Function to add a task then add values for task list and reset new_task string*/}
-    const addTask = async () => {
-        {/* if newTask is not an empty string*/}
-        if (newTask.trim() !== '') {
-            {/* attempt to post new_task data to fastapi*/}
-            try {
-                const response = await axios.post('http://localhost:8000/tasks/', {
-                    task_desc: newTask,
-                    task_is_completed: false
-                });
-                
-                const newTaskData = response.data; // Assuming response contains the created task with ID
-                // Insert the new task in the correct order by ID
-                setTasks((prevTasks) => {
-                    // Create a new array with previous tasks also including the new task
-                    const updatedTasks = [...prevTasks, newTaskData];
-                    
-                    // Sort the tasks by ID
-                    return updatedTasks.sort((a, b) => a.task_id - b.task_id);
-                });
-                setNewTask('');
-                {/* if sucessfull create a new array with the previous tasks and append the created task
-                setTasks([...tasks, { task_desc: newTask, task_is_completed: false }]);
-                setNewTask('');
-                */}
-                {/* also reset new_task to an empty string at end
-                setTasks([...tasks, response.data]);
-                
-                setNewTask('');
-                */}
-            } catch (error) {
-                console.error("Error adding task:", error);
-            }
+    const handleCreateTask = async () => {
+        if (newTask.trim()) {
+            const createdTask = await createTask(newTask);
+            setTasks((prev) => [...prev, createdTask].sort((a, b) => a.task_id - b.task_id));
+            setNewTask('');
         }
     };
 
-    {/* Function to delete a task*/}
-    const deleteTask = async (index) => {
+    const handleDeleteTask = async (index) => {
         const task = tasks[index];
-        {/* attempts to delete task using axios to a fastapi*/}
-        try {
-            await axios.delete(`http://localhost:8000/tasks/${task.task_id}`);
-            {/* creates a new taskArray by getting rid of any tasks by filtering any with the same index*/}
-            const updatedTasks = tasks.filter((_, i) => i !== index);
-            {/*Updates the tasks array with the updated tasks then closes the context menu from right click*/}
-            setTasks(updatedTasks.sort((a, b) => a.task_id - b.task_id));
-            hideContextMenu();
-        } catch (error) {
-            console.error("Error deleting task:", error);
-        }
+        await deleteTask(task.task_id);
+        setTasks((prev) => prev.filter((_, i) => i !== index));
     };
 
-    const toggleTaskCompletion = async (index) => {
-        {/* retrieves  and puts taskIndex into task*/}
+    const handleToggleTaskCompletion = async (index) => {
         const task = tasks[index];
-        {/* attempts to edit a task from fast api*/}
-        try {
-            {/* attempts to replace id, text, and reverses is completed using the task's index*/}
-            {/* retrieves id, desc, and reverses the tasks completion status*/}
-            await axios.put(`http://localhost:8000/tasks/${task.task_id}`, {
-                task_desc: task.task_desc,
-                task_is_completed: !task.task_is_completed
-            });
-            {/* creates a new task array using the original array by mapping and each ones task index and if equals it reverses that tasks is_completed data*/}
-            const updatedTasks = tasks.map((t, i) =>
-                i === index ? { ...t, task_is_completed: !t.task_is_completed } : t
-            );
-            setTasks(updatedTasks);
-            hideContextMenu();
-        } catch (error) {
-            console.error("Error toggling task completion:", error);
-        }
+        await updateTask(task.task_id, { ...task, task_is_completed: !task.task_is_completed });
+        setTasks((prev) =>
+            prev.map((t, i) => (i === index ? { ...t, task_is_completed: !t.task_is_completed } : t))
+        );
     };
 
-    const startEditingTask = (index) => {
-        setEditingIndex(index);
-        setEditTaskText(tasks[index].task_desc);
-        hideContextMenu();
-    };
-
-    const saveEditedTask = async (index) => {
-        try {
-            await axios.put(`http://localhost:8000/tasks/${tasks[index].task_id}`, {
-                task_desc: editTaskText,
-                task_is_completed: tasks[index].task_is_completed
-            });
-            const updatedTasks = tasks.map((task, i) =>
-                i === index ? { ...task, task_desc: editTaskText } : task
-            );
-            setTasks(updatedTasks);
-            setEditingIndex(null);
-            setEditTaskText('');
-        } catch (error) {
-            console.error("Error updating task:", error);
-        }
-    };
-
-    const handleRightClick = (e, index) => {
-        e.preventDefault();
-        setContextMenu({
-            visible: true,
-            x: e.pageX,
-            y: e.pageY,
-            taskIndex: index,
-        });
-    };
-
-    const hideContextMenu = () => {
-        setContextMenu({ visible: false, x: 0, y: 0, taskIndex: null });
+    const handleUpdateTask = async (index) => {
+        const task = tasks[index];
+        await updateTask(task.task_id, { ...task, task_desc: editTaskText });
+        setTasks((prev) =>
+            prev.map((t, i) => (i === index ? { ...t, task_desc: editTaskText } : t))
+        );
+        setEditingIndex(null);
+        setEditTaskText('');
     };
 
     const handleContextMenuAction = (action) => {
         const index = contextMenu.taskIndex;
-        if (action === 'edit') startEditingTask(index);
-        else if (action === 'delete') deleteTask(index);
-        else if (action === 'toggle') toggleTaskCompletion(index);
+        if (action === 'edit') setEditingIndex(index);
+        else if (action === 'delete') handleDeleteTask(index);
+        else if (action === 'toggle') handleToggleTaskCompletion(index);
     };
+
+    const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, taskIndex: null });
 
     return (
         <div className="app-container" onClick={hideContextMenu}>
-            <h1>To-Do List</h1>
-            <div className="input-container">
-                <input
-                    type="text"
-                    value={newTask}
-                    onChange={(e) => setNewTask(e.target.value)}
-                    onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                            addTask();
-                        }
-                    }}
-                    placeholder="Add a new task"
-                />
-            </div>
-            <ul className="task-list">
-                {tasks.map((task, index) => (
-                    <li
-                        key={task.task_id}
-                        className={`task ${task.task_is_completed ? 'completed' : ''}`}
-                        onContextMenu={(e) => handleRightClick(e, index)}
-                    >
-                        {editingIndex === index ? (
-                            <input
-                                type="text"
-                                value={editTaskText}
-                                onChange={(e) => setEditTaskText(e.target.value)}
-                                onKeyPress={(e) => {
-                                    if (e.key === 'Enter') {
-                                        
-                                        saveEditedTask(index);
-                                    }
-                                }}
-                                onBlur={() => {
-                                    saveEditedTask(index);
-                                }}
-                            />
-                        ) : (
-                            <span className="task-text">{task.task_desc}</span>
-                        )}
-                    </li>
-                ))}
-            </ul>
+            <h1 class = "header-title">To-Do List</h1>
+            {/*Component where user enters information */}
+            {/*3 Arguments/ props */}
+            <TaskInput newTask={newTask} setNewTask={setNewTask} onAddTask={handleCreateTask} />
+
+            {/*Component Tasklist*/}
+            <TaskList className = "task-list"
+                tasks={tasks}
+                editingIndex={editingIndex}
+                editTaskText={editTaskText}
+                setEditTaskText={setEditTaskText}
+                setEditingIndex={setEditingIndex}
+                onEditTask={handleUpdateTask}
+                onRightClick={(e, index) => {
+                    e.preventDefault();
+                    setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index });
+                }}
+            />
+
+            {/*Context Menu*/}
             {contextMenu.visible && (
-                <div
-                    className="context-menu fade-in"
-                    style={{ top: contextMenu.y, left: contextMenu.x }}
-                >
-                    <ul>
-                        <li className="edit" onClick={() => handleContextMenuAction('edit')}>
-                            ✏️ Edit
-                        </li>
-                        <li className="complete" onClick={() => handleContextMenuAction('toggle')}>
-                            ✅ {tasks[contextMenu.taskIndex].task_is_completed ? 'Undo Complete' : 'Mark as Complete'}
-                        </li>
-                        <li className="delete" onClick={() => handleContextMenuAction('delete')}>
-                            🗑️ Delete
-                        </li>
-                    </ul>
-                </div>
+                <ContextMenu
+                    top={contextMenu.y}
+                    left={contextMenu.x}
+                    onAction={handleContextMenuAction}
+                    isCompleted={tasks[contextMenu.taskIndex]?.task_is_completed}
+                />
             )}
         </div>
     );

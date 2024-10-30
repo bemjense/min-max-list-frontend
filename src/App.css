@@ -1,5 +1,22 @@
-/* Center and general layout */
 .app-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100vw; /* Ensure the container takes full width */
+    text-align: center;
+    font-family: 'Manrope', sans-serif; /* Apply Manrope font */
+    font-weight: 600;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #292929;
+}
+.app-container {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    color: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -8,117 +25,34 @@
     width: 100vw;
     text-align: center;
     font-family: 'Manrope', sans-serif; /* Apply Manrope font */
-    font-weight: 600;
+    font-weight: 500;
     padding: 20px;
     box-sizing: border-box;
     background-color: #292929;
+    position: relative;
 }
+
+.header-title {
+  color: white;
+  font-size: 50px;
+}
+
 .task-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.task {
-    border-radius: 25px;
-    padding: 10px;
-    z-index: 1;
-    transition: transform 0.3s ease;
-    background-color: #1C1C1C;
-    color: #f0f0f0
-    
-}
-.task.completed {
-    background-color: #8CC63F
+  color: white
+
 }
 
-.task.completed .task-text {
-    text-decoration: line-through;
-    color: #333333; /* Makes the text grey when completed */
+
+
+
+
+
+
+body {
+  margin: 0;
 }
 
-/* Task styling */
-.task-text {
-    flex-grow: 1;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-    margin-right: 10px;
-}
 
-/* Context menu */
-.context-menu {
-    position: absolute;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    border-radius: 8px;
-    padding: 0;
-    overflow: hidden;
-    transition: opacity 0.3s ease;
-}
 
-    /* Unstyled list */
-    .context-menu ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
 
-    /* Styled menu items */
-    .context-menu li {
-        padding: 12px 20px;
-        cursor: pointer;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
 
-        /* Color-coded menu items */
-        .context-menu li.edit {
-            color: #007bff; /* Blue for Edit */
-        }
-
-        .context-menu li.complete {
-            color: #28a745; /* Green for Complete */
-        }
-
-        .context-menu li.delete {
-            color: #dc3545; /* Red for Delete */
-        }
-
-        /* Hover effects */
-        .context-menu li:hover {
-            background-color: #f0f0f0;
-        }
-
-        .context-menu li.edit:hover {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .context-menu li.complete:hover {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .context-menu li.delete:hover {
-            background-color: #dc3545;
-            color: white;
-        }
-
-    /* Smooth fade-in for the context menu */
-    .context-menu.fade-in {
-        animation: fadeIn 0.3s ease-in-out;
-    }
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
