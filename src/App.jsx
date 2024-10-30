@@ -66,34 +66,44 @@ const App = () => {
 
     return (
         <div className="app-container" onClick={hideContextMenu}>
-            <h1 class = "header-title">To-Do List</h1>
-            {/*Component where user enters information */}
-            {/*3 Arguments/ props */}
-            <TaskInput newTask={newTask} setNewTask={setNewTask} onAddTask={handleCreateTask} />
 
-            {/*Component Tasklist*/}
-            <TaskList className = "task-list"
-                tasks={tasks}
-                editingIndex={editingIndex}
-                editTaskText={editTaskText}
-                setEditTaskText={setEditTaskText}
-                setEditingIndex={setEditingIndex}
-                onEditTask={handleUpdateTask}
-                onRightClick={(e, index) => {
-                    e.preventDefault();
-                    setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index });
-                }}
-            />
+            <div class ="filler">
 
-            {/*Context Menu*/}
-            {contextMenu.visible && (
-                <ContextMenu
-                    top={contextMenu.y}
-                    left={contextMenu.x}
-                    onAction={handleContextMenuAction}
-                    isCompleted={tasks[contextMenu.taskIndex]?.task_is_completed}
+            </div>
+
+            <div class = "canvas-container">
+                <h1 class = "header-title">To-Do List</h1>
+                {/*Component where user enters information */}
+                {/*3 Arguments/ props */}
+                <TaskInput newTask={newTask} setNewTask={setNewTask} onAddTask={handleCreateTask} />
+
+                {/*Component Tasklist*/}
+                <TaskList className = "task-list"
+                    tasks={tasks}
+                    editingIndex={editingIndex}
+                    editTaskText={editTaskText}
+                    setEditTaskText={setEditTaskText}
+                    setEditingIndex={setEditingIndex}
+                    onEditTask={handleUpdateTask}
+                    onRightClick={(e, index) => {
+                        e.preventDefault();
+                        setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index });
+                    }}
                 />
-            )}
+
+                {/*Context Menu*/}
+                {contextMenu.visible && (
+                    <ContextMenu
+                        top={contextMenu.y}
+                        left={contextMenu.x}
+                        onAction={handleContextMenuAction}
+                        isCompleted={tasks[contextMenu.taskIndex]?.task_is_completed}
+                    />
+                )}
+            </div>
+            <div class ="filler">
+
+            </div>
         </div>
     );
 };

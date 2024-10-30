@@ -1,5 +1,6 @@
 import React from 'react';
 import TaskItem from './TaskItem';
+import './TaskList.css';
 
 const TaskList = ({
     tasks,
