@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\hungr\\source\\repos\\Min-Max-List\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{84F62D43-9342-486E-83E4-3673041D81EA}|min-max-list.esproj|c:\\users\\hungr\\source\\repos\\min-max-list\\src\\index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{84F62D43-9342-486E-83E4-3673041D81EA}|min-max-list.esproj|solutionrelative:src\\index.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{84F62D43-9342-486E-83E4-3673041D81EA}|min-max-list.esproj|c:\\users\\hungr\\source\\repos\\min-max-list\\src\\app.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{84F62D43-9342-486E-83E4-3673041D81EA}|min-max-list.esproj|solutionrelative:src\\app.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
@@ -18,11 +22,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "App.jsx",
               "DocumentMoniker": "C:\\Users\\hungr\\source\\repos\\Min-Max-List\\src\\App.jsx",
               "RelativeDocumentMoniker": "src\\App.jsx",
@@ -36,7 +40,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "App.css",
               "DocumentMoniker": "C:\\Users\\hungr\\source\\repos\\Min-Max-List\\src\\App.css",
               "RelativeDocumentMoniker": "src\\App.css",
@@ -45,7 +49,19 @@
               "ViewState": "AgIAAAwAAAAAAAAAAAAAAFoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2024-10-16T21:05:27.854Z",
-              "IsPinned": true,
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "index.js",
+              "DocumentMoniker": "C:\\Users\\hungr\\source\\repos\\Min-Max-List\\src\\index.js",
+              "RelativeDocumentMoniker": "src\\index.js",
+              "ToolTip": "C:\\Users\\hungr\\source\\repos\\Min-Max-List\\src\\index.js",
+              "RelativeToolTip": "src\\index.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-10-21T03:59:32.553Z",
               "EditorCaption": ""
             }
           ]
