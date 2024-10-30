@@ -1,11 +1,21 @@
 import './App.css';
-import LoginSignup from './Components/LoginSignup/LoginSignup';
+import {
+  BrowserRouter as Router,
+  Routes,
+    Route,
+  BrowserRouter,
+} from 'react-router-dom';
+import LoginSignup from './Components/LoginSignup';
+import TodoPage from './Components/TodoPage'
 
 function App() {
   return (
-    <div>
-      <LoginSignup/>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginSignup />} />
+        <Route path="/TodoPage" element={<TodoPage />} />
+      </Routes>
+    </Router>
   );
 }
 

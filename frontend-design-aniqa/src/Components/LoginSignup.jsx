@@ -1,9 +1,10 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
 import './LoginSignup.css'
-import logo_icon from '../Assets/logo.png'
-import user_icon from '../Assets/person.png'
-import email_icon from '../Assets/email.png'
-import password_icon from '../Assets/password.png'
+import logo_icon from './assets/logo.png'
+import user_icon from './assets/person.png'
+import email_icon from './assets/email.png'
+import password_icon from './assets/password.png'
 
 const LoginSignup = () => {
   const[action, setAction] = useState("Login");
@@ -41,7 +42,13 @@ const LoginSignup = () => {
           <div className={action==="Sign Up"?"sign-up-submit":"login-submit"}>{action}</div>
             {/* <div className={action==="Sign Up"?"submit gray":"submit"} onClick={ ()=> setAction("Login")}>Login</div>
             <div className={action==="Login"?"submit gray":"submit"} onClick={ () => setAction("Sign Up")}>Sign Up</div> */}
-        </div>
+          </div>
+          {/* Button to navigate to TodoList page */}
+          <div className="todo-list-button">
+              <Link to="/TodoPage">
+                  <button className="todolist-button">TodoPage</button>
+              </Link>
+          </div>
     </div>
   )
 }
