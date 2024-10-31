@@ -4,8 +4,8 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
-import LoginSignup from './Components/LoginSignup';
-import TodoPage from './Components/TodoPage'
+import LoginSignup from './components/LoginSignup';
+import TodoPage from './components/TodoPage'
 
 function App() {
   return (
