@@ -3,6 +3,7 @@ import TaskInput from './TaskInput';
 import TaskList from './TaskList';
 import ContextMenu from './ContextMenu';
 import { readTasks, createTask, deleteTask, updateTask } from '../services/api';
+import Calendar from '../components/TaskCalendar'
 import './TodoPage.css';
 
 const TodoPage = () => {
@@ -99,7 +100,11 @@ const TodoPage = () => {
                 <TaskInput newTask={newTask} setNewTask={setNewTask} onAddTask={handleCreateTask} />
             </div>
 
-            <div class ="filler"></div>
+            <div class = "task-calendar">
+                <Calendar></Calendar>
+            </div>
+            
+
         </div>
     );
 };

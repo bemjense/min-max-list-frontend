@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts'; // Make sure to import the Chart component
 import './TaskMatrix.css'
+import Cal from './Calendar';
 
 const Matrix = () => {
 
@@ -43,6 +44,7 @@ const Matrix = () => {
     }
     return series;
   };
+
 
   return (
     <div class = "task-matrix">

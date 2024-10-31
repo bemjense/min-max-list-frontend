@@ -15,6 +15,7 @@
     box-sizing: border-box;
     background-color: #292929;
     position: relative;
+    gap: 100px;
 }
 
 .header-title {
