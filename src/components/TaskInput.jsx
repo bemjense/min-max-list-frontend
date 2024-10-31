@@ -1,4 +1,5 @@
 import React from 'react';
+import './TaskInput.css'
 
 const TaskInput = ({ newTask, setNewTask, onAddTask }) => (
     <div className="input-container">
@@ -9,7 +10,7 @@ const TaskInput = ({ newTask, setNewTask, onAddTask }) => (
             onKeyPress={(e) => {
                 if (e.key === 'Enter') onAddTask();
             }}
-            placeholder="Add a cool task"
+            placeholder="Enter a Task . . ."
         />
     </div>
 );

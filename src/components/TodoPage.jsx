@@ -121,9 +121,24 @@ const TodoPage = () => {
                 <TaskInput newTask={newTask} setNewTask={setNewTask} onAddTask={handleCreateTask} />
             </div>
 
-            <div class = "task-calendar">
-                <Calendar taskCounts={getTaskCountsByDate()} />
+            
+            <div class ="filler">
+                <div class = "task-calendar">
+                    <Calendar taskCounts={getTaskCountsByDate()} />
+                </div>
             </div>
+
+
+
+
+
+
+
+
+
+
+
+
             
 
         </div>
