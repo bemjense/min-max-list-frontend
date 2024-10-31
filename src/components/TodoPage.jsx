@@ -24,6 +24,27 @@ const TodoPage = () => {
         loadTasks();
     }, []);
 
+    const getTaskCountsByDate = () => {
+        const taskCounts = {};
+
+        tasks.forEach((task) => {
+            const timeStamp = task.task_created_time_stamp;
+            const date = new Date(timeStamp.replace(' ', 'T')); 
+
+            if (!taskCounts[date]) {
+                taskCounts[date] = 0;
+            }
+            taskCounts[date]++;
+        });
+
+        return Object.entries(taskCounts).map(([date, count]) => ({
+            date,
+            count,
+        }));
+    };
+
+
+
     const handleCreateTask = async () => {
         if (newTask.trim()) {
             const createdTask = await createTask(newTask);
@@ -101,7 +122,7 @@ const TodoPage = () => {
             </div>
 
             <div class = "task-calendar">
-                <Calendar></Calendar>
+                <Calendar taskCounts={getTaskCountsByDate()} />
             </div>
             
 

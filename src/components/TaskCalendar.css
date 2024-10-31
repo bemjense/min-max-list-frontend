@@ -14,7 +14,7 @@
 .react-calendar-heatmap .color-empty {
   stroke: #ffffff; /* Outline color */
   stroke-width: 1.5; /* Outline width */
-  fill: red;
+  fill: #292929;
 }
 
 .react-calendar-heatmap .color-filled {

@@ -1,20 +1,16 @@
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
-import './task-calendar.css'
+import './TaskCalendar.css'
 
-const Calendar = ({}) => (
+const Calendar = ({taskCounts}) => (
   <CalendarHeatmap
-  startDate={new Date('2016-01-01')}
-  endDate={new Date('2016-04-01')}
+  startDate={new Date('2024-10-01')}
+  endDate={new Date('2024-11-031')}
   horizontal = {false}
   gutterSize = {5}
   showMonthLabels = {true}
-  values={[
-    { date: '2016-01-01', count: 12 },
-    { date: '2016-01-22', count: 122 },
-    { date: '2016-01-30', count: 38 },
-    // ...and so on
-  ]}/>
+  values = {taskCounts}
+  />
 
 
 
