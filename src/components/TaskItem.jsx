@@ -24,7 +24,7 @@ const TaskItem = ({
                 onKeyPress={(e) => e.key === 'Enter' && onEditTask(index)}
             />
         ) : (
-            <span className="task-text">{task.task_desc}</span>
+            <span className="task-text">{task.task_desc} {task.task_created_time_stamp}</span>
         )}
     </div>
 );
