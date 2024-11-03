@@ -1,5 +1,6 @@
 import psycopg2
-
+from datetime import datetime
+import pytz
 
 """
 Used to create a data for all todo related functions 
@@ -20,6 +21,7 @@ TASK_PRIMARY_KEY = "task_id"
 TASK_DESCRIPTION = "task_desc"
 TASK_IS_COMPLETED = "task_is_completed"
 TASK_CREATED_TIME_STAMP = "task_created_time_stamp"
+TASK_ALARM_TIME = "task_alarm_time"
 
 
 
@@ -67,7 +69,8 @@ class TaskDatabase:
                     {TASK_PRIMARY_KEY} SERIAL PRIMARY KEY, 
                     {TASK_DESCRIPTION} VARCHAR(255), 
                     {TASK_IS_COMPLETED} BOOLEAN,
-                    {TASK_CREATED_TIME_STAMP} TIMESTAMPTZ
+                    {TASK_CREATED_TIME_STAMP} TIMESTAMPTZ,
+                    {TASK_ALARM_TIME} TIMESTAMPTZ
                     );
                     """)
         except Exception as e:
@@ -93,16 +96,26 @@ class TaskDatabase:
     
 
     
-    def create_task(self, task_desc):
+    def create_task(self, task_desc, task_alarm_time=None):
         """
         Creates basic task which is automatically set to false completed. Needs time implementation.
         """
+        print(f"Task Alarm Time: {task_alarm_time}, Type: {type(task_alarm_time)}")
 
         try:
+            # check if alarm is string or datetime and handle appropiately
+            if task_alarm_time:
+                if isinstance(task_alarm_time, str):
+                    task_alarm_time = datetime.fromisoformat(task_alarm_time)
+
+                if isinstance(task_alarm_time,datetime):
+                    task_alarm_time = task_alarm_time.astimezone(pytz.UTC)
+
+
             self.cursor.execute(f"""
-                    insert into tasks({TASK_DESCRIPTION},{TASK_IS_COMPLETED}, {TASK_CREATED_TIME_STAMP}) 
-                    values('{task_desc}', False, CURRENT_TIMESTAMP)
-                    """);
+                INSERT INTO tasks({TASK_DESCRIPTION}, {TASK_IS_COMPLETED}, {TASK_CREATED_TIME_STAMP},{TASK_ALARM_TIME})
+                VALUES(%s, %s, CURRENT_TIMESTAMP,%s);
+            """, (task_desc, False, task_alarm_time))
         except Exception as e:
             print(f"Error creating task: {e}")
         
@@ -219,18 +232,39 @@ class TaskDatabase:
         print("Closing connection")
         self.connection.close()
 
-    def update_task(self, task_id, new_desc=None, new_status=None):
+    def update_task(self, task_id, new_desc=None, new_status=None,new_alarm_time=None):
         """
         Updates a task's description, status, or both based on the task_id.
         """
         try:
             # Update both description and status if both are provided
-            if new_desc is not None and new_status is not None:
+            if new_desc is not None and new_status is not None and new_alarm_time is not None:
+                self.cursor.execute(f"""
+                    UPDATE tasks
+                    SET {TASK_DESCRIPTION} = %s, {TASK_IS_COMPLETED} = %s, {TASK_ALARM_TIME} = %s
+                    WHERE {TASK_PRIMARY_KEY} = %s
+                    """, (new_desc, new_status,new_alarm_time, task_id))
+            
+            elif new_desc is not None and new_status is not None:
                 self.cursor.execute(f"""
                     UPDATE tasks
                     SET {TASK_DESCRIPTION} = %s, {TASK_IS_COMPLETED} = %s
                     WHERE {TASK_PRIMARY_KEY} = %s
                     """, (new_desc, new_status, task_id))
+                
+            elif new_desc is not None and new_alarm_time is not None:
+                self.cursor.execute(f"""
+                    UPDATE tasks
+                    SET {TASK_DESCRIPTION} = %s, {TASK_ALARM_TIME} = %s
+                    WHERE {TASK_PRIMARY_KEY} = %s
+                    """, (new_desc, new_alarm_time, task_id))
+                
+            elif new_alarm_time is not None and new_status is not None:
+                self.cursor.execute(f"""
+                    UPDATE tasks
+                    SET {TASK_ALARM_TIME} = %s, {TASK_IS_COMPLETED} = %s
+                    WHERE {TASK_PRIMARY_KEY} = %s
+                    """, (new_alarm_time, new_status, task_id))
             
             # Update only the description if provided
             elif new_desc is not None:
@@ -247,6 +281,13 @@ class TaskDatabase:
                     SET {TASK_IS_COMPLETED} = %s
                     WHERE {TASK_PRIMARY_KEY} = %s
                     """, (new_status, task_id))
+            
+            elif new_alarm_time is not None:
+                self.cursor.execute(f"""
+                    UPDATE tasks
+                    SET {TASK_ALARM_TIME} = %s
+                    WHERE {TASK_PRIMARY_KEY} = %s
+                    """, (new_alarm_time, task_id))
             
             else:
                 print("No changes specified for update.")
@@ -265,13 +306,11 @@ class TaskDatabase:
 
 
 
-minmax_database = TaskDatabase("localhost", "minmax", "postgres", "dog", 5432)
-#minmax_database.create_task("Test")
+#minmax_database = TaskDatabase("localhost", "minmax", "postgres", "dog", 5432)
+#minmax_database.create_task("Test","2024-11-04T09:00:00+00:00")
 #minmax_database.create_task("Dog")
+#minmax_database.update_task(2,None,None,"2024-11-04T09:10:00+00:00")
 #listTest = minmax_database.read_tasks_with_status(False)
-#
-#
-#
 #for x in listTest:
 #    print(x)
 

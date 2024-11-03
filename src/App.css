@@ -55,6 +55,7 @@
         align-items: center;
         transition: background-color 0.3s ease, color 0.3s ease;
     }
+    
 
         /* Color-coded menu items */
         .context-menu li.edit {
@@ -87,6 +88,11 @@
         .context-menu li.delete:hover {
             background-color: #dc3545;
             color: white;
+        }
+        .alarm-time {
+            margin-left: 10px; /* Add space between task description and alarm time */
+            color: #FF4500; /* Change color for better visibility */
+            font-weight: bold; /* Optional: bold the alarm time */
         }
 
     /* Smooth fade-in for the context menu */

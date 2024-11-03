@@ -8,6 +8,8 @@ const App = () => {
     const [editingIndex, setEditingIndex] = useState(null);
     const [editTaskText, setEditTaskText] = useState('');
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, taskIndex: null });
+    const [alarmTime, setAlarmTime] = useState('');
+
 
     {/*On startup attempt to connect to fastapi and get a list of tasks if not output an error*/}
     useEffect(() => {
@@ -35,7 +37,8 @@ const App = () => {
             try {
                 const response = await axios.post('http://localhost:8000/tasks/', {
                     task_desc: newTask,
-                    task_is_completed: false
+                    task_is_completed: false,
+                    task_alarm_time: alarmTime ? new Date(alarmTime).toISOString() : null
                 });
                 
                 const newTaskData = response.data; // Assuming response contains the created task with ID
@@ -48,15 +51,7 @@ const App = () => {
                     return updatedTasks.sort((a, b) => a.task_id - b.task_id);
                 });
                 setNewTask('');
-                {/* if sucessfull create a new array with the previous tasks and append the created task
-                setTasks([...tasks, { task_desc: newTask, task_is_completed: false }]);
-                setNewTask('');
-                */}
-                {/* also reset new_task to an empty string at end
-                setTasks([...tasks, response.data]);
-                
-                setNewTask('');
-                */}
+                setAlarmTime('');
             } catch (error) {
                 console.error("Error adding task:", error);
             }
@@ -104,6 +99,7 @@ const App = () => {
     const startEditingTask = (index) => {
         setEditingIndex(index);
         setEditTaskText(tasks[index].task_desc);
+        setAlarmTime(tasks[index].task_alarm_time ? new Date(tasks[index].task_alarm_time).toISOString().slice(0, 16) : '');
         hideContextMenu();
     };
 
@@ -111,14 +107,16 @@ const App = () => {
         try {
             await axios.put(`http://localhost:8000/tasks/${tasks[index].task_id}`, {
                 task_desc: editTaskText,
-                task_is_completed: tasks[index].task_is_completed
+                task_is_completed: tasks[index].task_is_completed,
+                task_alarm_time: alarmTime ? new Date(alarmTime).toISOString() : null
             });
             const updatedTasks = tasks.map((task, i) =>
-                i === index ? { ...task, task_desc: editTaskText } : task
+                i === index ? { ...task, task_desc: editTaskText, task_alarm_time: alarmTime ? new Date(alarmTime).toISOString() : null } : task
             );
             setTasks(updatedTasks);
             setEditingIndex(null);
             setEditTaskText('');
+            setAlarmTime('');
         } catch (error) {
             console.error("Error updating task:", error);
         }
@@ -160,6 +158,13 @@ const App = () => {
                     }}
                     placeholder="Add a new task"
                 />
+                <input 
+                    type="datetime-local"
+                    value={alarmTime}
+                    onChange={(e) => setAlarmTime(e.target.value)}
+                    placeholder="Set an alarm time"
+                    
+                />
             </div>
             <ul className="task-list">
                 {tasks.map((task, index) => (
@@ -169,6 +174,7 @@ const App = () => {
                         onContextMenu={(e) => handleRightClick(e, index)}
                     >
                         {editingIndex === index ? (
+                        <div>
                             <input
                                 type="text"
                                 value={editTaskText}
@@ -183,8 +189,18 @@ const App = () => {
                                     saveEditedTask(index);
                                 }}
                             />
+                            <input
+                                type="datetime-local"
+                                value={alarmTime}
+                                onChange={(e) => setAlarmTime(e.target.value)}
+                                placeholder="Set an alarm time"
+                            />
+                            </div>
                         ) : (
                             <span className="task-text">{task.task_desc}</span>
+                        )}
+                        {task.task_alarm_time && (
+                            <span className='alarm-time'> ⏰ {new Date(task.task_alarm_time).toLocaleString()}</span>
                         )}
                     </li>
                 ))}

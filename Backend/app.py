@@ -7,9 +7,10 @@ from typing import Optional
 from datetime import datetime
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+import pytz
 
 USER_DATABASE_NAME = 'minmax'
-TASK_SCHEMA = ["task_id", "task_desc", "task_is_completed", "task_created_time_stamp"]
+TASK_SCHEMA = ["task_id", "task_desc", "task_is_completed", "task_created_time_stamp","task_alarm_time"]
 
 # convert a list of tuples to base model of task_schema
 def helper_tuple_to_task_base_model(list_of_tuples):
@@ -40,10 +41,16 @@ class Task(BaseModel):
     task_desc: str
     task_is_completed: bool
     task_created_time_stamp: datetime = None
+    task_alarm_time: Optional[datetime] = None
 
 @app.post("/tasks/")
 async def create_task(task: Task):
-    user_db.create_task(task.task_desc)
+    print(task.task_alarm_time)
+    if task.task_alarm_time:
+        # Ensure that task_alarm_time is parsed correctly
+        task.task_alarm_time = datetime.fromisoformat(task.task_alarm_time.isoformat())
+    print(task.task_alarm_time)
+    user_db.create_task(task.task_desc,task.task_alarm_time)
 
     all_tasks = user_db.read_all_tasks()
     most_recent_task = helper_tuple_to_task_base_model(all_tasks)[-1]
@@ -76,7 +83,9 @@ async def read_task_id(task_id:int):
 
 @app.put("/tasks/{task_id}")
 async def update_task(task_id: int, task: Task):
-    user_db.update_task(task_id, new_desc=task.task_desc, new_status=task.task_is_completed)
+    if task.task_alarm_time:
+        task.task_alarm_time = task.task_alarm_time.astimezone(pytz.UTC)
+    user_db.update_task(task_id, new_desc=task.task_desc, new_status=task.task_is_completed,new_alarm_time=task.task_alarm_time)
     return JSONResponse(content={"message": "Task updated successfully"}, status_code=201)
 
 @app.delete("/tasks/{task_id}")
