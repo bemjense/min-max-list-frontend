@@ -2,32 +2,49 @@
 import TaskInput from './TaskInput';
 import TaskList from './TaskList';
 import ContextMenu from './ContextMenu';
-import { readTasks, createTask, deleteTask, updateTask } from '../services/api';
+import { readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask } from '../services/api';
 import Calendar from '../components/TaskCalendar'
 import './TodoPage.css';
 
 const TodoPage = () => {
-    const [tasks, setTasks] = useState([]);
+    const [uncompletedTasks, setUncompletedTasks] = useState([]);
+    const [completedTasks, setCompletedTasks] = useState([]);
     // Store userinput for creating a new task
     const [newTask, setNewTask] = useState('');
-    // Index of task being editted
-    const [editingIndex, setEditingIndex] = useState(null);
-    //Holds the text of the task being edited.
-    const [editTaskText, setEditTaskText] = useState('');
-    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, taskIndex: null });
+
+
+    const [editingIndexUncompleted, setEditingIndexUncompleted] = useState(null);
+    const [editingIndexCompleted, setEditingIndexCompleted] = useState(null);
+    const [editTextUncompleted, setEditTextUncompleted] = useState('');
+    const [editTextCompleted, setEditTextCompleted] = useState('');
+
+
+
+    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, taskIndex: null, taskCompleted: false });
+
+
+    const handleReadUncompletedTasks = async () => {
+        const loadedTasks = await readUncompletedTasks();
+        setUncompletedTasks(loadedTasks);
+    };
+    const handleReadCompletedTasks = async () => {
+        const loadedTasks = await readCompletedTasks();
+        setCompletedTasks(loadedTasks);
+    };
+
+    const handleReadTasks = async() => {
+        handleReadCompletedTasks()
+        handleReadUncompletedTasks()
+    }
 
     useEffect(() => {
-        const loadTasks = async () => {
-            const loadedTasks = await readTasks();
-            setTasks(loadedTasks);
-        };
-        loadTasks();
+        handleReadTasks()
     }, []);
 
     const getTaskCountsByDate = () => {
         const taskCounts = {};
 
-        tasks.forEach((task) => {
+        uncompletedTasks.forEach((task) => {
             const timeStamp = task.task_created_time_stamp;
             const date = new Date(timeStamp.replace(' ', 'T')); 
 
@@ -48,40 +65,64 @@ const TodoPage = () => {
     const handleCreateTask = async () => {
         if (newTask.trim()) {
             const createdTask = await createTask(newTask);
-            setTasks((prev) => [...prev, createdTask].sort((a, b) => a.task_id - b.task_id));
+            //setUncompletedTasks((prev) => [...prev, createdTask].sort((a, b) => a.task_id - b.task_id));
+            handleReadTasks()
             setNewTask('');
         }
     };
 
-    const handleDeleteTask = async (index) => {
-        const task = tasks[index];
+    const handleDeleteUncompleted = async (index) => {
+        const task = uncompletedTasks[index];
         await deleteTask(task.task_id);
-        setTasks((prev) => prev.filter((_, i) => i !== index));
+        handleReadTasks()
+    };
+    const handleDeleteCompleted = async (index) => {
+        const task = completedTasks[index];
+        await deleteTask(task.task_id);
+        handleReadTasks()
     };
 
-    const handleToggleTaskCompletion = async (index) => {
-        const task = tasks[index];
+    const handleToggleUncompleted = async (index) => {
+        console.log(uncompletedTasks)
+        
+        const task = uncompletedTasks[index];
         await updateTask(task.task_id, { ...task, task_is_completed: !task.task_is_completed });
-        setTasks((prev) =>
-            prev.map((t, i) => (i === index ? { ...t, task_is_completed: !t.task_is_completed } : t))
-        );
+        handleReadTasks();
     };
 
-    const handleUpdateTask = async (index) => {
-        const task = tasks[index];
-        await updateTask(task.task_id, { ...task, task_desc: editTaskText });
-        setTasks((prev) =>
-            prev.map((t, i) => (i === index ? { ...t, task_desc: editTaskText } : t))
-        );
-        setEditingIndex(null);
-        setEditTaskText('');
+    const handleToggleCompleted = async (index) => {
+        console.log(index)
+        const task = completedTasks[index];
+        await updateTask(task.task_id, { ...task, task_is_completed: !task.task_is_completed });
+        handleReadTasks();
     };
 
-    const handleContextMenuAction = (action) => {
+    const handleUpdateUncompleted = async (index) => {
+        const task = uncompletedTasks[index];
+        await updateTask(task.task_id, { ...task, task_desc: editTextUncompleted });
+        handleReadUncompletedTasks();
+        setEditingIndexUncompleted(null);
+        setEditTextUncompleted('');
+    };
+    const handleUpdateCompleted = async (index) => {
+        const task = completedTasks[index];
+        await updateTask(task.task_id, { ...task, task_desc: editTextCompleted });
+        handleReadCompletedTasks();
+        setEditingIndexCompleted(null);
+        setEditTextCompleted('');
+    };
+
+    const handleContextMenuUncompleted = (action) => {
         const index = contextMenu.taskIndex;
-        if (action === 'edit') setEditingIndex(index);
-        else if (action === 'delete') handleDeleteTask(index);
-        else if (action === 'toggle') handleToggleTaskCompletion(index);
+        if (action === 'edit') setEditingIndexUncompleted(index);
+        else if (action === 'delete') handleDeleteUncompleted(index);
+        else if (action === 'toggle') handleToggleUncompleted(index);
+    };
+    const handleContextMenuCompleted = (action) => {
+        const index = contextMenu.taskIndex;
+        if (action === 'edit') setEditingIndexCompleted(index);
+        else if (action === 'delete') handleDeleteCompleted(index);
+        else if (action === 'toggle') handleToggleCompleted(index);
     };
 
     const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, taskIndex: null });
@@ -97,27 +138,49 @@ const TodoPage = () => {
 
                 {/*Component Tasklist*/}
                 <TaskList className = "task-list"
-                    tasks={tasks}
-                    editingIndex={editingIndex}
-                    editTaskText={editTaskText}
-                    setEditTaskText={setEditTaskText}
-                    setEditingIndex={setEditingIndex}
-                    onEditTask={handleUpdateTask}
+                    tasks={uncompletedTasks}
+                    editingIndex={editingIndexUncompleted}
+                    editTaskText={editTextUncompleted}
+                    setEditTaskText={setEditTextUncompleted}
+                    setEditingIndex={setEditingIndexUncompleted}
+                    onEditTask={handleUpdateUncompleted}
                     onRightClick={(e, index) => {
                         e.preventDefault();
-                        setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index });
+                        setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index, taskCompleted: false });
+                    }}
+                />
+
+                <TaskList className = "task-list"
+                    tasks={completedTasks}
+                    editingIndex={editingIndexCompleted}
+                    editTaskText={editTextCompleted}
+                    setEditTaskText={setEditTextCompleted}
+                    setEditingIndex={setEditingIndexCompleted}
+                    onEditTask={handleUpdateCompleted}
+                    onRightClick={(e, index) => {
+                        e.preventDefault();
+                        setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index, taskCompleted: true });
                     }}
                 />
 
                 {/*Context Menu*/}
+
+
                 {contextMenu.visible && (
                     <ContextMenu
                         top={contextMenu.y}
                         left={contextMenu.x}
-                        onAction={handleContextMenuAction}
-                        isCompleted={tasks[contextMenu.taskIndex]?.task_is_completed}
+                        onAction={(action) => {
+                            if (contextMenu.taskCompleted) {
+                                handleContextMenuCompleted(action);
+                            } else {
+                                handleContextMenuUncompleted(action);
+                            }
+                        }}
+                        isCompleted={contextMenu.taskCompleted}
                     />
                 )}
+
                 <TaskInput newTask={newTask} setNewTask={setNewTask} onAddTask={handleCreateTask} />
             </div>
 
