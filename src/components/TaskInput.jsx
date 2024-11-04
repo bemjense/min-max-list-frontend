@@ -2,7 +2,8 @@ import React from 'react';
 import './TaskInput.css'
 
 const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, newAlarmVisible, setNewAlarmVisible  }) => (
-    <div className="input-container">
+
+    <div class="fixed bottom-0 rounded bg-[#50d71e] grow-[1]"> 
         <input
             type="text"
             value={newTask}
@@ -24,6 +25,7 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
         <button onClick={() => setNewAlarmVisible(!newAlarmVisible)}>
             {newAlarmVisible ? "Hide Alarm" : "Set Alarm"}
         </button>
+
     </div>
 );
 
