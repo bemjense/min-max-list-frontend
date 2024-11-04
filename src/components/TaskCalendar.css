@@ -26,3 +26,16 @@
   stroke: #000000; /* Outline color */
   stroke-width: 1.5; /* Outline width */
 }
+
+.calendar-tooltip {
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+  /* Adjust positioning as needed */
+}

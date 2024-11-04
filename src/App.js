@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import LoginSignup from './components/LoginSignup';
 import TodoPage from './components/TodoPage'
+import AppTest from './components/AppTest'
 
 function App() {
   return (

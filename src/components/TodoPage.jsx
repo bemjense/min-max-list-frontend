@@ -4,6 +4,7 @@ import TaskList from './TaskList';
 import ContextMenu from './ContextMenu';
 import { readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask } from '../services/api';
 import Calendar from '../components/TaskCalendar'
+import Switch from '../components/Switch'
 import './TodoPage.css';
 
 const TodoPage = () => {
@@ -41,12 +42,14 @@ const TodoPage = () => {
         handleReadTasks()
     }, []);
 
-    const getTaskCountsByDate = () => {
+    const getCompletedCountsByDate = () => {
         const taskCounts = {};
 
-        uncompletedTasks.forEach((task) => {
+        completedTasks.forEach((task) => {
             const timeStamp = task.task_created_time_stamp;
             const date = new Date(timeStamp.replace(' ', 'T')); 
+            date.setHours(0, 0, 0, 0);
+            console.log(date)
 
             if (!taskCounts[date]) {
                 taskCounts[date] = 0;
@@ -128,6 +131,7 @@ const TodoPage = () => {
     const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, taskIndex: null });
 
     return (
+
         <div className="app-container" onClick={hideContextMenu}>
             <div class ="filler"></div>
 
@@ -149,6 +153,7 @@ const TodoPage = () => {
                         setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index, taskCompleted: false });
                     }}
                 />
+                <div className = "tast-list-spacer">test</div>
 
                 <TaskList className = "task-list"
                     tasks={completedTasks}
@@ -163,7 +168,7 @@ const TodoPage = () => {
                     }}
                 />
 
-                {/*Context Menu*/}
+
 
 
                 {contextMenu.visible && (
@@ -187,7 +192,7 @@ const TodoPage = () => {
             
             <div class ="filler">
                 <div class = "task-calendar">
-                    <Calendar taskCounts={getTaskCountsByDate()} />
+                    <Calendar taskCounts={getCompletedCountsByDate()} />
                 </div>
             </div>
 
