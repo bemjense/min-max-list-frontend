@@ -19,7 +19,8 @@ const TodoPage = () => {
     const [editTextUncompleted, setEditTextUncompleted] = useState('');
     const [editTextCompleted, setEditTextCompleted] = useState('');
 
-
+    const [alarmTime, setAlarmTime] = useState('');
+    const [newAlarmVisible, setNewAlarmVisible] = useState(false);
 
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, taskIndex: null, taskCompleted: false });
 
@@ -67,7 +68,7 @@ const TodoPage = () => {
 
     const handleCreateTask = async () => {
         if (newTask.trim()) {
-            const createdTask = await createTask(newTask);
+            const createdTask = await createTask(newTask,alarmTime);
             //setUncompletedTasks((prev) => [...prev, createdTask].sort((a, b) => a.task_id - b.task_id));
             handleReadTasks()
             setNewTask('');
@@ -186,8 +187,15 @@ const TodoPage = () => {
                     />
                 )}
 
-                <TaskInput newTask={newTask} setNewTask={setNewTask} onAddTask={handleCreateTask} />
-            </div>
+                <TaskInput 
+                    newTask={newTask} 
+                    setNewTask={setNewTask} 
+                    onAddTask={handleCreateTask} 
+                    alarmTime={alarmTime} 
+                    setAlarmTime={setAlarmTime} 
+                    newAlarmVisible={newAlarmVisible}
+                    setNewAlarmVisible={setNewAlarmVisible}
+                />            </div>
 
             
             <div class ="filler">

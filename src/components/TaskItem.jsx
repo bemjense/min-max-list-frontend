@@ -26,7 +26,11 @@ const TaskItem = ({
                     onKeyPress={(e) => e.key === 'Enter' && onEditTask(index)}
                 />
             ) : (
-                        <span className="task-text">{task.task_desc} {task.task_created_time_stamp}</span>
+                        <span className="task-text">{task.task_desc} {task.task_created_time_stamp}</span>     
+            )}
+            
+            {task.task_alarm_time && (
+                <span className="alarm-time"> ALARM: {new Date(task.task_alarm_time).toLocaleString()}</span>
             )}
         </div>
 

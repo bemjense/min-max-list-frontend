@@ -28,11 +28,12 @@ export const readCompletedTasks = async () => {
     }
 };
 
-export const createTask = async (taskDesc) => {
+export const createTask = async (taskDesc,alarmTime) => {
     try {
         const response = await axios.post('http://localhost:8000/tasks/', {
             task_desc: taskDesc,
             task_is_completed: false,
+            task_alarm_time: alarmTime ? new Date(alarmTime).toISOString() : null
         });
         return response.data;
     } catch (error) {

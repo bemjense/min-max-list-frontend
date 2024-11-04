@@ -46,3 +46,7 @@
     background-color: #ffeb3b; /* Yellow color */
     transform: translate(4px, -6px); /* Top-right offset */
 }
+
+.task.completed.alarm-time{
+    text-decoration: line-through;
+}
