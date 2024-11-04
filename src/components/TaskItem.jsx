@@ -14,7 +14,7 @@ const TaskItem = ({
     <div class="task-completed-overlay">
 
         <div
-            className={`task hover:rounded-xl transition-all duration-300${task.task_is_completed ? 'completed' : ''}`}
+            className={`task ${task.task_is_completed ? 'completed hover:rounded-xl hover:text-lg transition-all duration-300' : 'uncompleted hover:rounded-xl hover:text-lg transition-all duration-300'}`}
             onContextMenu={(e) => onRightClick(e, index)}
         >
             {isEditing ? (
@@ -26,7 +26,10 @@ const TaskItem = ({
                     onKeyPress={(e) => e.key === 'Enter' && onEditTask(index)}
                 />
             ) : (
-                        <span className="task-text">{task.task_desc} {task.task_created_time_stamp}</span>     
+                        <div>
+                        <div className="task-text">{task.task_desc} </div>
+                        <div className="absolute top-0 right-0 h-16 w-16 text-xs"> {task.task_created_time_stamp}</div>     
+                        </div>
             )}
             
             {task.task_alarm_time && (

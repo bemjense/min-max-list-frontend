@@ -133,9 +133,10 @@ const TodoPage = () => {
     return (
 
         <div className="app-container" onClick={hideContextMenu}>
-            <div class ="filler"></div>
+            <div class ="grow-1"></div>
 
-            <div class = "canvas-container">
+            <div className ="flex-col bg-[#] grow-[3]">
+
                 <h1 class = "header-title">To-Do List</h1>
                 {/*Component where user enters information */}
                 {/*3 Arguments/ props */}
@@ -194,10 +195,12 @@ const TodoPage = () => {
                     setAlarmTime={setAlarmTime} 
                     newAlarmVisible={newAlarmVisible}
                     setNewAlarmVisible={setNewAlarmVisible}
-                />            </div>
+                />            
+                
+            </div>
 
             
-            <div class ="filler">
+            <div class ="grow-1 flex">
                 <div class = "task-calendar">
                     <Calendar taskCounts={getCompletedCountsByDate()} />
                 </div>

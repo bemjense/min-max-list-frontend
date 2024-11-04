@@ -1,7 +1,12 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Wrapper for shadows */
 
 /* Main Task styling */
-.task {
+.task{
     position: relative;
     border-radius: 25px;
     padding: 10px;
@@ -9,9 +14,13 @@
     color: #f0f0f0;
     z-index: 2; /* Keeps the green rectangle on top */
 }
+
+
 .task.completed {
     background-color: #8CC63F;
+    
 }
+
 
 .task.completed .task-text {
     text-decoration: line-through;
