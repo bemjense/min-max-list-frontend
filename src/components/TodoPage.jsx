@@ -4,7 +4,6 @@ import TaskList from './TaskList';
 import ContextMenu from './ContextMenu';
 import { readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask } from '../services/api';
 import Calendar from '../components/TaskCalendar'
-import Switch from '../components/Switch'
 import './TodoPage.css';
 
 const TodoPage = () => {
