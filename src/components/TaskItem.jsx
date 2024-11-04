@@ -14,7 +14,7 @@ const TaskItem = ({
     <div class="task-completed-overlay">
 
         <div
-            className={`task ${task.task_is_completed ? 'completed' : ''}`}
+            className={`task hover:rounded-xl transition-all duration-300${task.task_is_completed ? 'completed' : ''}`}
             onContextMenu={(e) => onRightClick(e, index)}
         >
             {isEditing ? (
