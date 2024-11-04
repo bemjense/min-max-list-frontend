@@ -1,6 +1,7 @@
 import React from 'react';
+import './TaskInput.css'
 
-const TaskInput = ({ newTask, setNewTask, onAddTask }) => (
+const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, newAlarmVisible, setNewAlarmVisible  }) => (
     <div className="input-container">
         <input
             type="text"
@@ -9,8 +10,20 @@ const TaskInput = ({ newTask, setNewTask, onAddTask }) => (
             onKeyPress={(e) => {
                 if (e.key === 'Enter') onAddTask();
             }}
-            placeholder="Add a cool task"
+            placeholder="Enter a Task . . ."
         />
+        
+        {newAlarmVisible && (
+            <input
+                type="datetime-local"
+                value={alarmTime}
+                onChange={(e) => setAlarmTime(e.target.value)}
+                placeholder="Set an alarm time"
+                />
+            )}
+        <button onClick={() => setNewAlarmVisible(!newAlarmVisible)}>
+            {newAlarmVisible ? "Hide Alarm" : "Set Alarm"}
+        </button>
     </div>
 );
 

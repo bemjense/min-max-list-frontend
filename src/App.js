@@ -2,11 +2,11 @@ import './App.css';
 import {
   BrowserRouter as Router,
   Routes,
-    Route,
-  BrowserRouter,
+  Route,
 } from 'react-router-dom';
-import LoginSignup from './Components/LoginSignup';
-import TodoPage from './Components/TodoPage'
+import LoginSignup from './components/LoginSignup';
+import TodoPage from './components/TodoPage'
+import AppTest from './components/AppTest'
 
 function App() {
   return (

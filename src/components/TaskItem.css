@@ -1,12 +1,14 @@
+/* Wrapper for shadows */
 
+/* Main Task styling */
 .task {
+    position: relative;
     border-radius: 25px;
     padding: 10px;
-    z-index: 1;
-    background-color: #1C1C1C;
+    background-color: #3AA7FA; /* Green background */
     color: #f0f0f0;
+    z-index: 2; /* Keeps the green rectangle on top */
 }
-
 .task.completed {
     background-color: #8CC63F;
 }
@@ -16,11 +18,35 @@
     color: #333333; /* Makes the text grey when completed */
 }
 
-/* Task styling */
-.task-text {
-    flex-grow: 1;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-    margin-right: 10px;
+
+.task-completed-overlay{
+    position: relative;
+}
+
+.task-completed-overlay:has(.completed)::before,
+.task-completed-overlay:has(.completed)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 25px;
+    z-index: 0; /* Places shadows behind the green */
+}
+
+/* Pink shadow */
+.task-completed-overlay:has(.completed)::before {
+    background-color: #e91e63; /* Pink color */
+    transform: translate(-4px, 6px); /* Bottom-left offset */
+}
+
+/* Yellow shadow */
+.task-completed-overlay:has(.completed)::after {
+    background-color: #ffeb3b; /* Yellow color */
+    transform: translate(4px, -6px); /* Top-right offset */
+}
+
+.task.completed.alarm-time{
+    text-decoration: line-through;
 }

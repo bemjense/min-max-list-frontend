@@ -1,6 +1,2 @@
-.vs
-dist
-node_modules
-Backend/MattTests.py
-Backend/task_database.py
-Backend/
+node_modules/
+.venv

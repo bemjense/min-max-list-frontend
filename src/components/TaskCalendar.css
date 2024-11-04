@@ -1,0 +1,41 @@
+.task-calendar {
+    margin-top: 100px;
+    min-width: 300px;
+}
+
+
+
+
+.react-calendar-heatmap text {
+  font-size: 10px;
+  fill: #aaa;
+}
+
+.react-calendar-heatmap .color-empty {
+  stroke: #ffffff; /* Outline color */
+  stroke-width: 1.5; /* Outline width */
+  fill: #292929;
+}
+
+.react-calendar-heatmap .color-filled {
+  stroke: #ffffff; /* Outline color */
+  stroke-width: 1.5; /* Outline width */
+}
+
+.react-calendar-heatmap rect:hover {
+  stroke: #000000; /* Outline color */
+  stroke-width: 1.5; /* Outline width */
+}
+
+.calendar-tooltip {
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+  /* Adjust positioning as needed */
+}
