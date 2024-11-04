@@ -7,6 +7,9 @@ import email_icon from './assets/email.png'
 import password_icon from './assets/password.png'
 
 const LoginSignup = () => {
+  function handleSubmit(userdata) {
+    userdata.preventDefault();
+  }
   const[action, setAction] = useState("Login");
   const placeholderStyle = {color: "#000"};
   return (
