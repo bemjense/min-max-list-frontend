@@ -9,6 +9,8 @@ const App = () => {
     const [editTaskText, setEditTaskText] = useState('');
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, taskIndex: null });
     const [alarmTime, setAlarmTime] = useState('');
+    const [editAlarmVisible, setEditAlarmVisible] = useState(false);
+    const [newAlarmVisible, setNewAlarmVisible] = useState(false);
 
 
     {/*On startup attempt to connect to fastapi and get a list of tasks if not output an error*/}
@@ -117,6 +119,7 @@ const App = () => {
             setEditingIndex(null);
             setEditTaskText('');
             setAlarmTime('');
+            setEditAlarmVisible(false);
         } catch (error) {
             console.error("Error updating task:", error);
         }
@@ -158,13 +161,17 @@ const App = () => {
                     }}
                     placeholder="Add a new task"
                 />
-                <input 
-                    type="datetime-local"
-                    value={alarmTime}
-                    onChange={(e) => setAlarmTime(e.target.value)}
-                    placeholder="Set an alarm time"
-                    
-                />
+                <button onClick={() => setNewAlarmVisible(!newAlarmVisible)}>
+                    {newAlarmVisible ? "Hide Alarm" : "Set Alarm"}
+                </button>
+                {newAlarmVisible && (
+                    <input
+                        type="datetime-local"
+                        value={alarmTime}
+                        onChange={(e) => setAlarmTime(e.target.value)}
+                        placeholder="Set an alarm time"
+                    />
+                )}
             </div>
             <ul className="task-list">
                 {tasks.map((task, index) => (
@@ -189,12 +196,19 @@ const App = () => {
                                     saveEditedTask(index);
                                 }}
                             />
-                            <input
-                                type="datetime-local"
-                                value={alarmTime}
-                                onChange={(e) => setAlarmTime(e.target.value)}
-                                placeholder="Set an alarm time"
-                            />
+                            
+                            <button onClick={() => setEditAlarmVisible(!editAlarmVisible)}>
+                                {editAlarmVisible ? "Hide Alarm" : "Set Alarm"}
+                            </button>
+
+                            {editAlarmVisible && (
+                                <input
+                                    type="datetime-local"
+                                    value={alarmTime}
+                                    onChange={(e) => setAlarmTime(e.target.value)}
+                                    placeholder="Set an alarm time"
+                                />
+                            )}
                             </div>
                         ) : (
                             <span className="task-text">{task.task_desc}</span>

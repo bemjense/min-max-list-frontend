@@ -90,9 +90,8 @@
             color: white;
         }
         .alarm-time {
-            margin-left: 10px; /* Add space between task description and alarm time */
-            color: #FF4500; /* Change color for better visibility */
-            font-weight: bold; /* Optional: bold the alarm time */
+            margin-left: 10px;
+            font-weight: bold; 
         }
 
     /* Smooth fade-in for the context menu */
