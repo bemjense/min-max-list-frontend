@@ -19,3 +19,10 @@
     outline: none;
     box-sizing: border-box;
 }
+.hidden-datepicker {
+    position: absolute;
+    transform: translate(-200px, 0px); /* Fine-tune horizontal and vertical position */
+    opacity: 0; /* Make input fully transparent */
+    height: 0; 
+    pointer-events: none; /* Prevent interaction */
+}
