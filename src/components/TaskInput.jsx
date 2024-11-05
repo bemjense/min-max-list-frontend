@@ -1,34 +1,45 @@
 import React, {useState,useRef,useEffect} from 'react';
 import './TaskInput.css'
-import { FaBell } from 'react-icons/fa'; // Importing a bell icon from react-icons
-import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css';
+import { FaBell } from 'react-icons/fa';
+import AirDatepicker from 'air-datepicker';
+
+import 'air-datepicker/air-datepicker.css';
+import localeEn from 'air-datepicker/locale/en';
 
 const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, newAlarmVisible, setNewAlarmVisible  }) => {
     const dateTimePickerRef = useRef(null);
 
     useEffect(() => {
-        let fp; // To store the flatpickr instance
-        
-        // Only initialize Flatpickr if newAlarmVisible is true and dateTimePickerRef is available
+        let dp;
+
         if (newAlarmVisible && dateTimePickerRef.current) {
-            fp = flatpickr(dateTimePickerRef.current, {
-                enableTime: true,
-                dateFormat: "Y-m-d H:i",
-                onChange: ([date]) => {
-                    setAlarmTime(date);
-                    setNewAlarmVisible(false); // Hide the alarm field after setting the time
-                },
-                
+            // Initialize AirDatepicker with a built-in position setting
+            dp = new AirDatepicker(dateTimePickerRef.current, {
+                timepicker: true,
+                dateFormat: 'Y-m-d H:i',
+                timeFormat: 'hh:mm aa',
+                locale: localeEn,
+                buttons: [
+                    'clear',
+                    {
+                        content: 'Set Alarm',
+                        onClick: (datepickerInstance) => {
+                            const selectedDate = datepickerInstance.selectedDates[0];
+                            if (selectedDate) {
+                                setAlarmTime(selectedDate);
+                                setNewAlarmVisible(false);
+                            }
+                        },
+                    },
+                ],
+                position:"top right"
             });
-            fp.open();
+
+            dp.show();
         }
 
-        // Clean up Flatpickr instance on component unmount
         return () => {
-            if (fp) {
-                fp.destroy();
-            }
+            if (dp) dp.destroy();
         };
     }, [newAlarmVisible, setAlarmTime]);
 
@@ -38,7 +49,10 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
                 onKeyPress={(e) => {
-                    if (e.key === 'Enter') onAddTask();
+                    if (e.key === 'Enter') 
+                        onAddTask();
+                        setAlarmTime('');
+                    
                 }}
                 placeholder="Enter a Task . . ."
             />
@@ -52,10 +66,14 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
             {newAlarmVisible && (
                 <input
                     ref={dateTimePickerRef}
-                    style={{ display: 'none' }}
+                    className="hidden-datepicker"
                     placeholder="Set an alarm time"
                 />
             )}
+            {alarmTime && 
+            <div className="alarm-time-display">
+                Alarm set for: {alarmTime.toLocaleString()}
+            </div>} 
         </div>
     );
 };
