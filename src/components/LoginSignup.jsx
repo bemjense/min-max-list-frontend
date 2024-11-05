@@ -65,13 +65,13 @@ const LoginSignup = () => {
       <div className='inputs'>
         {action === "Login" ? (
           <div className='input'>
-            <img src={user_icon} alt="" />
+            <img src={email_icon} alt="" />
             <input
               type="text"
-              placeholder="Username"
+              placeholder="Email"
               style={placeholderStyle}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
         ) : (
@@ -134,9 +134,9 @@ const LoginSignup = () => {
       </div>
       {/* Button to navigate to TodoList page */}
       <div className="todo-list-button">
-              <Link to="/TodoPage">
-                  <button className="todolist-button">TodoPage</button>
-              </Link>
+        <Link to="/TodoPage">
+          <button className="todolist-button">TodoPage</button>
+        </Link>
       </div>
     </div>
   );
