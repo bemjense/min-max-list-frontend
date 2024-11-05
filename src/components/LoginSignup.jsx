@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"; // Import Firebase auth methods
 import './LoginSignup.css';
 import logo_icon from './assets/logo.png';
 import user_icon from './assets/person.png';
@@ -9,16 +10,35 @@ import password_icon from './assets/password.png';
 const LoginSignup = () => {
   const [action, setAction] = useState("Login");
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  
   const placeholderStyle = { color: "#000" };
-
   const navigate = useNavigate();
+  const auth = getAuth(); // Initialize Firebase Auth
 
   const handleSubmit = () => {
-    setUsername(username);
-    setPassword(password);
-    navigate('/TodoPage');
+    if (action === "Login") {
+      // Firebase login with email and password
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in successfully, navigate to TodoPage
+          navigate('/TodoPage');
+        })
+        .catch((error) => {
+          console.error("Login error:", error.message);
+        });
+    } else {
+      // Firebase sign-up with email and password
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Account created successfully, navigate to TodoPage or another page
+          navigate('/TodoPage');
+        })
+        .catch((error) => {
+          console.error("Sign-up error:", error.message);
+        });
+    }
   };
 
   return (
@@ -57,6 +77,8 @@ const LoginSignup = () => {
                 type="email"
                 placeholder="Email..."
                 style={placeholderStyle}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </>
