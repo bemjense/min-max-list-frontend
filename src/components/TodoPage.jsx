@@ -143,6 +143,18 @@ const TodoPage = () => {
         else if (action === 'toggle') handleToggleCompleted(index);
     };
 
+    const handleUpdateAlarmCompleted = async (index,alarm) => {
+        const task = completedTasks[index];
+        await updateTask(task.task_id, { ...task, task_alarm_time: alarm });
+        handleReadCompletedTasks();
+    };
+
+    const handleUpdateAlarmUncompleted = async (index,alarm) => {
+        const task = uncompletedTasks[index];
+        await updateTask(task.task_id, { ...task, task_alarm_time: alarm });
+        handleReadUncompletedTasks();
+    };
+
     const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, taskIndex: null });
 
     return (
@@ -165,6 +177,7 @@ const TodoPage = () => {
                     setEditTaskText={setEditTextUncompleted}
                     setEditingIndex={setEditingIndexUncompleted}
                     onEditTask={handleUpdateUncompleted}
+                    onAlarmUpdate={handleUpdateAlarmUncompleted}
                     onRightClick={(e, index) => {
                         e.preventDefault();
                         setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index, taskCompleted: false });
@@ -184,6 +197,7 @@ const TodoPage = () => {
                     setEditTaskText={setEditTextCompleted}
                     setEditingIndex={setEditingIndexCompleted}
                     onEditTask={handleUpdateCompleted}
+                    onAlarmUpdate={handleUpdateAlarmCompleted}
                     onRightClick={(e, index) => {
                         e.preventDefault();
                         setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index, taskCompleted: true });

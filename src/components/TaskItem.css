@@ -51,7 +51,10 @@
     transform: translate(4px, -6px); /* Top-right offset */
 }
 
-
-
-
-
+.hidden-datepicker {
+    position: absolute;
+    transform: translate(-200px, 0px); /* Fine-tune horizontal and vertical position */
+    opacity: 0; /* Make input fully transparent */
+    height: 0; 
+    pointer-events: none; /* Prevent interaction */
+}

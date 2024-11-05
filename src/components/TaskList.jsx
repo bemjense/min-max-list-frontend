@@ -10,6 +10,7 @@ const TaskList = ({
     setEditingIndex,
     onEditTask,
     onRightClick,
+    onAlarmUpdate,
 }) => (
 
 
@@ -26,6 +27,7 @@ const TaskList = ({
                 setEditingIndex={setEditingIndex}
                 onEditTask={onEditTask}
                 onRightClick={onRightClick}
+                onAlarmUpdate={onAlarmUpdate}
             />
         ))}
     </div>
