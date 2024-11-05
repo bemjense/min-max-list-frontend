@@ -11,7 +11,6 @@
     border-radius: 25px;
     padding: 10px;
     background-color: #3AA7FA; /* Green background */
-    color: #f0f0f0;
     z-index: 2; /* Keeps the green rectangle on top */
 }
 
@@ -22,10 +21,6 @@
 }
 
 
-.task.completed .task-text {
-    text-decoration: line-through;
-    color: #333333; /* Makes the text grey when completed */
-}
 
 
 .task-completed-overlay{
@@ -56,6 +51,7 @@
     transform: translate(4px, -6px); /* Top-right offset */
 }
 
-.task.completed.alarm-time{
-    text-decoration: line-through;
-}
+
+
+
+

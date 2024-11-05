@@ -142,6 +142,7 @@ const TodoPage = () => {
                 {/*3 Arguments/ props */}
 
                 {/*Component Tasklist*/}
+                <div className='text-[#ffffff] semi-bold'>
                 <TaskList className = "task-list"
                     tasks={uncompletedTasks}
                     editingIndex={editingIndexUncompleted}
@@ -154,8 +155,13 @@ const TodoPage = () => {
                         setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index, taskCompleted: false });
                     }}
                 />
+                </div>
+
+
+
                 <div className = "tast-list-spacer">test</div>
 
+                <div className = "line-through text-[#333333]">
                 <TaskList className = "task-list"
                     tasks={completedTasks}
                     editingIndex={editingIndexCompleted}
@@ -168,6 +174,7 @@ const TodoPage = () => {
                         setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index, taskCompleted: true });
                     }}
                 />
+                </div>
 
 
 

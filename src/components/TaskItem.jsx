@@ -18,6 +18,7 @@ const TaskItem = ({
             onContextMenu={(e) => onRightClick(e, index)}
         >
             {isEditing ? (
+                <div class = "text-black">
                 <input
                     type="text"
                     value={editTaskText}
@@ -25,6 +26,7 @@ const TaskItem = ({
                     onBlur={() => onEditTask(index)}
                     onKeyPress={(e) => e.key === 'Enter' && onEditTask(index)}
                 />
+                </div>
             ) : (
                         <div>
                         <div className="task-text">{task.task_desc} </div>
