@@ -58,19 +58,27 @@ const TaskItem = ({
 
 
 
-    const handleDoubleClick = () => {
-        setEditingIndex(index);
-        setEditTaskText(task.task_desc); // Set the current task description for editing
+    //const handleDoubleClick = () => {
+    //    setEditingIndex(index);
+    //    setEditTaskText(task.task_desc); // Set the current task description for editing
+    //};
+
+    const getTaskDate = (task) => {
+
+        const timeStamp = task.task_created_time_stamp;
+        const date = new Date(timeStamp.replace(' ', 'T')); 
+        const dateString = date.toLocaleDateString().slice(0,10)
+
+        return dateString
     };
 
     return (
-        <div className="flex-1">
+        <div className="flex-1 text-sm">
 
             <div
                 className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:bg-[#AFDD66]  transition-all duration-300'
                     : 'uncompleted hover:rounded-xl hover:bg-[#3AA7FA] transition-all duration-300'}`}
                 onContextMenu={(e) => onRightClick(e, index)}
-                onDoubleClick={handleDoubleClick}
             >
                 {isEditing ? (
                     <div class="text-black ">
@@ -84,15 +92,15 @@ const TaskItem = ({
                     </div>
                 ) : (
                     <div>
-                        <div className="task-text">{task.task_desc} </div>
-                        <div className="absolute bottom-2 right-2 text-xs"> {task.task_created_time_stamp}</div>
+                        <div className="task-text ml-4">{task.task_desc} </div>
+                        <div className="absolute bottom-2 right-2 text-xs mr-6"> {getTaskDate(task)}</div>
                     </div>
                 )}
                 {task.task_alarm_time && (
-                    <span className="alarm-time"> ALARM: {new Date(task.task_alarm_time).toLocaleString()}</span>
+                    <span className="alarm-time ml-4"> ALARM: {new Date(task.task_alarm_time).toLocaleString()}</span>
                 )}
                 <button
-                    className="alarm-edit-button"
+                    className="alarm-edit-button ml-4"
                     onClick={() =>
                         setIsEditingAlarm(!isEditingAlarm)
                     }

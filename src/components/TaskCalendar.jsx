@@ -6,13 +6,15 @@ import { Tooltip } from 'react-tooltip';
 
 
 const Calendar = ({ taskCounts }) => {
+
+
   const [hoverInfo, setHoverInfo] = useState(null); // State to store hover information
 
   const currentDate= new Date();
   const startDate = new Date(currentDate);
-  startDate.setDate(currentDate.getDate() - 100); // 30 days before today
+  startDate.setDate(currentDate.getDate() - 101); // 30 days before today
   const endDate = new Date(currentDate);
-  endDate.setDate(currentDate.getDate()); // 30 days after today
+  endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
 
   return (
     <div className="calendar-heatmap-container">
@@ -20,11 +22,8 @@ const Calendar = ({ taskCounts }) => {
 
       startDate={startDate}
       endDate={endDate}
-
-
-
-
-
+      showWeekdayLabels= {true}
+      showOutOfRangeDays = {true}
       horizontal={false}
       gutterSize={3}
       showMonthLabels={true}
@@ -54,10 +53,6 @@ const Calendar = ({ taskCounts }) => {
           'data-tooltip-content': `${value.date.toLocaleString().slice(0, 10)}: ${value.count} tasks completed`,
         };
       }}
-
-
-
-
 
 
       />
