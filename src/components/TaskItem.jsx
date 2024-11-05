@@ -23,6 +23,9 @@ const TaskItem = ({
 
         // Initialize AirDatepicker only when editing the alarm
         if (isEditingAlarm && dateTimePickerRef.current) {
+            const buttonRect = dateTimePickerRef.current.getBoundingClientRect();
+            const hasSpaceAbove = buttonRect.top > 300; // Adjust based on how much space you need above
+
             dp = new AirDatepicker(dateTimePickerRef.current, {
                 timepicker: true,
                 dateFormat: 'Y-m-d H:i',
@@ -40,7 +43,7 @@ const TaskItem = ({
                         },
                     },
                 ],
-                position: "top right",
+                position: hasSpaceAbove ? 'top right' : 'bottom right',
             });
 
             dp.show(); // Show the datepicker when initialized
