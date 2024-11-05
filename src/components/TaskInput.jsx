@@ -4,7 +4,7 @@ import { FaBell } from 'react-icons/fa';
 import AirDatepicker from 'air-datepicker';
 
 import 'air-datepicker/air-datepicker.css';
-import 'air-datepicker/locale/en.js'
+import localeEn from 'air-datepicker/locale/en';
 
 const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, newAlarmVisible, setNewAlarmVisible  }) => {
     const dateTimePickerRef = useRef(null);
@@ -17,7 +17,8 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
             dp = new AirDatepicker(dateTimePickerRef.current, {
                 timepicker: true,
                 dateFormat: 'Y-m-d H:i',
-                language: 'en',
+                timeFormat: 'hh:mm aa',
+                locale: localeEn,
                 buttons: [
                     'clear',
                     {
@@ -48,7 +49,10 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
                 onKeyPress={(e) => {
-                    if (e.key === 'Enter') onAddTask();
+                    if (e.key === 'Enter') 
+                        onAddTask();
+                        setAlarmTime('');
+                    
                 }}
                 placeholder="Enter a Task . . ."
             />
