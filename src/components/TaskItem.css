@@ -52,7 +52,7 @@
 
 .hidden-datepicker {
     position: absolute;
-    transform: translate(-183px, 10px); /* Fine-tune horizontal and vertical position */
+    transform: translate(-157px, 10px); /* Fine-tune horizontal and vertical position */
     opacity: 0; /* Make input fully transparent */
     height: 0; 
     pointer-events: none; /* Prevent interaction */
