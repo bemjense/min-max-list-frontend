@@ -133,7 +133,7 @@ const TodoPage = () => {
     return (
 
         <div className="app-container" onClick={hideContextMenu}>
-            <div class ="grow-1"></div>
+            <div class ="grow-[1]"></div>
 
             <div className ="flex-col bg-[#] grow-[3]">
 
@@ -200,7 +200,7 @@ const TodoPage = () => {
             </div>
 
             
-            <div class ="grow-1 flex">
+            <div class ="grow-[1] flex">
                 <div class = "task-calendar">
                     <Calendar taskCounts={getCompletedCountsByDate()} />
                 </div>
