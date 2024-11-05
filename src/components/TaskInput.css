@@ -19,9 +19,9 @@
     outline: none;
     box-sizing: border-box;
 }
-.hidden-datepicker {
+.hidden-datepicker-input{
     position: absolute;
-    transform: translate(-200px, 0px); /* Fine-tune horizontal and vertical position */
+    transform: translate(-204px, 15px); /* Fine-tune horizontal and vertical position */
     opacity: 0; /* Make input fully transparent */
     height: 0; 
     pointer-events: none; /* Prevent interaction */

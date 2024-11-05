@@ -66,7 +66,7 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
             {newAlarmVisible && (
                 <input
                     ref={dateTimePickerRef}
-                    className="hidden-datepicker"
+                    className="hidden-datepicker-input"
                     placeholder="Set an alarm time"
                 />
             )}

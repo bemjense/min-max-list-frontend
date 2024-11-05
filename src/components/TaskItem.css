@@ -51,7 +51,6 @@
 }
 
 .hidden-datepicker {
-       
     position: absolute;
     transform: translate(-183px, 10px); /* Fine-tune horizontal and vertical position */
     opacity: 0; /* Make input fully transparent */
