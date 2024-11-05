@@ -12,19 +12,20 @@
 }
 
 .react-calendar-heatmap .color-empty {
-  stroke: #ffffff; /* Outline color */
-  stroke-width: 1.5; /* Outline width */
-  fill: #292929;
+  stroke: none;
 }
 
 .react-calendar-heatmap .color-filled {
-  stroke: #ffffff; /* Outline color */
-  stroke-width: 1.5; /* Outline width */
+  fill: #d6e685;
+  stroke: none;
 }
 
+.react-calendar-heatmap .color-scale-1 { fill: #d6e685; }
+.react-calendar-heatmap .color-scale-2 { fill: #8cc665; }
+.react-calendar-heatmap .color-scale-3 { fill: #44a340; }
+.react-calendar-heatmap .color-scale-4 { fill: #1e6823; }
+
 .react-calendar-heatmap rect:hover {
-  stroke: #000000; /* Outline color */
-  stroke-width: 1.5; /* Outline width */
 }
 
 .calendar-tooltip {

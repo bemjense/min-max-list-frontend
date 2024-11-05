@@ -2,6 +2,8 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import './TaskCalendar.css';
 import { useState } from 'react';
+import { Tooltip } from 'react-tooltip';
+
 
 const Calendar = ({ taskCounts }) => {
   const [hoverInfo, setHoverInfo] = useState(null); // State to store hover information
@@ -12,30 +14,38 @@ const Calendar = ({ taskCounts }) => {
         startDate={new Date('2024-10-01')}
         endDate={new Date('2024-12-01')}
         horizontal={false}
-        gutterSize={5}
+        gutterSize={3}
         showMonthLabels={true}
         values={taskCounts}
 
 
-        onMouseOver={(event, value) => {
-          if (value) {
-            console.log(`Tasks completed on ${value.date}: ${value.count}`);
-            setHoverInfo({ date: value.date, count: value.count });
-          } else {
-            setHoverInfo(null); // Reset hover info if no value
-          }
+        classForValue={(value) => {
+        if (!value) {
+          return 'color-empty';
+        }
+        if (value.count > 3) {
+          return `color-scale-3`;
+        }
+        return `color-scale-${value.count}`;
         }}
 
-        onMouseLeave={(event,value) => {
-          setHoverInfo(null)
+        tooltipDataAttrs={(value) => {
+          if (!value || !value.date) {
+            return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };
+          }
+          return {
+            'data-tooltip-id': 'task-tooltip',
+            'data-tooltip-content': `${value.date} has count: ${value.count}`,
+          };
         }}
+
+
+
+
+
+
       />
-      {/*If hoverinfo is set to true then create popup else disable*/}
-      {hoverInfo && (
-        <div className="calendar-tooltip">
-          {hoverInfo.count} tasks completed
-        </div>
-      )}
+      <Tooltip id="task-tooltip" />
     </div>
   );
 };
