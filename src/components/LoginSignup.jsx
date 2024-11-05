@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"; // Import Firebase auth methods
+import { initializeApp } from 'firebase/app'
 import './LoginSignup.css';
 import logo_icon from './assets/logo.png';
 import user_icon from './assets/person.png';
@@ -9,6 +10,17 @@ import password_icon from './assets/password.png';
 import {
   Link
 } from 'react-router-dom';
+
+const firebaseApp = initializeApp({
+  apiKey: "AIzaSyD3BMBI9I9Jj6QUvQkyh9quttuLWbFUbRQ",
+  authDomain: "min-max-list.firebaseapp.com",
+  projectId: "min-max-list",
+  storageBucket: "min-max-list.firebasestorage.app",
+  messagingSenderId: "267782539417",
+  appId: "1:267782539417:web:5c9472ec0748142639d008",
+  measurementId: "G-8KSRE4VHQ1"
+})
+
 
 const LoginSignup = () => {
   const [action, setAction] = useState("Login");
@@ -119,12 +131,12 @@ const LoginSignup = () => {
         >
           {action}
         </div>
-        {/* Button to navigate to TodoList page */}
+      </div>
+      {/* Button to navigate to TodoList page */}
       <div className="todo-list-button">
               <Link to="/TodoPage">
                   <button className="todolist-button">TodoPage</button>
               </Link>
-          </div>
       </div>
     </div>
   );
