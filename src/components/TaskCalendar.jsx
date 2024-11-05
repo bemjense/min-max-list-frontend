@@ -8,18 +8,30 @@ import { Tooltip } from 'react-tooltip';
 const Calendar = ({ taskCounts }) => {
   const [hoverInfo, setHoverInfo] = useState(null); // State to store hover information
 
+  const currentDate= new Date();
+  const startDate = new Date(currentDate);
+  startDate.setDate(currentDate.getDate() - 100); // 30 days before today
+  const endDate = new Date(currentDate);
+  endDate.setDate(currentDate.getDate()); // 30 days after today
+
   return (
     <div className="calendar-heatmap-container">
       <CalendarHeatmap
-        startDate={new Date('2024-10-01')}
-        endDate={new Date('2024-12-01')}
-        horizontal={false}
-        gutterSize={3}
-        showMonthLabels={true}
-        values={taskCounts}
+
+      startDate={startDate}
+      endDate={endDate}
 
 
-        classForValue={(value) => {
+
+
+
+      horizontal={false}
+      gutterSize={3}
+      showMonthLabels={true}
+      values={taskCounts}
+
+
+      classForValue={(value) => {
         if (!value) {
           return 'color-empty';
         }
@@ -27,17 +39,21 @@ const Calendar = ({ taskCounts }) => {
           return `color-scale-3`;
         }
         return `color-scale-${value.count}`;
-        }}
+      }}
 
-        tooltipDataAttrs={(value) => {
-          if (!value || !value.date) {
-            return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };
-          }
-          return {
-            'data-tooltip-id': 'task-tooltip',
-            'data-tooltip-content': `${value.date} has count: ${value.count}`,
-          };
-        }}
+
+      tooltipDataAttrs={(value) => {
+        if (!value || !value.date) {
+          return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };
+        }
+
+
+
+        return {
+          'data-tooltip-id': 'task-tooltip',
+          'data-tooltip-content': `${value.date.toLocaleString().slice(0, 10)}: ${value.count} tasks completed`,
+        };
+      }}
 
 
 
