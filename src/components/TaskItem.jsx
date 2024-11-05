@@ -28,7 +28,7 @@ const TaskItem = ({
             ) : (
                         <div>
                         <div className="task-text">{task.task_desc} </div>
-                        <div className="absolute top-0 right-0 h-16 w-16 text-xs"> {task.task_created_time_stamp}</div>     
+                        <div className="absolute bottom-2 right-2 text-xs"> {task.task_created_time_stamp}</div>     
                         </div>
             )}
             

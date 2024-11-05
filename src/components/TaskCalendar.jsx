@@ -25,6 +25,10 @@ const Calendar = ({ taskCounts }) => {
             setHoverInfo(null); // Reset hover info if no value
           }
         }}
+
+        onMouseLeave={(event,value) => {
+          setHoverInfo(null)
+        }}
       />
       {/*If hoverinfo is set to true then create popup else disable*/}
       {hoverInfo && (
