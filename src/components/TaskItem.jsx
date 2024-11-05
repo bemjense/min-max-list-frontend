@@ -86,7 +86,7 @@ const TaskItem = ({
                     }
                     title="Set an alarm"
                 >
-                <FaBell style={{ color: isEditingAlarm ? '#000000' : 'white' }} />
+                <FaBell style={{ color: isEditingAlarm ? 'blue' : 'white' }} />
                 </button>
                 {isEditingAlarm && (
                     <input

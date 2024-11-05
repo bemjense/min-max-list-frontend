@@ -8,7 +8,7 @@
 /* Main Task styling */
 .task{
     position: relative;
-    border-radius: 25px;
+    border-radius: 100px;
     padding: 10px;
     background-color: #3AA7FA; /* Green background */
     z-index: 2; /* Keeps the green rectangle on top */
@@ -35,7 +35,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 25px;
+    border-radius: 100px;
     z-index: 0; /* Places shadows behind the green */
 }
 
