@@ -55,10 +55,11 @@ const TaskItem = ({
     }, [isEditingAlarm, index]);
 
     return ( 
-        <div class="task-completed-overlay">
+            <div className = "flex-1">
 
             <div
-                className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl transition-all duration-300' : 'uncompleted hover:rounded-xl transition-all duration-300'}`}
+                className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:bg-[#AFDD66]  transition-all duration-300' 
+                    : 'uncompleted hover:rounded-xl hover:bg-[#3AA7FA] transition-all duration-300'}`}
                 onContextMenu={(e) => onRightClick(e, index)}
             >
                 {isEditing ? (
@@ -99,8 +100,8 @@ const TaskItem = ({
                 )}
 
             </div>
+            </div>
 
-        </div>
     );
 };
 export default TaskItem;
