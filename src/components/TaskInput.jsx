@@ -49,10 +49,10 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
                 onKeyPress={(e) => {
-                    if (e.key === 'Enter') 
+                    if (e.key === 'Enter') {
                         onAddTask();
                         setAlarmTime('');
-                    
+                    }
                 }}
                 placeholder="Enter a Task . . ."
             />
