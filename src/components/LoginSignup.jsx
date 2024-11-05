@@ -6,6 +6,9 @@ import logo_icon from './assets/logo.png';
 import user_icon from './assets/person.png';
 import email_icon from './assets/email.png';
 import password_icon from './assets/password.png';
+import {
+  Link
+} from 'react-router-dom';
 
 const LoginSignup = () => {
   const [action, setAction] = useState("Login");
@@ -116,6 +119,12 @@ const LoginSignup = () => {
         >
           {action}
         </div>
+        {/* Button to navigate to TodoList page */}
+      <div className="todo-list-button">
+              <Link to="/TodoPage">
+                  <button className="todolist-button">TodoPage</button>
+              </Link>
+          </div>
       </div>
     </div>
   );
