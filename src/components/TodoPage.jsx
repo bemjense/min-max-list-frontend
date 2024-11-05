@@ -183,11 +183,14 @@ const TodoPage = () => {
                         setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index, taskCompleted: false });
                     }}
                 />
+
                 </div>
 
+                <hr className="h-2 bg-[#3AA7FA] border-0 rounded md:my-5" />
 
 
-                <div className = "tast-list-spacer">test</div>
+
+
 
                 <div className = "line-through text-[#333333]">
                 <TaskList className = "task-list"
