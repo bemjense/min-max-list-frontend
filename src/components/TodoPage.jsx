@@ -193,7 +193,10 @@ const TodoPage = () => {
 
 
             <div className="flex-col bg-[#] grow-[3]">
-                <h1 class="text-white text-3xl text-left mb-6 mt-6">Min-Max List</h1>
+                <div className= "flex gap-2">
+                    <img src="/assets/star.svg" width="30" height="30" />
+                    <h1 class="text-white text-2xl text-left mb-6 mt-6">Min-Max List</h1>
+                </div>
                 {/*Component where user enters information */}
                 {/*3 Arguments/ props */}
 
