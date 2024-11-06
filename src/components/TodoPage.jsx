@@ -62,11 +62,13 @@ const TodoPage = () => {
         };
     }, []);
 
-    // Fetch tasks as soon as UID is available
     useEffect(() => {
-        if (uid) {
-            handleReadTasks(uid);  // Fetch tasks when UID is available
+        // mostly for dev work
+        const isOnline = navigator.onLine;
+        if (!isOnline) {
+            setUid("dummy_uid")
         }
+        handleReadTasks(uid);
     }, [uid]);
 
 
@@ -159,13 +161,13 @@ const TodoPage = () => {
     const handleUpdateAlarmCompleted = async (index, alarm) => {
         const task = completedTasks[index];
         await updateTask(task.task_id, { ...task, task_alarm_time: alarm, uid });
-        handleReadCompletedTasks();
+        handleReadCompletedTasks(uid);
     };
 
     const handleUpdateAlarmUncompleted = async (index, alarm) => {
         const task = uncompletedTasks[index];
         await updateTask(task.task_id, { ...task, task_alarm_time: alarm, uid });
-        handleReadUncompletedTasks();
+        handleReadUncompletedTasks(uid);
     };
 
     const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, taskIndex: null });
