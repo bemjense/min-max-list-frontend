@@ -57,9 +57,9 @@ export const deleteTask = async (taskId) => {
     }
 };
 
-export const updateTask = async (taskId, taskData, uid) => {
+export const updateTask = async (taskId, taskUid, taskData) => {
     try {
-        await axios.put(`http://localhost:8000/tasks/${taskId}`, taskData, uid);
+        await axios.put(`http://localhost:8000/tasks/${taskId}`, taskData, taskUid);
     } catch (error) {
         console.error('Error updating task:', error);
     }

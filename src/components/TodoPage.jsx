@@ -97,7 +97,7 @@ const TodoPage = () => {
 
     const handleCreateTask = async () => {
         if (newTask.trim()) {
-            const createdTask = await createTask(newTask, alarmTime, uid);
+            const createdTask = await createTask(newTask, uid, alarmTime);
             //setUncompletedTasks((prev) => [...prev, createdTask].sort((a, b) => a.task_id - b.task_id));
             handleReadTasks(uid)
             setNewTask('');
@@ -119,30 +119,42 @@ const TodoPage = () => {
         console.log(uncompletedTasks)
 
         const task = uncompletedTasks[index];
-        await updateTask(task.task_id, { ...task, task_is_completed: !task.task_is_completed, uid });
+        await updateTask(task.task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed});
         handleReadTasks(uid);
     };
 
     const handleToggleCompleted = async (index) => {
         console.log(index)
         const task = completedTasks[index];
-        await updateTask(task.task_id, { ...task, task_is_completed: !task.task_is_completed, uid });
+        await updateTask(task.task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed});
         handleReadTasks(uid);
     };
 
     const handleUpdateUncompleted = async (index) => {
         const task = uncompletedTasks[index];
-        await updateTask(task.task_id, { ...task, task_desc: editTextUncompleted, uid });
+        await updateTask(task.task_id, task.task_uid, { ...task, task_desc: editTextUncompleted});
         handleReadUncompletedTasks(uid);
         setEditingIndexUncompleted(null);
         setEditTextUncompleted('');
     };
     const handleUpdateCompleted = async (index) => {
         const task = completedTasks[index];
-        await updateTask(task.task_id, { ...task, task_desc: editTextCompleted, uid });
+        await updateTask(task.task_id, task.task_uid, { ...task, task_desc: editTextCompleted});
         handleReadCompletedTasks(uid);
         setEditingIndexCompleted(null);
         setEditTextCompleted('');
+    };
+
+    const handleUpdateAlarmCompleted = async (index, alarm) => {
+        const task = completedTasks[index];
+        await updateTask(task.task_id, task.task_uid, { ...task, task_alarm_time: alarm});
+        handleReadCompletedTasks(uid);
+    };
+
+    const handleUpdateAlarmUncompleted = async (index, alarm) => {
+        const task = uncompletedTasks[index];
+        await updateTask(task.task_id, task.task_uid,{ ...task, task_alarm_time: alarm});
+        handleReadUncompletedTasks(uid);
     };
 
     const handleContextMenuUncompleted = (action) => {
@@ -158,17 +170,6 @@ const TodoPage = () => {
         else if (action === 'toggle') handleToggleCompleted(index);
     };
 
-    const handleUpdateAlarmCompleted = async (index, alarm) => {
-        const task = completedTasks[index];
-        await updateTask(task.task_id, { ...task, task_alarm_time: alarm, uid });
-        handleReadCompletedTasks(uid);
-    };
-
-    const handleUpdateAlarmUncompleted = async (index, alarm) => {
-        const task = uncompletedTasks[index];
-        await updateTask(task.task_id, { ...task, task_alarm_time: alarm, uid });
-        handleReadUncompletedTasks(uid);
-    };
 
     const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, taskIndex: null });
 
