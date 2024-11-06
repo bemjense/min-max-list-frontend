@@ -62,10 +62,13 @@ const TodoPage = () => {
         };
     }, []);
 
-    // Only fetch tasks once the UID is set
+    // Fetch tasks as soon as UID is available
     useEffect(() => {
-        handleReadTasks();  // Fetch tasks when UID is available
-    }, [uid]);  // Dependency on UID
+        if (uid) {
+            handleReadTasks(uid);  // Fetch tasks when UID is available
+        }
+    }, [uid]);
+
 
 
     const getCompletedCountsByDate = () => {
@@ -114,27 +117,27 @@ const TodoPage = () => {
         console.log(uncompletedTasks)
 
         const task = uncompletedTasks[index];
-        await updateTask(task.task_id, { ...task, task_is_completed: !task.task_is_completed, uid});
+        await updateTask(task.task_id, { ...task, task_is_completed: !task.task_is_completed, uid });
         handleReadTasks(uid);
     };
 
     const handleToggleCompleted = async (index) => {
         console.log(index)
         const task = completedTasks[index];
-        await updateTask(task.task_id, { ...task, task_is_completed: !task.task_is_completed, uid});
+        await updateTask(task.task_id, { ...task, task_is_completed: !task.task_is_completed, uid });
         handleReadTasks(uid);
     };
 
     const handleUpdateUncompleted = async (index) => {
         const task = uncompletedTasks[index];
-        await updateTask(task.task_id, { ...task, task_desc: editTextUncompleted, uid});
+        await updateTask(task.task_id, { ...task, task_desc: editTextUncompleted, uid });
         handleReadUncompletedTasks(uid);
         setEditingIndexUncompleted(null);
         setEditTextUncompleted('');
     };
     const handleUpdateCompleted = async (index) => {
         const task = completedTasks[index];
-        await updateTask(task.task_id, { ...task, task_desc: editTextCompleted , uid});
+        await updateTask(task.task_id, { ...task, task_desc: editTextCompleted, uid });
         handleReadCompletedTasks(uid);
         setEditingIndexCompleted(null);
         setEditTextCompleted('');
@@ -155,13 +158,13 @@ const TodoPage = () => {
 
     const handleUpdateAlarmCompleted = async (index, alarm) => {
         const task = completedTasks[index];
-        await updateTask(task.task_id, { ...task, task_alarm_time: alarm , uid});
+        await updateTask(task.task_id, { ...task, task_alarm_time: alarm, uid });
         handleReadCompletedTasks();
     };
 
     const handleUpdateAlarmUncompleted = async (index, alarm) => {
         const task = uncompletedTasks[index];
-        await updateTask(task.task_id, { ...task, task_alarm_time: alarm , uid});
+        await updateTask(task.task_id, { ...task, task_alarm_time: alarm, uid });
         handleReadUncompletedTasks();
     };
 
