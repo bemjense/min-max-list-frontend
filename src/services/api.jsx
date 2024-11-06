@@ -35,7 +35,7 @@ export const readCompletedTasks = async (uid) => {
     }
 };
 
-export const createTask = async (taskDesc,alarmTime, uid) => {
+export const createTask = async (uid, taskDesc,alarmTime) => {
     try {
         const response = await axios.post('http://localhost:8000/tasks/', {
             task_uid: uid,

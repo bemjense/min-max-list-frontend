@@ -97,7 +97,7 @@ const TodoPage = () => {
 
     const handleCreateTask = async () => {
         if (newTask.trim()) {
-            const createdTask = await createTask(newTask, uid, alarmTime);
+            const createdTask = await createTask(uid, newTask, alarmTime);
             //setUncompletedTasks((prev) => [...prev, createdTask].sort((a, b) => a.task_id - b.task_id));
             handleReadTasks(uid)
             setNewTask('');
