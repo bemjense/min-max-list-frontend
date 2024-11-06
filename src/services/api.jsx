@@ -2,7 +2,7 @@ import axios from 'axios';
 export const readTasks = async (uid) => {
     try {
         const response = await axios.get(`http://localhost:8000/tasks/`, {
-            params: { uid: uid } // Pass the uid as a query parameter
+            params: { task_uid: uid } // Pass the uid as a query parameter
         });
         return response.data.sort((a, b) => a.task_id - b.task_id);
     } catch (error) {
@@ -14,7 +14,7 @@ export const readTasks = async (uid) => {
 export const readUncompletedTasks = async (uid) => {
     try {
         const response = await axios.get('http://localhost:8000/tasks/?task_is_completed=false', {
-            params: { uid: uid } 
+            params: { task_uid: uid } 
 
         });
         return response.data.sort((a, b) => a.task_id - b.task_id);
@@ -26,7 +26,7 @@ export const readUncompletedTasks = async (uid) => {
 export const readCompletedTasks = async (uid) => {
     try {
         const response = await axios.get('http://localhost:8000/tasks/?task_is_completed=True', {
-            params: { uid: uid } 
+            params: { task_uid: uid } 
         });
         return response.data.sort((a, b) => a.task_id - b.task_id);
     } catch (error) {
@@ -38,10 +38,10 @@ export const readCompletedTasks = async (uid) => {
 export const createTask = async (taskDesc,alarmTime, uid) => {
     try {
         const response = await axios.post('http://localhost:8000/tasks/', {
+            task_uid: uid,
             task_desc: taskDesc,
             task_is_completed: false,
-            task_alarm_time: alarmTime ? new Date(alarmTime).toISOString() : null,
-            uid: uid
+            task_alarm_time: alarmTime ? new Date(alarmTime).toISOString() : null
         });
         return response.data;
     } catch (error) {
