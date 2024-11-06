@@ -9,7 +9,7 @@
 .task{
     position: relative;
     border-radius: 100px;
-    padding: 10px;
+    padding: 4px;
     background-color: #333333; /* Green background */
     z-index: 2; /* Keeps the green rectangle on top */
 }

@@ -12,7 +12,8 @@ const auth = getAuth();
 
 
 const TodoPage = () => {
-    const [uid, setUid] = useState(null);
+    const [userUid, setUserUid] = useState(null);
+    const [userEmail, setUserEmail] = useState(null);
     const [uncompletedTasks, setUncompletedTasks] = useState([]);
     const [completedTasks, setCompletedTasks] = useState([]);
     // Store userinput for creating a new task
@@ -51,9 +52,13 @@ const TodoPage = () => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 const userId = user.uid;
-                setUid(userId); // Set UID when user is authenticated
+                setUserUid(userId); // Set UID when user is authenticated
+                const userEmail = user.email;
+                setUserEmail(userEmail);
+
             } else {
-                setUid(null); // Clear UID when the user is signed out
+                setUserUid(null); // Clear UID when the user is signed out
+                setUserEmail(null); 
             }
         });
 
@@ -66,10 +71,11 @@ const TodoPage = () => {
         // mostly for dev work
         const isOnline = navigator.onLine;
         if (!isOnline) {
-            setUid("dummy_uid")
+            setUserUid("dummy_uid")
+            setUserEmail("MatrixHunter101@ucsc.edu")
         }
-        handleReadTasks(uid);
-    }, [uid]);
+        handleReadTasks(userUid);
+    }, [userUid]);
 
 
 
@@ -97,9 +103,9 @@ const TodoPage = () => {
 
     const handleCreateTask = async () => {
         if (newTask.trim()) {
-            const createdTask = await createTask(uid, newTask, alarmTime);
+            const createdTask = await createTask(userUid, newTask, alarmTime);
             //setUncompletedTasks((prev) => [...prev, createdTask].sort((a, b) => a.task_id - b.task_id));
-            handleReadTasks(uid)
+            handleReadTasks(userUid)
             setNewTask('');
         }
     };
@@ -107,12 +113,12 @@ const TodoPage = () => {
     const handleDeleteUncompleted = async (index) => {
         const task = uncompletedTasks[index];
         await deleteTask(task.task_id);
-        handleReadTasks(uid)
+        handleReadTasks(userUid)
     };
     const handleDeleteCompleted = async (index) => {
         const task = completedTasks[index];
         await deleteTask(task.task_id);
-        handleReadTasks(uid)
+        handleReadTasks(userUid)
     };
 
     const handleToggleUncompleted = async (index) => {
@@ -120,27 +126,27 @@ const TodoPage = () => {
 
         const task = uncompletedTasks[index];
         await updateTask(task.task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed});
-        handleReadTasks(uid);
+        handleReadTasks(userUid);
     };
 
     const handleToggleCompleted = async (index) => {
         console.log(index)
         const task = completedTasks[index];
         await updateTask(task.task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed});
-        handleReadTasks(uid);
+        handleReadTasks(userUid);
     };
 
     const handleUpdateUncompleted = async (index) => {
         const task = uncompletedTasks[index];
         await updateTask(task.task_id, task.task_uid, { ...task, task_desc: editTextUncompleted});
-        handleReadUncompletedTasks(uid);
+        handleReadUncompletedTasks(userUid);
         setEditingIndexUncompleted(null);
         setEditTextUncompleted('');
     };
     const handleUpdateCompleted = async (index) => {
         const task = completedTasks[index];
         await updateTask(task.task_id, task.task_uid, { ...task, task_desc: editTextCompleted});
-        handleReadCompletedTasks(uid);
+        handleReadCompletedTasks(userUid);
         setEditingIndexCompleted(null);
         setEditTextCompleted('');
     };
@@ -148,13 +154,13 @@ const TodoPage = () => {
     const handleUpdateAlarmCompleted = async (index, alarm) => {
         const task = completedTasks[index];
         await updateTask(task.task_id, task.task_uid, { ...task, task_alarm_time: alarm});
-        handleReadCompletedTasks(uid);
+        handleReadCompletedTasks(userUid);
     };
 
     const handleUpdateAlarmUncompleted = async (index, alarm) => {
         const task = uncompletedTasks[index];
         await updateTask(task.task_id, task.task_uid,{ ...task, task_alarm_time: alarm});
-        handleReadUncompletedTasks(uid);
+        handleReadUncompletedTasks(userUid);
     };
 
     const handleContextMenuUncompleted = (action) => {
@@ -176,11 +182,22 @@ const TodoPage = () => {
     return (
 
         <div className="app-container" onClick={hideContextMenu}>
-            <div class="grow-[1]"></div>
+            <div class="flex flex-grow-[0.5] flex-col">
+                <div class="text-3xl text-white mb-6 mt-6">{userEmail}</div>
+
+
+
+
+
+
+
+            </div>
+
+
 
             <div className="flex-col bg-[#] grow-[3]">
 
-                <h1 class="header-title">To-Do List</h1>
+                <h1 class="text-white text-3xl text-left mb-6 mt-6">Min-Max List</h1>
                 {/*Component where user enters information */}
                 {/*3 Arguments/ props */}
 
@@ -199,7 +216,6 @@ const TodoPage = () => {
                             setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index, taskCompleted: false });
                         }}
                     />
-
                 </div>
 
                 <hr className="h-2 bg-[#3AA7FA] border-0 rounded md:my-5" />

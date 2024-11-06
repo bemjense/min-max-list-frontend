@@ -69,7 +69,7 @@ const TaskItem = ({
     };
 
     return (
-        <div className="flex-1 text-sm">
+        <div className="flex-1 text-[0.8rem]">
 
             <div
                 className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:bg-[#AFDD66]  transition-all duration-300'
