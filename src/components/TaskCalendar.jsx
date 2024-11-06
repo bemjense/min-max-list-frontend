@@ -20,6 +20,7 @@ const Calendar = ({ taskCounts }) => {
     <div className="calendar-heatmap-container">
       <CalendarHeatmap
 
+      //propertries for calendar 
       startDate={startDate}
       endDate={endDate}
       showWeekdayLabels= {true}
@@ -30,6 +31,7 @@ const Calendar = ({ taskCounts }) => {
       values={taskCounts}
 
 
+      //color customization
       classForValue={(value) => {
         if (!value) {
           return 'color-empty';
@@ -41,6 +43,7 @@ const Calendar = ({ taskCounts }) => {
       }}
 
 
+      //hover tooltips
       tooltipDataAttrs={(value) => {
         if (!value || !value.date) {
           return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };

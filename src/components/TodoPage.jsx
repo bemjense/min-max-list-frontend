@@ -193,8 +193,6 @@ const TodoPage = () => {
 
 
 
-
-
                 {/*Toggle button*/}
                 <div class="mt-5 mb-5 flex">
                     <div class="rounded-full bg-[#8CC63F] flex ">

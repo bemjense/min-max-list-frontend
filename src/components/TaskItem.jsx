@@ -20,7 +20,6 @@ const TaskItem = ({
     const dateTimePickerRef = useRef(null);
     useEffect(() => {
         let dp;
-
         // Initialize AirDatepicker only when editing the alarm
         if (isEditingAlarm && dateTimePickerRef.current) {
             const buttonRect = dateTimePickerRef.current.getBoundingClientRect();
@@ -54,19 +53,16 @@ const TaskItem = ({
         };
     }, [isEditingAlarm, index]);
 
-
-
-
-
     //const handleDoubleClick = () => {
     //    setEditingIndex(index);
     //    setEditTaskText(task.task_desc); // Set the current task description for editing
     //};
 
-    const getTaskDate = (task) => {
 
+    const helperGetTaskDate = (task) => {
         const timeStamp = task.task_created_time_stamp;
         const date = new Date(timeStamp.replace(' ', 'T')); 
+        // gets only day month year
         const dateString = date.toLocaleDateString().slice(0,10)
 
         return dateString
@@ -78,8 +74,11 @@ const TaskItem = ({
             <div
                 className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:bg-[#AFDD66]  transition-all duration-300'
                     : 'uncompleted hover:rounded-xl hover:bg-[#3AA7FA] transition-all duration-300'}`}
+
                 onContextMenu={(e) => onRightClick(e, index)}
             >
+
+                {/*if state of task is currently editing then return userinput prompt else return normal render */}
                 {isEditing ? (
                     <div class="text-black ">
                         <input class=""
@@ -92,8 +91,10 @@ const TaskItem = ({
                     </div>
                 ) : (
                     <div>
+
+                    {/*Normal Render description and text*/}
                         <div className="task-text ml-4">{task.task_desc} </div>
-                        <div className="absolute bottom-2 right-2 text-xs mr-6"> {getTaskDate(task)}</div>
+                        <div className="absolute bottom-2 right-2 text-xs mr-6"> {helperGetTaskDate(task)}</div>
                     </div>
                 )}
                 {task.task_alarm_time && (

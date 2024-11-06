@@ -43,7 +43,11 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
         };
     }, [newAlarmVisible, setAlarmTime]);
 
+
+    // render 
     return (<div className="input-container">
+
+            {/*Basic text input*/}
             <input
                 type="text"
                 value={newTask}
