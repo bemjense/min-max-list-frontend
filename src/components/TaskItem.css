@@ -41,13 +41,13 @@
 /* Pink shadow */
 .task-completed-overlay:has(.completed)::before {
     background-color: #e91e63; /* Pink color */
-    transform: translate(-4px, 6px); /* Bottom-left offset */
+    transform: translate(-8px, 5px); /* Bottom-left offset */
 }
 
 /* Yellow shadow */
 .task-completed-overlay:has(.completed)::after {
     background-color: #ffeb3b; /* Yellow color */
-    transform: translate(4px, -6px); /* Top-right offset */
+    transform: translate(5px, -8px); /* Top-right offset */
 }
 
 .hidden-datepicker {

@@ -201,7 +201,7 @@ const TodoPage = () => {
                 {/*3 Arguments/ props */}
 
                 {/*Component Tasklist*/}
-                <div className='text-[#ffffff] semi-bold'>
+                <div className='text-[#ffffff]'>
                     <TaskList className="task-list"
                         tasks={uncompletedTasks}
                         editingIndex={editingIndexUncompleted}
