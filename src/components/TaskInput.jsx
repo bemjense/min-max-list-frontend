@@ -43,16 +43,20 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
         };
     }, [newAlarmVisible, setAlarmTime]);
 
+
+    // render 
     return (<div className="input-container">
+
+            {/*Basic text input*/}
             <input
                 type="text"
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
                 onKeyPress={(e) => {
-                    if (e.key === 'Enter') 
+                    if (e.key === 'Enter') {
                         onAddTask();
                         setAlarmTime('');
-                    
+                    }
                 }}
                 placeholder="Enter a Task . . ."
             />
@@ -66,7 +70,7 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
             {newAlarmVisible && (
                 <input
                     ref={dateTimePickerRef}
-                    className="hidden-datepicker"
+                    className="hidden-datepicker-input"
                     placeholder="Set an alarm time"
                 />
             )}

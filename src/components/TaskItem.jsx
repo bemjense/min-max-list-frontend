@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './TaskItem.css'; 
+import { FaBell } from 'react-icons/fa';
+import AirDatepicker from 'air-datepicker';
+import 'air-datepicker/air-datepicker.css';
+import localeEn from 'air-datepicker/locale/en';
 
 const TaskItem = ({
     task,
@@ -10,36 +14,111 @@ const TaskItem = ({
     setEditingIndex,
     onEditTask,
     onRightClick,
-}) => (
-    <div class="task-completed-overlay">
+    onAlarmUpdate,
+}) => {
+    const [isEditingAlarm, setIsEditingAlarm] = useState(false); // Track alarm editing state
+    const dateTimePickerRef = useRef(null);
+    useEffect(() => {
+        let dp;
+        // Initialize AirDatepicker only when editing the alarm
+        if (isEditingAlarm && dateTimePickerRef.current) {
+            const buttonRect = dateTimePickerRef.current.getBoundingClientRect();
+            const hasSpaceAbove = buttonRect.top > 300; // Adjust based on how much space you need above
 
-        <div
-            className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:text-lg transition-all duration-300' : 'uncompleted hover:rounded-xl hover:text-lg transition-all duration-300'}`}
-            onContextMenu={(e) => onRightClick(e, index)}
-        >
-            {isEditing ? (
-                <div class = "text-black">
-                <input
-                    type="text"
-                    value={editTaskText}
-                    onChange={(e) => setEditTaskText(e.target.value)}
-                    onBlur={() => onEditTask(index)}
-                    onKeyPress={(e) => e.key === 'Enter' && onEditTask(index)}
-                />
-                </div>
-            ) : (
-                        <div>
-                        <div className="task-text">{task.task_desc} </div>
-                        <div className="absolute bottom-2 right-2 text-xs"> {task.task_created_time_stamp}</div>     
-                        </div>
-            )}
-            
-            {task.task_alarm_time && (
-                <span className="alarm-time"> ALARM: {new Date(task.task_alarm_time).toLocaleString()}</span>
-            )}
+            dp = new AirDatepicker(dateTimePickerRef.current, {
+                timepicker: true,
+                dateFormat: 'Y-m-d H:i',
+                locale: localeEn,
+                buttons: [
+                    'clear',
+                    {
+                        content: 'Set Alarm',
+                        onClick: (datepickerInstance) => {
+                            const selectedDate = datepickerInstance.selectedDates[0];
+                            if (selectedDate) {
+                                onAlarmUpdate(index, selectedDate); // Call function to update alarm
+                                setIsEditingAlarm(false); // Exit alarm editing mode
+                            }
+                        },
+                    },
+                ],
+                position: hasSpaceAbove ? 'top right' : 'bottom right',
+            });
+
+            dp.show(); // Show the datepicker when initialized
+        }
+
+        return () => {
+            if (dp) dp.destroy(); // Clean up
+        };
+    }, [isEditingAlarm, index]);
+
+    //const handleDoubleClick = () => {
+    //    setEditingIndex(index);
+    //    setEditTaskText(task.task_desc); // Set the current task description for editing
+    //};
+
+
+    const helperGetTaskDate = (task) => {
+        const timeStamp = task.task_created_time_stamp;
+        const date = new Date(timeStamp.replace(' ', 'T')); 
+        // gets only day month year
+        const dateString = date.toLocaleDateString().slice(0,10)
+
+        return dateString
+    };
+
+    return (
+        <div className="flex-1 text-sm">
+
+            <div
+                className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:bg-[#AFDD66]  transition-all duration-300'
+                    : 'uncompleted hover:rounded-xl hover:bg-[#3AA7FA] transition-all duration-300'}`}
+
+                onContextMenu={(e) => onRightClick(e, index)}
+            >
+
+                {/*if state of task is currently editing then return userinput prompt else return normal render */}
+                {isEditing ? (
+                    <div class="text-black ">
+                        <input class=""
+                            type="text"
+                            value={editTaskText}
+                            onChange={(e) => setEditTaskText(e.target.value)}
+                            onBlur={() => onEditTask(index)}
+                            onKeyPress={(e) => e.key === 'Enter' && onEditTask(index)}
+                        />
+                    </div>
+                ) : (
+                    <div>
+
+                    {/*Normal Render description and text*/}
+                        <div className="task-text ml-4">{task.task_desc} </div>
+                        <div className="absolute bottom-2 right-2 text-xs mr-6"> {helperGetTaskDate(task)}</div>
+                    </div>
+                )}
+                {task.task_alarm_time && (
+                    <span className="alarm-time ml-4"> ALARM: {new Date(task.task_alarm_time).toLocaleString()}</span>
+                )}
+                <button
+                    className="alarm-edit-button ml-4"
+                    onClick={() =>
+                        setIsEditingAlarm(!isEditingAlarm)
+                    }
+                    title="Set an alarm"
+                >
+                    <FaBell style={{ color: isEditingAlarm ? 'blue' : 'white' }} />
+                </button>
+                {isEditingAlarm && (
+                    <input
+                        ref={dateTimePickerRef}
+                        className="hidden-datepicker"
+                    />
+                )}
+
+            </div>
         </div>
 
-    </div>
-);
-
+    );
+};
 export default TaskItem;

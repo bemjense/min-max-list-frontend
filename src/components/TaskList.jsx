@@ -10,11 +10,13 @@ const TaskList = ({
     setEditingIndex,
     onEditTask,
     onRightClick,
+    onAlarmUpdate,
 }) => (
 
 
 
     <div className="task-list">
+        {/*map functions to each task for organizaiton in tasks*/}
         {tasks.map((task, index) => (
             <TaskItem
                 key={task.task_id}
@@ -26,6 +28,7 @@ const TaskList = ({
                 setEditingIndex={setEditingIndex}
                 onEditTask={onEditTask}
                 onRightClick={onRightClick}
+                onAlarmUpdate={onAlarmUpdate}
             />
         ))}
     </div>

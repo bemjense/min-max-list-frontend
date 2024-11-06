@@ -5,27 +5,41 @@
 
 
 
+.react-calendar-heatmap {
+  padding: 10px; /* Adds space around the entire heatmap */
+  overflow: visible; /* Ensures strokes are not clipped */
 
-.react-calendar-heatmap text {
-  font-size: 10px;
-  fill: #aaa;
 }
 
+
+.react-calendar-heatmap rect {
+  rx: 2px; /* Adjust as needed */
+  ry: 2px;
+  box-sizing: border-box;
+}
+
+.react-calendar-heatmap text {
+  font-size: 4.5px;
+}
+
+
 .react-calendar-heatmap .color-empty {
-  stroke: #ffffff; /* Outline color */
-  stroke-width: 1.5; /* Outline width */
-  fill: #292929;
+  fill: #333;
+  stroke-width: 1px;    
 }
 
 .react-calendar-heatmap .color-filled {
-  stroke: #ffffff; /* Outline color */
-  stroke-width: 1.5; /* Outline width */
+  fill: #d6e685;
 }
 
-.react-calendar-heatmap rect:hover {
-  stroke: #000000; /* Outline color */
-  stroke-width: 1.5; /* Outline width */
+.react-calendar-heatmap .color-scale-1 { 
+  fill: #d6e685; 
+
 }
+.react-calendar-heatmap .color-scale-2 { fill: #8cc665; }
+.react-calendar-heatmap .color-scale-3 { fill: #44a340; }
+.react-calendar-heatmap .color-scale-4 { fill: #1e6823; }
+
 
 .calendar-tooltip {
   position: absolute;
