@@ -182,21 +182,17 @@ const TodoPage = () => {
     return (
 
         <div className="app-container" onClick={hideContextMenu}>
-            <div class="flex flex-grow-[0.5] flex-col">
+
+            <div class="flex flex-grow-[0.2] flex-col">
                 <div class="text-3xl text-white mb-6 mt-6">{userEmail}</div>
-
-
-
-
-
-
-
+                <div class= "text-3xl text-white">List [1] go here</div>
+                <div class= "text-3xl text-white">List [2] go here</div>
+                <div class= "text-3xl text-white">List [3] go here</div>
             </div>
 
 
 
             <div className="flex-col bg-[#] grow-[3]">
-
                 <h1 class="text-white text-3xl text-left mb-6 mt-6">Min-Max List</h1>
                 {/*Component where user enters information */}
                 {/*3 Arguments/ props */}
@@ -289,23 +285,12 @@ const TodoPage = () => {
             </div>
 
 
-            <div class="grow-[1] flex">
+            <div class="grow-[0.2] flex flex-col items-center">
+                <div className = "text-white">Graph View</div>
                 <div class="task-calendar">
                     <Calendar taskCounts={getCompletedCountsByDate()} />
                 </div>
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         </div>
