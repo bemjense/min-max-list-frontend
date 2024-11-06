@@ -73,7 +73,7 @@ const TaskItem = ({
 
             <div
                 className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:bg-[#AFDD66]  transition-all duration-300'
-                    : 'uncompleted hover:rounded-xl hover:bg-[#3AA7FA] transition-all duration-300'}`}
+                    : 'uncompleted hover:rounded-xl hover:bg-[#0592E8] transition-all duration-300'}`}
 
                 onContextMenu={(e) => onRightClick(e, index)}
             >

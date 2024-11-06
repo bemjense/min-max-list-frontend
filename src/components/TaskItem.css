@@ -10,7 +10,7 @@
     position: relative;
     border-radius: 100px;
     padding: 4px;
-    background-color: #333333; /* Green background */
+    background-color: #3AA7FA; /* Green background */
     z-index: 2; /* Keeps the green rectangle on top */
 }
 
