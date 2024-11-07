@@ -12,6 +12,9 @@
     padding: 4px;
     background-color: #292929; /* Green background */
     z-index: 2; /* Keeps the green rectangle on top */
+    min-height: 50px;
+      display: flex; /* Enable flexbox */
+    align-items: center; /* Vertically center the content */
 }
 
 

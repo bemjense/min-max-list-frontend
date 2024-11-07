@@ -15,7 +15,9 @@ const TaskItem = ({
     setEditID,
     editText,
     setEditText,
-    handleUpdateDesc
+    handleUpdateDesc,
+    setEditAlarmID,
+    editAlarmID
 }) => {
     const [isEditingAlarm, setIsEditingAlarm] = useState(false); // Track alarm editing state
     const dateTimePickerRef = useRef(null);
@@ -30,7 +32,6 @@ const TaskItem = ({
             y: e.pageY,
             task_id: task.task_id, // Pass the task_id
             task_is_completed: task.task_is_completed, // Also pass other properties if needed
-            task_desc: task.desc, // Also pass other properties if needed
         });
     };
 
@@ -44,11 +45,21 @@ const TaskItem = ({
     }, [editID, task]);
 
 
+    useEffect(() => {
+        if (editAlarmID === task.task_id) {
+            setIsEditingAlarm(true);
+        } else {
+            setIsEditingAlarm(false); // Ensure editing state is reset when not matching
+        }
+    }, [editAlarmID, task]);
+
+
+
+
 
 
 
     useEffect(() => {
-
 
         let dp;
         // Initialize AirDatepicker only when editing the alarm
@@ -68,7 +79,7 @@ const TaskItem = ({
                             const selectedDate = datepickerInstance.selectedDates[0];
                             if (selectedDate) {
                                 onAlarmUpdate(task.task_id, selectedDate); // Call function to update alarm
-                                setIsEditingAlarm(false); // Exit alarm editing mode
+                                setEditAlarmID(null)
                             }
                         },
                     },
@@ -82,7 +93,7 @@ const TaskItem = ({
         return () => {
             if (dp) dp.destroy(); // Clean up
         };
-    }, [isEditingAlarm, index]);
+    }, [isEditingAlarm, editAlarmID]);
 
     //const handleDoubleClick = () => {
     //    setEditingIndex(index);
@@ -92,9 +103,9 @@ const TaskItem = ({
 
     const helperGetTaskDate = (task) => {
         const timeStamp = task.task_created_time_stamp;
-        const date = new Date(timeStamp.replace(' ', 'T')); 
+        const date = new Date(timeStamp.replace(' ', 'T'));
         // gets only day month year
-        const dateString = date.toLocaleDateString().slice(0,10)
+        const dateString = date.toLocaleDateString().slice(0, 10)
 
         return dateString
     };
@@ -121,7 +132,7 @@ const TaskItem = ({
     }, [editID, task]);
 
     return (
-        <div className="flex-1 text-[0.8rem] font-medium">
+        <div className="flex-1 text-[0.8rem] font-medium ">
 
             <div onContextMenu={handleRightClick}
                 className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:bg-[#AFDD66]  transition-all duration-300'
@@ -130,62 +141,58 @@ const TaskItem = ({
 
 
 
+                <div className='flex flex-col'>
 
 
 
 
-                {/*if state of task is currently editing then return userinput prompt else return normal render */}
-                {isEditing ? (
-                    <div class={`${task.task_is_completed ? 'text-[#292929] '
-                        : 'text-white'}`}>
-                        <input
-                            className="task-input bg-transparent p-2 outline-none focus:outline-none w-full ml-5 placeholder-gray-500"
-                            type="text"
-                            value={editText}
-                            onChange={handleUserInput}
-                            onKeyDown={handleKeyDown}
-                            autoFocus
-                            placeholder="Type here"
-                        />
-                    </div>
-                ) : (
-                    <div>
 
-                        {/*Normal Render description and text*/}
-                        <div className = "flex">
-                        <div className="task-text ml-4">{task.task_desc} </div>
 
-                        <button onClick={handleEditButton} className='ml-2'>
-                            <FaEdit style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
-                        </button>
+                    {/*if state of task is currently editing then return userinput prompt else return normal render */}
+                    {isEditing ? (
+                        <div class={`${task.task_is_completed ? 'text-[#292929] '
+                            : 'text-white'}`}>
+                            <input
+                                className="task-input bg-transparent p-2 outline-none focus:outline-none w-full ml-5 placeholder-gray-500"
+                                type="text"
+                                value={editText}
+                                onChange={handleUserInput}
+                                onKeyDown={handleKeyDown}
+                                autoFocus
+                                placeholder="Type here"
+                            />
                         </div>
-                        <div className="absolute bottom-2 right-2 text-xs mr-6"> {helperGetTaskDate(task)}</div>
+                    ) : (
+                        <div className="flex">
+                            {/*Normal Render description and text*/}
+                            <div className="task-text ml-4">{task.task_desc} </div>
+
+                            <button onClick={handleEditButton} className='ml-2'>
+                                <FaEdit style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
+                            </button>
+                            <div className="absolute bottom-2 right-2 text-xs mr-6"> {helperGetTaskDate(task)}</div>
+                        </div>
+                    )}
+
+
+
+                    <div className="flex">
+                        {task.task_alarm_time && (
+                            <div className="alarm-edit-button ml-4 mt-0.5">
+                                <FaBell style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
+                            </div>
+                        )}
+
+                        {isEditingAlarm && (
+                            <input
+                                ref={dateTimePickerRef}
+                                className="hidden-datepicker"
+                            />
+                        )}
+                        {task.task_alarm_time && (
+                            <span className="alarm-time ml-1"> {new Date(task.task_alarm_time).toLocaleString()}</span>
+                        )}
                     </div>
-                )}
-
-
-
-                <div className="flex">
-
-                    <button
-                        className="alarm-edit-button ml-4"
-                        onClick={() =>
-                            setIsEditingAlarm(!isEditingAlarm)
-                        }
-                        title="Set an alarm"
-                    >
-                        <FaBell style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
-                    </button>
-
-                    {isEditingAlarm && (
-                        <input
-                            ref={dateTimePickerRef}
-                            className="hidden-datepicker"
-                        />
-                    )}
-                    {task.task_alarm_time && (
-                        <span className="alarm-time ml-1"> {new Date(task.task_alarm_time).toLocaleString()}</span>
-                    )}
                 </div>
 
             </div>

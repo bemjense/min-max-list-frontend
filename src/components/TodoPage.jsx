@@ -19,13 +19,14 @@ const TodoPage = () => {
     const [editText, setEditText] = useState('');
     const [editID, setEditID] = useState(null);
 
+    const [editAlarmID, setEditAlarmID] = useState('');
 
 
 
     const [alarmTime, setAlarmTime] = useState('');
     const [newAlarmVisible, setNewAlarmVisible] = useState(false);
 
-    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false });
+    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
 
 
     const handleReadTasks = async (uid) => {
@@ -116,6 +117,12 @@ const TodoPage = () => {
 
     };
 
+    const handleUpdateAlarmInContextMenu = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        console.log(task.task_alarm_time)
+        setEditAlarmID(task.task_id)
+    };
+
     const handleUpdateDesc = async (task_id, task_desc) => {
         const task = await readTaskAtId(task_id)
         await updateTask(task.task_id, task.task_uid, { ...task, task_desc: task_desc});
@@ -132,9 +139,11 @@ const TodoPage = () => {
 
     const handleContextMenu = (action) => {
         const task_id = contextMenu.task_id;
+
         if (action === 'edit') handleUpdateInContextMenu(task_id);
         else if (action === 'delete') handleDelete(task_id);
         else if (action === 'toggle') handleToggleStatus(task_id);
+        else if (action === 'alarm') handleUpdateAlarmInContextMenu(task_id);
     };
 
 
@@ -170,6 +179,8 @@ const TodoPage = () => {
                     setEditID={setEditID}
                     editText={editText}
                     setEditText={setEditText}
+                    setEditAlarmID={setEditAlarmID}
+                    editAlarmID={editAlarmID}
                     handleUpdateDesc={handleUpdateDesc}
 
                 />

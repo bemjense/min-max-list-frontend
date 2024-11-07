@@ -22,6 +22,10 @@ const ContextMenu = ({ top, left, onAction, isCompleted }) => (
             <li onClick={() => onAction('delete')}>
                 <HiMiniTrash className = 'mr-2'/> Delete
             </li>
+
+            <li onClick={() => onAction('alarm')}>
+                <HiMiniTrash className = 'mr-2'/> Alarm
+            </li>
         </ul>
     </div>
 );

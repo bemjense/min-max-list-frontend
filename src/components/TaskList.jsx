@@ -13,7 +13,9 @@ const TaskList = ({
     setEditID,
     editText,
     setEditText,
-    handleUpdateDesc
+    handleUpdateDesc,
+    setEditAlarmID,
+    editAlarmID
 }) => {
     const [showCompleted, setShowCompleted] = useState(false);
 
@@ -38,6 +40,8 @@ const TaskList = ({
                     editText = {editText}
                     setEditText = {setEditText}
                     handleUpdateDesc = {handleUpdateDesc}
+                    setEditAlarmID={setEditAlarmID}
+                    editAlarmID={editAlarmID}
                 />
             ))}
         </div>
