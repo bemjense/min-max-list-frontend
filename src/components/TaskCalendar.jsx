@@ -29,6 +29,7 @@ const Calendar = ({ taskCounts }) => {
       gutterSize={3}
       showMonthLabels={true}
       values={taskCounts}
+      viewbox = "0 10 100 10"
 
 
       //color customization

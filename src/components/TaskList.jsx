@@ -48,7 +48,7 @@ const TaskList = ({
         <hr className="h-2 bg-[#3AA7FA] border-0 rounded md:my-5" />
 
             <div class="mt-5 mb-5 flex">
-                <div class="rounded-full bg-[#8CC63F] flex ">
+                <div class="rounded-full bg-[#8CC63F] flex  hover:bg-[#AFDD66]  transition-all duration-300 ">
                     <label class="inline-flex items-center cursor-pointer m-1">
                         <input type="checkbox" value="" class="sr-only peer"
                             checked={showCompleted}

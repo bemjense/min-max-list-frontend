@@ -11,6 +11,13 @@
 
 }
 
+.calendar-heatmap-container svg {
+    width: 100%;
+    height: auto;
+    transform: scale(2); /* Adjust scale as needed */
+    transform: translateY(-60px) translateX(60px) scale(1.2); /* Moves the heatmap 50px to the right */
+}
+
 
 .react-calendar-heatmap rect {
   rx: 2px; /* Adjust as needed */

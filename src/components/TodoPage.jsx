@@ -143,17 +143,17 @@ const TodoPage = () => {
 
         <div className="app-container" onClick={hideContextMenu}>
 
-            <div class="flex flex-grow-[0.2] flex-col">
+            <div class="flex flex-1 flex-col bg-[#161616] m-0">
                 <div class="text-3xl text-white mb-6 mt-6">{userEmail}</div>
-                <div class= "text-3xl text-white">List [1] go here</div>
-                <div class= "text-3xl text-white">List [2] go here</div>
-                <div class= "text-3xl text-white">List [3] go here</div>
+                <div class="text-3xl text-white">List [1] go here</div>
+                <div class="text-3xl text-white">List [2] go here</div>
+                <div class="text-3xl text-white">List [3] go here</div>
             </div>
 
 
 
-            <div className="flex-col bg-[#] grow-[3]">
-                <div className= "flex gap-2">
+            <div className="flex-col bg-[#] flex-[3_2_0%]">
+                <div className="flex gap-2">
                     <img src="/assets/star.svg" width="30" height="30" />
                     <h1 class="text-white text-2xl text-left mb-6 mt-6">Min-Max List</h1>
                 </div>
@@ -161,17 +161,17 @@ const TodoPage = () => {
                 {/*3 Arguments/ props */}
 
                 {/*Component Tasklist*/}
-                    <TaskList className="task-list"
-                        tasks={tasks}
-                        onAlarmUpdate={handleUpdateAlarm}
-                        setContextMenu={setContextMenu}
-                        editID = {editID}
-                        setEditID = {setEditID}
-                        editText = {editText}
-                        setEditText = {setEditText}
-                        handleUpdateDesc = {handleUpdateDesc}
+                <TaskList className="task-list"
+                    tasks={tasks}
+                    onAlarmUpdate={handleUpdateAlarm}
+                    setContextMenu={setContextMenu}
+                    editID={editID}
+                    setEditID={setEditID}
+                    editText={editText}
+                    setEditText={setEditText}
+                    handleUpdateDesc={handleUpdateDesc}
 
-                    />
+                />
 
 
 
@@ -187,7 +187,7 @@ const TodoPage = () => {
                         left={contextMenu.x}
                         onAction={(action) => {
                             handleContextMenu(action);
-                            
+
                         }}
                         isCompleted={contextMenu.task_is_completed}
                     />
@@ -206,9 +206,11 @@ const TodoPage = () => {
             </div>
 
 
-            <div class="grow-[0.2] flex flex-col items-center">
-                <div className = "text-white">Graph View</div>
-                <div class="task-calendar">
+            <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
+                <div className="text-white mt-6 text-3xl ">Graph View</div>
+                <div className="text-white mt-6 text-3xl ">Tasks Complete</div>
+                <div className="text-white mt-6 text-3xl ">Graph View</div>
+                <div class="task-calendar mb-0">
                     <Calendar taskCounts={getCompletedCountsByDate()} />
                 </div>
             </div>
