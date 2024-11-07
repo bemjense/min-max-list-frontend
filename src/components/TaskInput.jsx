@@ -45,39 +45,51 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
 
 
     // render 
-    return (<div className="input-container">
+    return (
+    
+    
+    
 
-            {/*Basic text input*/}
-            <input
-                type="text"
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                        onAddTask();
-                        setAlarmTime('');
-                    }
-                }}
-                placeholder="Enter a Task . . ."
-            />
-            <button 
-                className="alarm-toggle-button" 
-                onClick={() => setNewAlarmVisible(!newAlarmVisible)}
-                title="Set an alarm"
-            >
-            <FaBell style={{ color: newAlarmVisible ? 'blue' : 'gray' }} />
-            </button>
-            {newAlarmVisible && (
-                <input
-                    ref={dateTimePickerRef}
-                    className="hidden-datepicker-input"
-                    placeholder="Set an alarm time"
+        <div className="bottom-0 left-0 right-0 absolute">
+            <div className='flex m-5'>
+                <button
+                    className="alarm-toggle-button mr-3 ml-6 flex"
+                    onClick={() => setNewAlarmVisible(!newAlarmVisible)}
+                    title="Set an alarm"
+                >
+                    <FaBell style={{ color: newAlarmVisible ? 'blue' : 'white' }} />
+                </button>
+                {newAlarmVisible && (
+                    <input
+                        ref={dateTimePickerRef}
+                        className="hidden-datepicker-input"
+                        position= "bottom left"
+                    />
+                )}
+                {alarmTime &&
+                    <div className="alarm-time-display text-white flex">
+                        Alarm set for: {alarmTime.toLocaleString()}
+                    </div>}
+            </div>
+
+            <div className="border-[3px] border-white p-[16]  bg-[#161616] rounded-full mb-10 ">
+
+                {/*Basic text input*/}
+                <div className='flex'>
+                <input className="bg-transparent text-white p-2 outline-none focus:outline-none w-full ml-5"
+                    type="text"
+                    value={newTask}
+                    onChange={(e) => setNewTask(e.target.value)}
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                            onAddTask();
+                            setAlarmTime('');
+                        }
+                    }}
+                    placeholder="Enter a Task . . ."
                 />
-            )}
-            {alarmTime && 
-            <div className="alarm-time-display">
-                Alarm set for: {alarmTime.toLocaleString()}
-            </div>} 
+                </div>
+            </div>
         </div>
     );
 };

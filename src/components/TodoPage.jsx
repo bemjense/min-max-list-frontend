@@ -152,7 +152,7 @@ const TodoPage = () => {
 
 
 
-            <div className="flex-col bg-[#] flex-[3_2_0%]">
+            <div className="flex-col bg-[#] flex-[3_2_0%] relative">
                 <div className="flex gap-2">
                     <img src="/assets/star.svg" width="30" height="30" />
                     <h1 class="text-white text-2xl text-left mb-6 mt-6">Min-Max List</h1>
@@ -174,36 +174,29 @@ const TodoPage = () => {
                 />
 
 
-
-
-                {/*Toggle button*/}
-
-
-
-
-                {contextMenu.visible && (
-                    <ContextMenu
-                        top={contextMenu.y}
-                        left={contextMenu.x}
-                        onAction={(action) => {
-                            handleContextMenu(action);
-
-                        }}
-                        isCompleted={contextMenu.task_is_completed}
+                    <TaskInput
+                        newTask={newTask}
+                        setNewTask={setNewTask}
+                        onAddTask={handleCreateTask}
+                        alarmTime={alarmTime}
+                        setAlarmTime={setAlarmTime}
+                        newAlarmVisible={newAlarmVisible}
+                        setNewAlarmVisible={setNewAlarmVisible}
                     />
-                )}
-
-                <TaskInput
-                    newTask={newTask}
-                    setNewTask={setNewTask}
-                    onAddTask={handleCreateTask}
-                    alarmTime={alarmTime}
-                    setAlarmTime={setAlarmTime}
-                    newAlarmVisible={newAlarmVisible}
-                    setNewAlarmVisible={setNewAlarmVisible}
-                />
 
             </div>
+
+            {contextMenu.visible && (
+                <ContextMenu
+                    top={contextMenu.y}
+                    left={contextMenu.x}
+                    onAction={(action) => {
+                        handleContextMenu(action);
+
+                    }}
+                    isCompleted={contextMenu.task_is_completed}
+                />
+            )}
 
 
             <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
