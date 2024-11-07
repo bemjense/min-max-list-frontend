@@ -134,13 +134,10 @@ const TaskItem = ({
                 ) : (
                     <div>
 
-                    {/*Normal Render description and text*/}
+                        {/*Normal Render description and text*/}
                         <div className="task-text ml-4">{task.task_desc} </div>
                         <div className="absolute bottom-2 right-2 text-xs mr-6"> {helperGetTaskDate(task)}</div>
                     </div>
-                )}
-                {task.task_alarm_time && (
-                    <span className="alarm-time ml-4"> ALARM: {new Date(task.task_alarm_time).toLocaleString()}</span>
                 )}
                 <button
                     className="alarm-edit-button ml-4"
@@ -156,6 +153,9 @@ const TaskItem = ({
                         ref={dateTimePickerRef}
                         className="hidden-datepicker"
                     />
+                )}
+                {task.task_alarm_time && (
+                    <span className="alarm-time ml-1"> {new Date(task.task_alarm_time).toLocaleString()}</span>
                 )}
 
             </div>
