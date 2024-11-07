@@ -122,13 +122,15 @@ const TaskItem = ({
 
                 {/*if state of task is currently editing then return userinput prompt else return normal render */}
                 {isEditing ? (
-                    <div class="text-black ">
-                        <input class=""
-                            className="task-input"
+                    <div class={`${task.task_is_completed ? 'text-black '
+                    : 'text-white'}`}>
+                        <input 
+                            className="task-input bg-transparent p-2 outline-none focus:outline-none w-full ml-5"
                             type="text"
                             value={editText}
                             onChange={handleUserInput}
                             onKeyDown={handleKeyDown}
+                            autoFocus
                         />
                     </div>
                 ) : (
