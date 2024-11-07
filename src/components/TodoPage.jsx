@@ -15,11 +15,7 @@ const TodoPage = () => {
     const [userUid, setUserUid] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
     const [tasks, setTasks] = useState([]);
-    const [completedTasks, setCompletedTasks] = useState([]);
-    // Store userinput for creating a new task
     const [newTask, setNewTask] = useState('');
-
-
     const [editText, setEditText] = useState('');
     const [editID, setEditID] = useState(null);
 
@@ -72,8 +68,6 @@ const TodoPage = () => {
     const getCompletedCountsByDate = () => {
         const taskCounts = {};
 
-
-
         tasks.forEach((task) => {
             if (task.task_is_completed) {
                 const timeStamp = task.task_created_time_stamp;
@@ -118,8 +112,6 @@ const TodoPage = () => {
     const handleUpdateInContextMenu = async (task_id) => {
         const task = await readTaskAtId(task_id)
         setEditID(task.task_id)
-        setEditText(task.task_desc)
-        console.log(editID)
 
     };
 
@@ -175,8 +167,8 @@ const TodoPage = () => {
                         setContextMenu={setContextMenu}
                         editID = {editID}
                         setEditID = {setEditID}
-                        inputValue = {editText}
-                        setInputValue = {setEditText}
+                        editText = {editText}
+                        setEditText = {setEditText}
                         handleUpdateDesc = {handleUpdateDesc}
 
                     />

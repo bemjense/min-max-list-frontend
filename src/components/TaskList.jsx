@@ -11,8 +11,8 @@ const TaskList = ({
     setContextMenu,
     editID,
     setEditID,
-    inputValue,
-    setInputValue,
+    editText,
+    setEditText,
     handleUpdateDesc
 }) => {
     const [showCompleted, setShowCompleted] = useState(false);
@@ -35,8 +35,8 @@ const TaskList = ({
                     setContextMenu= {setContextMenu}
                     editID = {editID}
                     setEditID = {setEditID}
-                    inputValue = {inputValue}
-                    setInputValue = {setInputValue}
+                    editText = {editText}
+                    setEditText = {setEditText}
                     handleUpdateDesc = {handleUpdateDesc}
                 />
             ))}
@@ -75,8 +75,8 @@ const TaskList = ({
                     setContextMenu= {setContextMenu}
                     editID = {editID}
                     setEditID = {setEditID}
-                    inputValue = {inputValue}
-                    setInputValue = {setInputValue}
+                    editText = {editText}
+                    setEditText = {setEditText}
                     handleUpdateDesc = {handleUpdateDesc}
                 />
             ))}

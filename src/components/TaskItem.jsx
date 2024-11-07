@@ -13,8 +13,8 @@ const TaskItem = ({
     setContextMenu,
     editID,
     setEditID,
-    inputValue,
-    setInputValue,
+    editText,
+    setEditText,
     handleUpdateDesc
 }) => {
     const [isEditingAlarm, setIsEditingAlarm] = useState(false); // Track alarm editing state
@@ -98,14 +98,14 @@ const TaskItem = ({
 
     const handleUserInput = (e) => {
         const newDesc = e.target.value;
-        setInputValue(newDesc);  // Update local state first
+        setEditText(newDesc);  // Update local state first
     };
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            handleUpdateDesc(task.task_id, inputValue);  // Update task when "Enter" is pressed
+            handleUpdateDesc(task.task_id, editText);  // Update task when "Enter" is pressed
             setEditID(null)
-            setInputValue('')
+            setEditText('')
         }
     };
 
@@ -126,7 +126,7 @@ const TaskItem = ({
                         <input class=""
                             className="task-input"
                             type="text"
-                            value={inputValue}
+                            value={editText}
                             onChange={handleUserInput}
                             onKeyDown={handleKeyDown}
                         />
