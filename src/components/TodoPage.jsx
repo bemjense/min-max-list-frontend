@@ -112,6 +112,7 @@ const TodoPage = () => {
     const handleUpdateInContextMenu = async (task_id) => {
         const task = await readTaskAtId(task_id)
         setEditID(task.task_id)
+        setEditText(task.task_desc)
 
     };
 

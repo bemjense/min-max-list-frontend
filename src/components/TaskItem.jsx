@@ -30,6 +30,7 @@ const TaskItem = ({
             y: e.pageY,
             task_id: task.task_id, // Pass the task_id
             task_is_completed: task.task_is_completed, // Also pass other properties if needed
+            task_desc: task.desc, // Also pass other properties if needed
         });
     };
 
