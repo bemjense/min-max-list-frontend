@@ -174,6 +174,7 @@ const TodoPage = () => {
                 />
 
 
+            <div className="absolute bottom-0 left-0 right-0">
                     <TaskInput
                         newTask={newTask}
                         setNewTask={setNewTask}
@@ -183,6 +184,7 @@ const TodoPage = () => {
                         newAlarmVisible={newAlarmVisible}
                         setNewAlarmVisible={setNewAlarmVisible}
                     />
+                </div>
 
             </div>
 

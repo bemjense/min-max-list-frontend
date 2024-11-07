@@ -135,7 +135,7 @@ const TaskItem = ({
 
                 {/*if state of task is currently editing then return userinput prompt else return normal render */}
                 {isEditing ? (
-                    <div class={`${task.task_is_completed ? 'text-black '
+                    <div class={`${task.task_is_completed ? 'text-[#292929] '
                         : 'text-white'}`}>
                         <input
                             className="task-input bg-transparent p-2 outline-none focus:outline-none w-full ml-5"
@@ -154,7 +154,7 @@ const TaskItem = ({
                         <div className="task-text ml-4">{task.task_desc} </div>
 
                         <button onClick={handleEditButton} className='ml-2'>
-                            <FaEdit style={{ color: task.task_is_completed ? 'black' : 'white' }} />
+                            <FaEdit style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
                         </button>
                         </div>
                         <div className="absolute bottom-2 right-2 text-xs mr-6"> {helperGetTaskDate(task)}</div>
@@ -172,7 +172,7 @@ const TaskItem = ({
                         }
                         title="Set an alarm"
                     >
-                        <FaBell style={{ color: task.task_is_completed ? 'black' : 'white' }} />
+                        <FaBell style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
                     </button>
 
                     {isEditingAlarm && (
