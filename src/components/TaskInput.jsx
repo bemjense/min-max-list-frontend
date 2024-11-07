@@ -86,7 +86,7 @@ const TaskInput = ({ newTask, setNewTask, onAddTask, alarmTime, setAlarmTime, ne
                             setAlarmTime('');
                         }
                     }}
-                    placeholder="Enter a Task . . ."
+                    placeholder="Enter a Task"
                 />
                 </div>
             </div>

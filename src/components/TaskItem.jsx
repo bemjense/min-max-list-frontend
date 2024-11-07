@@ -139,12 +139,13 @@ const TaskItem = ({
                     <div class={`${task.task_is_completed ? 'text-[#292929] '
                         : 'text-white'}`}>
                         <input
-                            className="task-input bg-transparent p-2 outline-none focus:outline-none w-full ml-5"
+                            className="task-input bg-transparent p-2 outline-none focus:outline-none w-full ml-5 placeholder-gray-500"
                             type="text"
                             value={editText}
                             onChange={handleUserInput}
                             onKeyDown={handleKeyDown}
                             autoFocus
+                            placeholder="Type here"
                         />
                     </div>
                 ) : (
