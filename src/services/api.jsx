@@ -10,6 +10,15 @@ export const readTasks = async (uid) => {
         return [];
     }
 };
+export const readTaskAtId = async (task_id) => {
+    try {
+        const response = await axios.get(`http://localhost:8000/tasks/${task_id}`);
+        return response.data
+    } catch (error) {
+        console.error('Error fetching tasks:', error);
+        return [];
+    }
+};
 
 export const readUncompletedTasks = async (uid) => {
     try {

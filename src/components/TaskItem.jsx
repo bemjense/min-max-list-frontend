@@ -4,21 +4,49 @@ import { FaBell } from 'react-icons/fa';
 import AirDatepicker from 'air-datepicker';
 import 'air-datepicker/air-datepicker.css';
 import localeEn from 'air-datepicker/locale/en';
+import { GiConsoleController } from 'react-icons/gi';
 
 const TaskItem = ({
     task,
     index,
-    isEditing,
-    editTaskText,
-    setEditTaskText,
-    setEditingIndex,
-    onEditTask,
-    onRightClick,
     onAlarmUpdate,
+    setContextMenu,
+    editID,
+    setEditID,
+    inputValue,
+    setInputValue,
+    handleUpdateDesc
 }) => {
     const [isEditingAlarm, setIsEditingAlarm] = useState(false); // Track alarm editing state
     const dateTimePickerRef = useRef(null);
+    const [isEditing, setIsEditing] =useState(false);
+
+    const handleRightClick = (e) => {
+        e.preventDefault();
+        // Use the task object to set the context menu
+        setContextMenu({
+            visible: true,
+            x: e.pageX,
+            y: e.pageY,
+            task_id: task.task_id, // Pass the task_id
+            task_is_completed: task.task_is_completed, // Also pass other properties if needed
+        });
+    };
+
+
     useEffect(() => {
+        if (editID === task.task_id) {
+            setIsEditing(true);
+        } else {
+            setIsEditing(false); // Ensure editing state is reset when not matching
+        }
+    }, [editID, task]);
+
+
+
+    useEffect(() => {
+
+
         let dp;
         // Initialize AirDatepicker only when editing the alarm
         if (isEditingAlarm && dateTimePickerRef.current) {
@@ -36,7 +64,7 @@ const TaskItem = ({
                         onClick: (datepickerInstance) => {
                             const selectedDate = datepickerInstance.selectedDates[0];
                             if (selectedDate) {
-                                onAlarmUpdate(index, selectedDate); // Call function to update alarm
+                                onAlarmUpdate(task.task_id, selectedDate); // Call function to update alarm
                                 setIsEditingAlarm(false); // Exit alarm editing mode
                             }
                         },
@@ -68,25 +96,39 @@ const TaskItem = ({
         return dateString
     };
 
+    const handleUserInput = (e) => {
+        const newDesc = e.target.value;
+        setInputValue(newDesc);  // Update local state first
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            handleUpdateDesc(task.task_id, inputValue);  // Update task when "Enter" is pressed
+            setEditID(null)
+            setInputValue('')
+        }
+    };
+
     return (
         <div className="flex-1 text-[0.8rem] font-semibold">
 
-            <div
+            <div onContextMenu={handleRightClick}
                 className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:bg-[#AFDD66]  transition-all duration-300'
                     : 'uncompleted hover:rounded-xl hover:bg-[#0592E8] transition-all duration-300'}`}
-
-                onContextMenu={(e) => onRightClick(e, index)}
             >
+
+
+
 
                 {/*if state of task is currently editing then return userinput prompt else return normal render */}
                 {isEditing ? (
                     <div class="text-black ">
                         <input class=""
+                            className="task-input"
                             type="text"
-                            value={editTaskText}
-                            onChange={(e) => setEditTaskText(e.target.value)}
-                            onBlur={() => onEditTask(index)}
-                            onKeyPress={(e) => e.key === 'Enter' && onEditTask(index)}
+                            value={inputValue}
+                            onChange={handleUserInput}
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
                 ) : (
