@@ -82,6 +82,8 @@ const TaskGrouping = ({
                     editText = {editText}
                     setEditText = {setEditText}
                     handleUpdateDesc = {handleUpdateDesc}
+                    setEditAlarmID={setEditAlarmID}
+                    editAlarmID={editAlarmID}
                 />
             ))}
         </div>
