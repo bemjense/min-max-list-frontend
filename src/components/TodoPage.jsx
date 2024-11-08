@@ -12,6 +12,7 @@ const auth = getAuth();
 
 
 const TodoPage = () => {
+    const [currentList, setCurrentList] = useState('primaryTest');
     const [userUid, setUserUid] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
     const [tasks, setTasks] = useState([]);
@@ -29,8 +30,11 @@ const TodoPage = () => {
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
 
 
+
+
+
     const handleReadTasks = async (uid) => {
-        const loadedTasks = await readTasks(uid);
+        const loadedTasks = await readTasks(uid, currentList);
         setTasks(loadedTasks);
     };
 
@@ -92,7 +96,7 @@ const TodoPage = () => {
 
     const handleCreateTask = async () => {
         if (newTask.trim()) {
-            const createdTask = await createTask(userUid, newTask, alarmTime);
+            await createTask(userUid, currentList,newTask, alarmTime);
             handleReadTasks(userUid)
             setNewTask('');
         }
@@ -127,7 +131,6 @@ const TodoPage = () => {
         const task = await readTaskAtId(task_id)
         await updateTask(task.task_id, task.task_uid, { ...task, task_desc: task_desc});
         handleReadTasks(userUid);
-
     };
 
     const handleUpdateAlarm = async (task_id, alarm) => {
