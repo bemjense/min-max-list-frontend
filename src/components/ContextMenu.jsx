@@ -2,8 +2,6 @@ import React from 'react';
 import './ContextMenu.css'; // Import the CSS file
 
 import { FaBell} from 'react-icons/fa';
-import { FaRegTrashCan } from "react-icons/fa6";
-import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { FaEdit} from 'react-icons/fa';
 import { HiMiniTrash } from "react-icons/hi2";
 import { RiMarkPenFill } from "react-icons/ri";
@@ -11,7 +9,6 @@ import { RiMarkPenFill } from "react-icons/ri";
 const ContextMenu = ({ top, left, onAction, isCompleted }) => (
     <div className="context-menu fade-in" style={{ position: 'absolute', top, left }}>
         <ul className="flex-row flex">
-
 
             <div className='flex-col flex'>
                 <li onClick={() => onAction('edit')}>️

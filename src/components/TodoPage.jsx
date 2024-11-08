@@ -4,6 +4,7 @@ import TaskGrouping from './TaskGrouping';
 import ContextMenu from './ContextMenu';
 import { readTaskAtId, readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID} from '../services/api';
 import Calendar from './TaskCalendar'
+import ListInterface from './ListInterface'
 import './TodoPage.css';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -163,11 +164,12 @@ const TodoPage = () => {
 
         <div className="app-container" onClick={hideContextMenu}>
 
-            <div class="flex flex-1 flex-col bg-[#161616] m-0">
+            <div class="flex flex-1 flex-col bg-[#161616] m-0 justify-between items-center">
                 <div class="text-3xl text-white mb-6 mt-6">{userEmail}</div>
-                <div class="text-3xl text-white">List [1] go here</div>
-                <div class="text-3xl text-white">List [2] go here</div>
-                <div class="text-3xl text-white">List [3] go here</div>
+                <ListInterface 
+                    currentList={currentList}
+                >
+                </ListInterface>
             </div>
 
 
@@ -175,7 +177,7 @@ const TodoPage = () => {
             <div className="flex-col bg-[#] flex-[3_2_0%] relative">
                 <div className="flex gap-2">
                     <img src="/assets/star.svg" width="30" height="30" />
-                    <h1 class="text-white text-2xl text-left mb-6 mt-6">Min-Max List</h1>
+                    <h1 class="text-white text-2xl text-left mb-6 mt-6">{currentList}</h1>
                 </div>
                 {/*Component where user enters information */}
                 {/*3 Arguments/ props */}
