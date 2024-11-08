@@ -1,3 +1,2 @@
-node_modules
-Backend/MattTests.py
-Backend/task_database.py
+node_modules/
+.venv
