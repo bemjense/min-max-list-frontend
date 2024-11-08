@@ -1,10 +1,10 @@
 import React, { useState } from 'react';  // Add useState here
 import TaskItem from './TaskItem';
-import './TaskList.css';
+import './TaskGrouping.css';
 
 
 
-const TaskList = ({
+const TaskGrouping = ({
     tasks,
     editTaskText,
     onAlarmUpdate,
@@ -90,4 +90,4 @@ const TaskList = ({
     );
 }
 
-export default TaskList;
+export default TaskGrouping;

@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import TaskInput from './TaskInput';
-import TaskList from './TaskList';
+import TaskGrouping from './TaskGrouping';
 import ContextMenu from './ContextMenu';
 import { readTaskAtId, readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID} from '../services/api';
 import Calendar from './TaskCalendar'
@@ -171,7 +171,7 @@ const TodoPage = () => {
                 {/*3 Arguments/ props */}
 
                 {/*Component Tasklist*/}
-                <TaskList className="task-list"
+                <TaskGrouping className="task-list"
                     tasks={tasks}
                     onAlarmUpdate={handleUpdateAlarm}
                     setContextMenu={setContextMenu}
