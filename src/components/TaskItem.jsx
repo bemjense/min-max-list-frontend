@@ -4,11 +4,9 @@ import { FaBell, FaEdit} from 'react-icons/fa';
 import AirDatepicker from 'air-datepicker';
 import 'air-datepicker/air-datepicker.css';
 import localeEn from 'air-datepicker/locale/en';
-import { GiConsoleController } from 'react-icons/gi';
 
 const TaskItem = ({
     task,
-    index,
     onAlarmUpdate,
     setContextMenu,
     editID,
