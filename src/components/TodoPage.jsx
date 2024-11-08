@@ -12,29 +12,35 @@ const auth = getAuth();
 
 
 const TodoPage = () => {
+    // multipleToDoLists State
     const [currentList, setCurrentList] = useState('primaryTest');
+
+    //Authetnication statesj
     const [userUid, setUserUid] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
+    //tasks display
     const [tasks, setTasks] = useState([]);
+    //task input
     const [newTask, setNewTask] = useState('');
+    //task edit store input value temporarily
     const [editText, setEditText] = useState('');
     const [editID, setEditID] = useState(null);
-
+    //task edit alarm store input value temporarily
     const [editAlarmID, setEditAlarmID] = useState('');
-
-
-
     const [alarmTime, setAlarmTime] = useState('');
     const [newAlarmVisible, setNewAlarmVisible] = useState(false);
-
+    //context menu functionality
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
 
 
-
-
-
+    // change logic later to take arugment for null
     const handleReadTasks = async (uid) => {
-        const loadedTasks = await readTasks(uid, currentList);
+        if (currentList == "main_list") {
+            var loadedTasks = await readTasks(uid);
+        } else {
+            var loadedTasks = await readTasks(uid, currentList);
+        }
+
         setTasks(loadedTasks);
     };
 
