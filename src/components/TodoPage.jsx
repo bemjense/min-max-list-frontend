@@ -65,7 +65,7 @@ const TodoPage = () => {
     }, []);
 
     useEffect(() => {
-        // mostly for dev work
+        // mostly for dev work offlien
         const isOnline = navigator.onLine;
         if (!isOnline) {
             setUserUid("dummy_uid")
@@ -76,6 +76,7 @@ const TodoPage = () => {
 
 
 
+    // used by graph fucntion. Modify this if you want to hcange how coloring works
     const getCompletedCountsByDate = () => {
         const taskCounts = {};
 
