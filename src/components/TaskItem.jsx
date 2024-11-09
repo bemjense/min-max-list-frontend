@@ -134,14 +134,24 @@ const TaskItem = ({
         setIsEditing(true)
     }, [editID, task]);
 
+    const handleEditBlur = () => {
+        setEditID(null)
+        setEditText(null)
+    };
+
     return (
         <div className="flex-1 text-[0.8rem] font-medium w-full">
 
             {/*then return userinput prompt else return normal render */}
-            <div onContextMenu={handleRightClick}
-                className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:bg-[#AFDD66]  transition-all duration-300'
-                    : 'uncompleted hover:rounded-xl hover:bg-[#0592E8] transition-all duration-300'} w-full`}
+            <div
+                onContextMenu={handleRightClick}
+                className={`text-left task w-full transition-all duration-300
+                ${task.task_is_completed
+                        ? `completed ${isEditing ? 'bg-[#AFDD66]' : 'hover:bg-[#AFDD66]'}`
+                        : `uncompleted ${isEditing ? 'bg-[#0592E8]' : 'hover:bg-[#0592E8]'}`
+                }`}
             >
+
 
 
                 <div className='flex flex-col w-full'>
@@ -156,6 +166,7 @@ const TaskItem = ({
                                 value={editText}
                                 onChange={handleUserInput}
                                 onKeyDown={handleKeyDown}
+                                onBlur={handleEditBlur}
                                 autoFocus
                                 placeholder="Type here"
                             />
