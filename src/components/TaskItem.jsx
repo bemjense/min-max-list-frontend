@@ -130,28 +130,23 @@ const TaskItem = ({
     }, [editID, task]);
 
     return (
-        <div className="flex-1 text-[0.8rem] font-medium ">
+        <div className="flex-1 text-[0.8rem] font-medium w-full">
 
+            {/*then return userinput prompt else return normal render */}
             <div onContextMenu={handleRightClick}
                 className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:bg-[#AFDD66]  transition-all duration-300'
-                    : 'uncompleted hover:rounded-xl hover:bg-[#0592E8] transition-all duration-300'}`}
+                    : 'uncompleted hover:rounded-xl hover:bg-[#0592E8] transition-all duration-300'} w-full`}
             >
 
 
-
-                <div className='flex flex-col'>
-
-
-
-
-
+                <div className='flex flex-col w-full'>
 
                     {/*if state of task is currently editing then return userinput prompt else return normal render */}
                     {isEditing ? (
                         <div class={`${task.task_is_completed ? 'text-[#292929] '
                             : 'text-white'}`}>
                             <input
-                                className="task-input bg-transparent p-2 outline-none focus:outline-none w-full ml-5 placeholder-gray-500"
+                                className="task-input bg-transparent  outline-none focus:outline-none w-full ml-5 placeholder-gray-500 pr-10"
                                 type="text"
                                 value={editText}
                                 onChange={handleUserInput}
