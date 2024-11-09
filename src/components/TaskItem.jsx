@@ -158,7 +158,7 @@ const TaskItem = ({
 
                     {/*if state of task is currently editing then return userinput prompt else return normal render */}
                     {isEditing ? (
-                        <div class={`${task.task_is_completed ? 'text-[#292929] bg-[#0592E8]'
+                        <div class={`${task.task_is_completed ? 'text-[#292929] '
                             : 'text-white'}`}>
                             <input
                                 className="task-input bg-transparent  outline-none focus:outline-none w-full ml-5 placeholder-gray-500 pr-10"
