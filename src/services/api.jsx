@@ -1,6 +1,11 @@
 import axios from 'axios';
 
 
+
+
+const baseurl = "http://localhost:8000"
+
+
 export const readTasks = async (uid, taskList = null) => {
     try {
         // Create an object for query parameters
@@ -12,7 +17,7 @@ export const readTasks = async (uid, taskList = null) => {
         }
 
         // Send the GET request with the query parameters
-        const response = await axios.get(`http://localhost:8000/tasks/`, { params: task_params });
+        const response = await axios.get(baseurl + `/tasks/`, { params: task_params });
 
         // Sort the tasks by task_id
         return response.data.sort((a, b) => a.task_id - b.task_id);
@@ -23,7 +28,7 @@ export const readTasks = async (uid, taskList = null) => {
 };
 export const readTaskAtId = async (task_id) => {
     try {
-        const response = await axios.get(`http://localhost:8000/tasks/${task_id}`);
+        const response = await axios.get(baseurl + `/tasks/${task_id}`);
         return response.data
     } catch (error) {
         console.error('Error fetching tasks:', error);
@@ -42,7 +47,7 @@ export const readUncompletedTasks = async (uid, taskList = null) => {
         }
 
         // Send the GET request with the query parameters
-        const response = await axios.get('http://localhost:8000/tasks/', { params: task_params });
+        const response = await axios.get(baseurl + '/tasks/', { params: task_params });
 
         // Sort the tasks by task_id
         return response.data.sort((a, b) => a.task_id - b.task_id);
@@ -63,7 +68,7 @@ export const readCompletedTasks = async (uid, taskList = null) => {
         }
 
         // Send the GET request with the query parameters
-        const response = await axios.get('http://localhost:8000/tasks/', { params: task_params });
+        const response = await axios.get(baseurl + '/tasks/', { params: task_params });
 
         // Sort the tasks by task_id
         return response.data.sort((a, b) => a.task_id - b.task_id);
@@ -76,7 +81,7 @@ export const readCompletedTasks = async (uid, taskList = null) => {
 
 export const createTask = async (task_uid, task_list, task_desc,task_alarm_time) => {
     try {
-        const response = await axios.post('http://localhost:8000/tasks/', {
+        const response = await axios.post(baseurl + '/tasks/', {
             task_uid: task_uid,
             task_list: task_list,
             task_desc: task_desc,
@@ -91,7 +96,7 @@ export const createTask = async (task_uid, task_list, task_desc,task_alarm_time)
 
 export const deleteTask = async (task_id) => {
     try {
-        await axios.delete(`http://localhost:8000/tasks/${task_id}`);
+        await axios.delete(baseurl + `/tasks/${task_id}`);
     } catch (error) {
         console.error('Error deleting task:', error);
     }
@@ -99,7 +104,7 @@ export const deleteTask = async (task_id) => {
 
 export const updateTask = async (task_id, task_uid, task_data) => {
     try {
-        await axios.put(`http://localhost:8000/tasks/${task_id}`, task_data, task_uid);
+        await axios.put(baseurl + `/tasks/${task_id}`, task_data, task_uid);
     } catch (error) {
         console.error('Error updating task:', error);
     }
