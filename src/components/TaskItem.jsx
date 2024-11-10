@@ -54,21 +54,22 @@ const TaskItem = ({
 
 
 
-    useEffect(() => {
-        const checkAlarm = () => {
-          const now = new Date();
-          if (!task.task_alarm_time) return; // No alarm set
+
+    //useEffect(() => {
+    //    const checkAlarm = () => {
+    //      const now = new Date();
+    //      if (!task.task_alarm_time) return; // No alarm set
     
-          const alarmTime = new Date(task.task_alarm_time);
-          if (now >= alarmTime) {
-            alert(`Alarm notification! Time: ${alarmTime.toLocaleTimeString()}`);
-            handleUpdateAlarm(task.task_id, null)
-          }
-        };
+    //      const alarmTime = new Date(task.task_alarm_time);
+    //      if (now >= alarmTime) {
+    //        alert(`Alarm notification! Time: ${alarmTime.toLocaleTimeString()}`);
+    //        handleUpdateAlarm(task.task_id, null)
+    //      }
+    //    };
     
-        const intervalId = setInterval(checkAlarm, 60000); // Check every minute
-        return () => clearInterval(intervalId); // Cleanup on unmount
-      }, [task]); // Re-run when task or alarm changes
+    //    const intervalId = setInterval(checkAlarm, 60000); // Check every minute
+    //    return () => clearInterval(intervalId); // Cleanup on unmount
+    //  }, [task]); // Re-run when task or alarm changes
 
 
 
