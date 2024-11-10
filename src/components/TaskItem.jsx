@@ -223,7 +223,12 @@ const TaskItem = ({
                             />
                         )}
                         {task.task_alarm_time && (
-                            <span className="text-gray-400 alarm-time ml-1 text-[0.6rem]"> {new Date(task.task_alarm_time).toLocaleString()}</span>
+                            <span
+                                className={`${task.task_is_completed ? "text-[#292929]" : "text-[#9CA3AF]"
+                                    } alarm-time ml-1 text-[0.6rem]`}
+                            >
+                                {new Date(task.task_alarm_time).toLocaleString()}
+                            </span>
                         )}
                     </div>
                 </div>
