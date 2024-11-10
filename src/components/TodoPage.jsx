@@ -185,7 +185,7 @@ const TodoPage = () => {
                 {/*Component Tasklist*/}
                 <TaskGrouping className="task-list"
                     tasks={tasks}
-                    onAlarmUpdate={handleUpdateAlarm}
+                    handleUpdateAlarm={handleUpdateAlarm}
                     setContextMenu={setContextMenu}
                     editID={editID}
                     setEditID={setEditID}

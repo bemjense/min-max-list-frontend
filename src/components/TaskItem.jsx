@@ -7,7 +7,7 @@ import localeEn from 'air-datepicker/locale/en';
 
 const TaskItem = ({
     task,
-    onAlarmUpdate,
+    handleUpdateAlarm,
     setContextMenu,
     editID,
     setEditID,
@@ -54,6 +54,30 @@ const TaskItem = ({
 
 
 
+    useEffect(() => {
+        const checkAlarm = () => {
+          const now = new Date();
+          if (!task.task_alarm_time) return; // No alarm set
+    
+          const alarmTime = new Date(task.task_alarm_time);
+          if (now >= alarmTime) {
+            alert(`Alarm notification! Time: ${alarmTime.toLocaleTimeString()}`);
+            handleUpdateAlarm(task.task_id, null)
+          }
+        };
+    
+        const intervalId = setInterval(checkAlarm, 60000); // Check every minute
+        return () => clearInterval(intervalId); // Cleanup on unmount
+      }, [task]); // Re-run when task or alarm changes
+
+
+
+
+
+
+
+
+
 
 
 
@@ -76,8 +100,7 @@ const TaskItem = ({
                         onClick: (datepickerInstance) => {
                             const selectedDate = datepickerInstance.selectedDates[0];
                             if (selectedDate) {
-                                onAlarmUpdate(task.task_id, selectedDate); // Call function to update alarm
-                                setEditAlarmID(null)
+                                handleUpdateAlarm(task.task_id, selectedDate); // Call function to update alarm
                             }
                         },
                     },

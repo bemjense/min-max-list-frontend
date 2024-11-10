@@ -6,8 +6,7 @@ import './TaskGrouping.css';
 
 const TaskGrouping = ({
     tasks,
-    editTaskText,
-    onAlarmUpdate,
+    handleUpdateAlarm,
     setContextMenu,
     editID,
     setEditID,
@@ -33,7 +32,7 @@ const TaskGrouping = ({
                     key={task.task_id}
                     task={task}
                     index={index}
-                    onAlarmUpdate={onAlarmUpdate}
+                    handleUpdateAlarm={handleUpdateAlarm}
                     setContextMenu= {setContextMenu}
                     editID = {editID}
                     setEditID = {setEditID}
@@ -75,7 +74,7 @@ const TaskGrouping = ({
                     key={task.task_id}
                     task={task}
                     index={index}
-                    onAlarmUpdate={onAlarmUpdate}
+                    handleUpdateAlarm={handleUpdateAlarm}
                     setContextMenu= {setContextMenu}
                     editID = {editID}
                     setEditID = {setEditID}
