@@ -201,9 +201,9 @@ const TaskItem = ({
                             <div className="task-text ml-4">{task.task_desc} </div>
 
                             <button onClick={handleEditButton} className='ml-2'>
-                                <FaEdit style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
+                                <FaEdit size = {10} style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
                             </button>
-                            <div className="absolute bottom-2 right-2 text-xs mr-6"> {helperGetTaskDate(task)}</div>
+                            <div className="absolute bottom-2 right-2 text-[0.6rem] mr-6 text-gray-400"> {helperGetTaskDate(task)}</div>
                         </div>
                     )}
 
@@ -212,7 +212,7 @@ const TaskItem = ({
                     <div className="flex">
                         {task.task_alarm_time && (
                             <div className="alarm-edit-button ml-4 mt-0.5">
-                                <FaBell style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
+                                <FaBell size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
                             </div>
                         )}
 
@@ -223,7 +223,7 @@ const TaskItem = ({
                             />
                         )}
                         {task.task_alarm_time && (
-                            <span className="alarm-time ml-1"> {new Date(task.task_alarm_time).toLocaleString()}</span>
+                            <span className="text-gray-400 alarm-time ml-1 text-[0.6rem]"> {new Date(task.task_alarm_time).toLocaleString()}</span>
                         )}
                     </div>
                 </div>

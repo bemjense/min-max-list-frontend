@@ -165,7 +165,7 @@ const TodoPage = () => {
         <div className="app-container" onClick={hideContextMenu}>
 
             <div class="flex flex-1 flex-col bg-[#161616] m-0 justify-between items-center">
-                <div class="text-3xl text-white mb-6 mt-6">{userEmail}</div>
+                <div class="text-2xl text-white mb-6 mt-6">{userEmail}</div>
                 <ListInterface 
                     currentList={currentList}
                 >
@@ -226,9 +226,9 @@ const TodoPage = () => {
 
 
             <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
-                <div className="text-white mt-6 text-3xl ">Graph View</div>
-                <div className="text-white mt-6 text-3xl ">Tasks Complete</div>
-                <div className="text-white mt-6 text-3xl ">Graph View</div>
+                <div className="text-white mt-6 text-2xl ">Graph View</div>
+                <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
+                <div className="text-white mt-6 text-2xl ">Graph View</div>
                 <div class="task-calendar mb-0">
                     <Calendar taskCounts={getCompletedCountsByDate()} />
                 </div>
