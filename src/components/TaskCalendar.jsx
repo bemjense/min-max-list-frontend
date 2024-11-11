@@ -2,36 +2,65 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import './TaskCalendar.css';
 import { useState } from 'react';
+import { Tooltip } from 'react-tooltip';
+
 
 const Calendar = ({ taskCounts }) => {
+
+
   const [hoverInfo, setHoverInfo] = useState(null); // State to store hover information
+
+  const currentDate= new Date();
+  const startDate = new Date(currentDate);
+  startDate.setDate(currentDate.getDate() - 101); // 30 days before today
+  const endDate = new Date(currentDate);
+  endDate.setDate(endDate.getDate());
 
   return (
     <div className="calendar-heatmap-container">
       <CalendarHeatmap
-        startDate={new Date('2024-10-01')}
-        endDate={new Date('2024-12-01')}
-        horizontal={false}
-        gutterSize={5}
-        showMonthLabels={true}
-        values={taskCounts}
+
+      //propertries for calendar 
+      startDate={startDate}
+      endDate={endDate}
+      showWeekdayLabels= {true}
+      showOutOfRangeDays = {true}
+      horizontal={false}
+      gutterSize={3}
+      showMonthLabels={true}
+      values={taskCounts}
+      viewbox = "0 10 100 10"
 
 
-        onMouseOver={(event, value) => {
-          if (value) {
-            console.log(`Tasks completed on ${value.date}: ${value.count}`);
-            setHoverInfo({ date: value.date, count: value.count });
-          } else {
-            setHoverInfo(null); // Reset hover info if no value
-          }
-        }}
+      //color customization
+      classForValue={(value) => {
+        if (!value) {
+          return 'color-empty';
+        }
+        if (value.count > 3) {
+          return `color-scale-3`;
+        }
+        return `color-scale-${value.count}`;
+      }}
+
+
+      //hover tooltips
+      tooltipDataAttrs={(value) => {
+        if (!value || !value.date) {
+          return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };
+        }
+
+
+
+        return {
+          'data-tooltip-id': 'task-tooltip',
+          'data-tooltip-content': `${value.date.toLocaleString().slice(0, 10)}: ${value.count} tasks completed`,
+        };
+      }}
+
+
       />
-      {/*If hoverinfo is set to true then create popup else disable*/}
-      {hoverInfo && (
-        <div className="calendar-tooltip">
-          {hoverInfo.count} tasks completed
-        </div>
-      )}
+      <Tooltip id="task-tooltip" />
     </div>
   );
 };

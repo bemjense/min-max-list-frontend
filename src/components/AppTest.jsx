@@ -1,11 +1,11 @@
 import React from "react";
-import Switch from "./Switch";
 
 
+//useless file used for testing components seperate from everyhting else
 const AppTest = () => {
     return (
-    <div className = "AppTest">
-        <Switch />
+    <div className = "flex">
+        
 
 
     </div>

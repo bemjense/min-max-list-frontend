@@ -12,15 +12,15 @@
     text-align: center;
     font-family: 'Manrope', sans-serif; /* Apply Manrope font */
     font-weight: 500;
-    box-sizing: border-box;
-    background-color: #292929;
-    position: relative;
-    gap: 100px;
+    background-color: #1C1C1C;
+    gap: 50px;
+    overflow:auto;
 }
 
 .header-title {
   color: white;
   font-size: 50px;
+  font-weight: 500;
 }
 
 .canvas-container {
@@ -46,6 +46,7 @@
 body {
   margin: 0;
 }
+
 
 
 
