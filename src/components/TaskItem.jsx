@@ -172,7 +172,7 @@ const TaskItem = ({
                 className={`text-left task w-full transition-all duration-300
                 ${task.task_is_completed
                         ? `completed ${isEditing ? 'bg-[#AFDD66]' : 'hover:bg-[#AFDD66]'}`
-                        : `uncompleted ${isEditing ? 'bg-[#0592E8]' : 'hover:bg-[#0592E8]'}`
+                        : `uncompleted ${isEditing ? 'bg-[#161616]' : 'hover:bg-[#161616]'}`
                 }`}
             >
 

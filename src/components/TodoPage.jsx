@@ -14,7 +14,7 @@ const auth = getAuth();
 
 const TodoPage = () => {
     // multipleToDoLists State
-    const [currentList, setCurrentList] = useState('count');
+    const [currentList, setCurrentList] = useState('main_list');
 
     //Authetnication statesj
     const [userUid, setUserUid] = useState(null);
