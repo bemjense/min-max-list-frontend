@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import './ContextMenu.css';
 import { FaFolderOpen } from "react-icons/fa6";
 
-const ListInterface = () => {
-    const [lists, setLists] = useState(["Main"]);
-    const [currentList, setCurrentList] = useState(lists[0]);
+const ListInterface = ({currentList, setCurrentList, lists, setLists}) => {
     const [newListName, setNewListName] = useState("");
 
     const addList = () => {

@@ -15,6 +15,7 @@ const auth = getAuth();
 const TodoPage = () => {
     // multipleToDoLists State
     const [currentList, setCurrentList] = useState('main_list');
+    const [lists, setLists] = useState(['main_list']);
 
     //Authetnication statesj
     const [userUid, setUserUid] = useState(null);
@@ -44,6 +45,13 @@ const TodoPage = () => {
 
         setTasks(loadedTasks);
     };
+
+    //update if list changes for multiple to dolists
+    useEffect(() => {
+        if (userUid) {
+            handleReadTasks(userUid);
+        }
+    }, [currentList, userUid]);
 
 
     useEffect(() => {
@@ -168,6 +176,9 @@ const TodoPage = () => {
                 <div class="text-2xl text-white mb-6 mt-6">{userEmail}</div>
                 <ListInterface 
                     currentList={currentList}
+                    setCurrentList={setCurrentList}
+                    setLists={setLists}
+                    lists={lists}
                 >
                 </ListInterface>
             </div>
