@@ -4,12 +4,10 @@ import { FaBell, FaEdit} from 'react-icons/fa';
 import AirDatepicker from 'air-datepicker';
 import 'air-datepicker/air-datepicker.css';
 import localeEn from 'air-datepicker/locale/en';
-import { GiConsoleController } from 'react-icons/gi';
 
 const TaskItem = ({
     task,
-    index,
-    onAlarmUpdate,
+    handleUpdateAlarm,
     setContextMenu,
     editID,
     setEditID,
@@ -57,6 +55,31 @@ const TaskItem = ({
 
 
 
+    //useEffect(() => {
+    //    const checkAlarm = () => {
+    //      const now = new Date();
+    //      if (!task.task_alarm_time) return; // No alarm set
+    
+    //      const alarmTime = new Date(task.task_alarm_time);
+    //      if (now >= alarmTime) {
+    //        alert(`Alarm notification! Time: ${alarmTime.toLocaleTimeString()}`);
+    //        handleUpdateAlarm(task.task_id, null)
+    //      }
+    //    };
+    
+    //    const intervalId = setInterval(checkAlarm, 60000); // Check every minute
+    //    return () => clearInterval(intervalId); // Cleanup on unmount
+    //  }, [task]); // Re-run when task or alarm changes
+
+
+
+
+
+
+
+
+
+
 
 
     useEffect(() => {
@@ -78,15 +101,19 @@ const TaskItem = ({
                         onClick: (datepickerInstance) => {
                             const selectedDate = datepickerInstance.selectedDates[0];
                             if (selectedDate) {
-                                onAlarmUpdate(task.task_id, selectedDate); // Call function to update alarm
-                                setEditAlarmID(null)
+                                handleUpdateAlarm(task.task_id, selectedDate); // Call function to update alarm
                             }
                         },
                     },
                 ],
                 position: hasSpaceAbove ? 'top right' : 'bottom right',
+
+                onHide: () => {
+                    setEditAlarmID(null); 
+                },
             });
 
+            dateTimePickerRef.current.focus();
             dp.show(); // Show the datepicker when initialized
         }
 
@@ -131,33 +158,39 @@ const TaskItem = ({
         setIsEditing(true)
     }, [editID, task]);
 
-    return (
-        <div className="flex-1 text-[0.8rem] font-medium ">
+    const handleEditBlur = () => {
+        setEditID(null)
+        setEditText(null)
+    };
 
-            <div onContextMenu={handleRightClick}
-                className={`text-left task ${task.task_is_completed ? 'completed hover:rounded-xl hover:bg-[#AFDD66]  transition-all duration-300'
-                    : 'uncompleted hover:rounded-xl hover:bg-[#0592E8] transition-all duration-300'}`}
+    return (
+        <div className="flex-1 text-[0.8rem] font-medium w-full ">
+
+            {/*then return userinput prompt else return normal render */}
+            <div
+                onContextMenu={handleRightClick}
+                className={`text-left task w-full transition-all duration-300 motion-duration-500 motion-preset-blur-left
+                ${task.task_is_completed
+                        ? `completed ${isEditing ? 'bg-[#AFDD66]' : 'hover:bg-[#AFDD66]'}`
+                        : `uncompleted ${isEditing ? 'bg-[#161616]' : 'hover:bg-[#161616]'}`
+                }`}
             >
 
 
 
-                <div className='flex flex-col'>
-
-
-
-
-
+                <div className='flex flex-col w-full'>
 
                     {/*if state of task is currently editing then return userinput prompt else return normal render */}
                     {isEditing ? (
                         <div class={`${task.task_is_completed ? 'text-[#292929] '
                             : 'text-white'}`}>
                             <input
-                                className="task-input bg-transparent p-2 outline-none focus:outline-none w-full ml-5 placeholder-gray-500"
+                                className="task-input bg-transparent  outline-none focus:outline-none w-full ml-5 placeholder-gray-500 pr-10"
                                 type="text"
                                 value={editText}
                                 onChange={handleUserInput}
                                 onKeyDown={handleKeyDown}
+                                onBlur={handleEditBlur}
                                 autoFocus
                                 placeholder="Type here"
                             />
@@ -168,9 +201,9 @@ const TaskItem = ({
                             <div className="task-text ml-4">{task.task_desc} </div>
 
                             <button onClick={handleEditButton} className='ml-2'>
-                                <FaEdit style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
+                                <FaEdit size = {10} style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
                             </button>
-                            <div className="absolute bottom-2 right-2 text-xs mr-6"> {helperGetTaskDate(task)}</div>
+                            <div className="absolute bottom-2 right-2 text-[0.6rem] mr-6 text-gray-400"> {helperGetTaskDate(task)}</div>
                         </div>
                     )}
 
@@ -179,7 +212,7 @@ const TaskItem = ({
                     <div className="flex">
                         {task.task_alarm_time && (
                             <div className="alarm-edit-button ml-4 mt-0.5">
-                                <FaBell style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
+                                <FaBell size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
                             </div>
                         )}
 
@@ -190,7 +223,12 @@ const TaskItem = ({
                             />
                         )}
                         {task.task_alarm_time && (
-                            <span className="alarm-time ml-1"> {new Date(task.task_alarm_time).toLocaleString()}</span>
+                            <span
+                                className={`${task.task_is_completed ? "text-[#292929]" : "text-[#9CA3AF]"
+                                    } alarm-time ml-1 text-[0.6rem]`}
+                            >
+                                {new Date(task.task_alarm_time).toLocaleString()}
+                            </span>
                         )}
                     </div>
                 </div>

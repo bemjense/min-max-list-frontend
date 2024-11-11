@@ -14,7 +14,7 @@ const Calendar = ({ taskCounts }) => {
   const startDate = new Date(currentDate);
   startDate.setDate(currentDate.getDate() - 101); // 30 days before today
   const endDate = new Date(currentDate);
-  endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+  endDate.setDate(endDate.getDate());
 
   return (
     <div className="calendar-heatmap-container">
