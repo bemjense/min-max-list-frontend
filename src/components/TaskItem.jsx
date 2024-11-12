@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback} from 'react';
 import './TaskItem.css'; 
-import { FaBell, FaEdit} from 'react-icons/fa';
+import { FaBell, FaEdit, FaCalendarAlt} from 'react-icons/fa';
 import AirDatepicker from 'air-datepicker';
 import 'air-datepicker/air-datepicker.css';
 import localeEn from 'air-datepicker/locale/en';
@@ -15,10 +15,15 @@ const TaskItem = ({
     setEditText,
     handleUpdateDesc,
     setEditAlarmID,
-    editAlarmID
+    editAlarmID,
+    handleUpdateDueDate,
+    editDueDateID,
+    setEditDueDateID
 }) => {
     const [isEditingAlarm, setIsEditingAlarm] = useState(false); // Track alarm editing state
+    const [isEditingDueDate, setIsEditingDueDate] = useState(false); // Track alarm editing state
     const dateTimePickerRef = useRef(null);
+    const dueDateTimePickerRef = useRef(null);
     const [isEditing, setIsEditing] =useState(false);
 
     const handleRightClick = (e) => {
@@ -51,6 +56,13 @@ const TaskItem = ({
         }
     }, [editAlarmID, task]);
 
+    useEffect(() => {
+        if (editDueDateID === task.task_id) {
+            setIsEditingDueDate(true);
+        } else {
+            setIsEditingDueDate(false); // Ensure editing state is reset when not matching
+        }
+    }, [editDueDateID, task]);
 
 
 
@@ -127,6 +139,45 @@ const TaskItem = ({
     //    setEditTaskText(task.task_desc); // Set the current task description for editing
     //};
 
+    useEffect(() => {
+
+        let dp;
+        // Initialize AirDatepicker only when editing the alarm
+        if (isEditingDueDate && dueDateTimePickerRef.current) {
+            const buttonRect = dueDateTimePickerRef.current.getBoundingClientRect();
+            const hasSpaceAbove = buttonRect.top > 300; // Adjust based on how much space you need above
+
+            dp = new AirDatepicker(dueDateTimePickerRef.current, {
+                timepicker: true,
+                dateFormat: 'Y-m-d H:i',
+                locale: localeEn,
+                buttons: [
+                    'clear',
+                    {
+                        content: 'Set Due Date',
+                        onClick: (datepickerInstance) => {
+                            const selectedDate = datepickerInstance.selectedDates[0];
+                            if (selectedDate) {
+                                handleUpdateDueDate(task.task_id, selectedDate); // Call function to update alarm
+                            }
+                        },
+                    },
+                ],
+                position: hasSpaceAbove ? 'top right' : 'bottom right',
+
+                onHide: () => {
+                    setEditDueDateID(null); 
+                },
+            });
+
+            dueDateTimePickerRef.current.focus();
+            dp.show(); // Show the datepicker when initialized
+        }
+
+        return () => {
+            if (dp) dp.destroy(); // Clean up
+        };
+    }, [isEditingDueDate, editDueDateID]);
 
     const helperGetTaskDate = (task) => {
         const timeStamp = task.task_created_time_stamp;
@@ -210,6 +261,29 @@ const TaskItem = ({
 
 
                     <div className="flex">
+                        {task.task_due_date && (
+                            <div className="dueDate-edit-button ml-4 mt-0.5">
+                                <FaCalendarAlt size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
+                            </div>
+                        )}
+
+                        {isEditingDueDate && (
+                            <input
+                                ref={dueDateTimePickerRef}
+                                className="hidden-datepicker"
+                            />
+                        )}
+                        {task.task_due_date && (
+                            <span
+                                className={`${task.task_is_completed ? "text-[#292929]" : "text-[#9CA3AF]"
+                                    } alarm-time ml-1 text-[0.6rem]`}
+                            >
+                                {new Date(task.task_due_date).toLocaleString()}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="flex">
                         {task.task_alarm_time && (
                             <div className="alarm-edit-button ml-4 mt-0.5">
                                 <FaBell size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
@@ -231,6 +305,8 @@ const TaskItem = ({
                             </span>
                         )}
                     </div>
+
+                    
                 </div>
 
             </div>

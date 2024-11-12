@@ -1,7 +1,7 @@
 import React from 'react';
 import './ContextMenu.css'; // Import the CSS file
 
-import { FaBell} from 'react-icons/fa';
+import { FaBell , FaCalendarAlt} from 'react-icons/fa';
 import { FaEdit} from 'react-icons/fa';
 import { HiMiniTrash } from "react-icons/hi2";
 import { RiMarkPenFill } from "react-icons/ri";
@@ -28,6 +28,12 @@ const ContextMenu = ({ top, left, onAction, isCompleted }) => (
 
             <li onClick={() => onAction('alarm')}>
                 <FaBell className = 'mr-2'/> Alarm
+            </li>
+            </div>
+
+            <div className='flex-col flex'>
+            <li onClick={() => onAction('due_date')}>
+                <FaCalendarAlt className = 'mr-2'/> Due Date
             </li>
             </div>
 
