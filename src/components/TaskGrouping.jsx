@@ -14,7 +14,10 @@ const TaskGrouping = ({
     setEditText,
     handleUpdateDesc,
     setEditAlarmID,
-    editAlarmID
+    editAlarmID,
+    handleUpdateDueDate,
+    editDueDateID,
+    setEditDueDateID
 }) => {
     const [showCompleted, setShowCompleted] = useState(false);
 
@@ -41,6 +44,9 @@ const TaskGrouping = ({
                     handleUpdateDesc = {handleUpdateDesc}
                     setEditAlarmID={setEditAlarmID}
                     editAlarmID={editAlarmID}
+                    handleUpdateDueDate={handleUpdateDueDate}
+                    editDueDateID={editDueDateID}
+                    setEditDueDateID={setEditDueDateID}
                 />
             ))}
         </div>
@@ -83,6 +89,9 @@ const TaskGrouping = ({
                     handleUpdateDesc = {handleUpdateDesc}
                     setEditAlarmID={setEditAlarmID}
                     editAlarmID={editAlarmID}
+                    handleUpdateDueDate={handleUpdateDueDate}
+                    editDueDateID={editDueDateID}
+                    setEditDueDateID={setEditDueDateID}
                 />
             ))}
         </div>

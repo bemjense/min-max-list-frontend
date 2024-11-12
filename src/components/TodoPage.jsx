@@ -31,6 +31,10 @@ const TodoPage = () => {
     const [editAlarmID, setEditAlarmID] = useState('');
     const [alarmTime, setAlarmTime] = useState('');
     const [newAlarmVisible, setNewAlarmVisible] = useState(false);
+    //task edit Due Date store input value temporarily
+    const [editDueDateID, setEditDueDateID] = useState('');
+    const [dueDate, setDueDate] = useState('');
+    const [newDueDateVisible, setNewDueDateVisible] = useState(false);
     //context menu functionality
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
 
@@ -112,7 +116,7 @@ const TodoPage = () => {
 
     const handleCreateTask = async () => {
         if (newTask.trim()) {
-            await createTask(userUid, currentList,newTask, alarmTime);
+            await createTask(userUid, currentList,newTask, alarmTime,dueDate);
             handleReadTasks(userUid)
             setNewTask('');
         }
@@ -155,6 +159,17 @@ const TodoPage = () => {
         handleReadTasks(userUid);
     };
 
+    const handleUpdateDueDate = async (task_id, dueDate) => {
+        const task = await readTaskAtId(task_id)
+        await updateTask(task.task_id, task.task_uid,{ ...task, task_due_date: dueDate});
+        handleReadTasks(userUid);
+    };
+
+    const handleUpdateDueDateInContextMenu = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        console.log(task.task_due_date)
+        setEditDueDateID(task.task_id)
+    };
 
     const handleContextMenu = (action) => {
         const task_id = contextMenu.task_id;
@@ -163,6 +178,7 @@ const TodoPage = () => {
         else if (action === 'delete') handleDelete(task_id);
         else if (action === 'toggle') handleToggleStatus(task_id);
         else if (action === 'alarm') handleUpdateAlarmInContextMenu(task_id);
+        else if (action === 'due_date') handleUpdateDueDateInContextMenu(task_id);
     };
 
 
@@ -205,6 +221,9 @@ const TodoPage = () => {
                     setEditAlarmID={setEditAlarmID}
                     editAlarmID={editAlarmID}
                     handleUpdateDesc={handleUpdateDesc}
+                    handleUpdateDueDate={handleUpdateDueDate}
+                    editDueDateID={editDueDateID}
+                    setEditDueDateID={setEditDueDateID}
 
                 />
 
@@ -218,6 +237,10 @@ const TodoPage = () => {
                         setAlarmTime={setAlarmTime}
                         newAlarmVisible={newAlarmVisible}
                         setNewAlarmVisible={setNewAlarmVisible}
+                        dueDate={dueDate}
+                        setDueDate={setDueDate}
+                        newDueDateVisible={newDueDateVisible}
+                        setNewDueDateVisible={setNewDueDateVisible}
                     />
                 </div>
 

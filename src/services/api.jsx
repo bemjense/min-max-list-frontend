@@ -79,14 +79,15 @@ export const readCompletedTasks = async (uid, taskList = null) => {
 };
 
 
-export const createTask = async (task_uid, task_list, task_desc,task_alarm_time) => {
+export const createTask = async (task_uid, task_list, task_desc,task_alarm_time,task_due_date) => {
     try {
         const response = await axios.post(baseurl + '/tasks/', {
             task_uid: task_uid,
             task_list: task_list,
             task_desc: task_desc,
             task_is_completed: false,
-            task_alarm_time: task_alarm_time ? new Date(task_alarm_time).toISOString() : null
+            task_alarm_time: task_alarm_time ? new Date(task_alarm_time).toISOString() : null,
+            task_due_date: task_due_date ? new Date(task_due_date).toISOString() : null
         });
         return response.data;
     } catch (error) {
