@@ -260,9 +260,9 @@ const TaskItem = ({
 
 
 
-                    <div className="flex">
+                    <div className="flex ml-2">
                         {task.task_due_date && (
-                            <div className="dueDate-edit-button ml-4 mt-0.5">
+                            <div className="dueDate-edit-button ml-2 mt-0.5">
                                 <FaCalendarAlt size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
                             </div>
                         )}
@@ -281,11 +281,8 @@ const TaskItem = ({
                                 {new Date(task.task_due_date).toLocaleString()}
                             </span>
                         )}
-                    </div>
-
-                    <div className="flex">
                         {task.task_alarm_time && (
-                            <div className="alarm-edit-button ml-4 mt-0.5">
+                            <div className="alarm-edit-button ml-2 mt-0.5">
                                 <FaBell size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
                             </div>
                         )}
@@ -304,6 +301,9 @@ const TaskItem = ({
                                 {new Date(task.task_alarm_time).toLocaleString()}
                             </span>
                         )}
+                    </div>
+
+                    <div className="flex">
                     </div>
 
                     
