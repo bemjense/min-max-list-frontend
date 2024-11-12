@@ -13,34 +13,43 @@ const ListInterface = ({currentList, setCurrentList, lists, setLists}) => {
     };
 
     return (
-        <div className="flex flex-col p-5">
-            <div className="dropdown">
-                <select
-                    className="text-3xl text-white p-5 bg-yellow-900 hover:rounded-xl hover:bg-[#AFDD66] transition-all duration-300"
-                    value={currentList}
-                    onChange={(e) => setCurrentList(e.target.value)}
-                >
-                    {lists.map((list, index) => (
-                        <option key={index} value={list}>
-                            {list}
-                        </option>
-                    ))}
-                </select>
+        <div className="flex flex-col p-5 text-white  font-semibold text-2xl">
+
+            <div>
+                {lists.map((list) => (
+                    list !== 'Tasks' && (
+                        <div className='flex'>
+                            <FaFolderOpen className="mr-3 mt-[5px]" />
+                            <button onClick={() => setCurrentList(list)}>{list}</button>
+                        </div>
+                    )
+                ))}
+                {/*Ensure that main list is bottom*/}
+                <div className='flex'>
+                    <FaFolderOpen className="mr-3 mt-[5px]" />
+                    <button onClick={() => setCurrentList("Tasks")}>Tasks</button>
+                </div>
             </div>
-            <div className="flex mt-4">
+
+
+
+            <div className="text-3xl text-white flex p-5 bg-yellow-900 mt-4">
+                <FaFolderOpen className="mr-3" /> {currentList}
+            </div>
+
+            <div className="flex mt-4 text-black">
                 <input
                     type="text"
                     placeholder="Add new list"
                     value={newListName}
                     onChange={(e) => setNewListName(e.target.value)}
                     className="p-2 text-lg"
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                            addList()
+                        }
+                    }}
                 />
-                <button onClick={addList} className="ml-2 p-2 bg-green-500 text-white">
-                    Add
-                </button>
-            </div>
-            <div className="text-3xl text-white flex p-5 bg-yellow-900 mt-4">
-                <FaFolderOpen className="mr-3" /> {currentList}
             </div>
         </div>
     );

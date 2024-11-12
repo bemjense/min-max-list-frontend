@@ -14,8 +14,8 @@ const auth = getAuth();
 
 const TodoPage = () => {
     // multipleToDoLists State
-    const [currentList, setCurrentList] = useState('main_list');
-    const [lists, setLists] = useState(['main_list']);
+    const [currentList, setCurrentList] = useState('Tasks');
+    const [lists, setLists] = useState(['Tasks']);
 
     //Authetnication statesj
     const [userUid, setUserUid] = useState(null);
@@ -41,13 +41,12 @@ const TodoPage = () => {
 
     // change logic later to take arugment for null
     const handleReadTasks = async (uid) => {
-        if (currentList == "main_list") {
+        if (currentList == "Tasks") {
             var loadedTasks = await readTasks(uid);
         } else {
             var loadedTasks = await readTasks(uid, currentList);
         }
         setTasks(loadedTasks);
-
     };
 
     //update if list changes for multiple to dolists
@@ -94,8 +93,8 @@ const TodoPage = () => {
 
     const handleReadLists = async(uid) => {
         const fetchedLists = await readLists(uid);
-        if (!fetchedLists.includes("main_list")) {
-            fetchedLists.push("main_list");
+        if (!fetchedLists.includes("Tasks")) {
+            fetchedLists.push("Tasks");
         }
         setLists(fetchedLists);
     }
