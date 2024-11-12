@@ -36,6 +36,17 @@ export const readTaskAtId = async (task_id) => {
     }
 };
 
+export const readLists = async (uid) => {
+    const task_params = { task_uid: uid };
+    try {
+        const response = await axios.get(baseurl + `/lists/`, {params: task_params});
+        return response.data
+    } catch (error) {
+        console.error('Error fetching tasks:', error);
+        return [];
+    }
+};
+
 export const readUncompletedTasks = async (uid, taskList = null) => {
     try {
         // Create an object for query parameters

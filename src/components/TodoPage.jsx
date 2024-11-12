@@ -2,7 +2,7 @@
 import TaskInput from './TaskInput';
 import TaskGrouping from './TaskGrouping';
 import ContextMenu from './ContextMenu';
-import { readTaskAtId, readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID} from '../services/api';
+import { readTaskAtId, readLists,readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID} from '../services/api';
 import Calendar from './TaskCalendar'
 import ListInterface from './ListInterface'
 import './TodoPage.css';
@@ -46,8 +46,8 @@ const TodoPage = () => {
         } else {
             var loadedTasks = await readTasks(uid, currentList);
         }
-
         setTasks(loadedTasks);
+
     };
 
     //update if list changes for multiple to dolists
@@ -56,6 +56,10 @@ const TodoPage = () => {
             handleReadTasks(userUid);
         }
     }, [currentList, userUid]);
+
+    useEffect(() => {
+        handleReadLists(userUid)
+    }, [tasks, userUid]);
 
 
     useEffect(() => {
@@ -86,6 +90,17 @@ const TodoPage = () => {
         }
         handleReadTasks(userUid);
     }, [userUid]);
+
+
+    const handleReadLists = async(uid) => {
+        const fetchedLists = await readLists(uid);
+        if (!fetchedLists.includes("main_list")) {
+            fetchedLists.push("main_list");
+        }
+        setLists(fetchedLists);
+    }
+
+
 
 
 
