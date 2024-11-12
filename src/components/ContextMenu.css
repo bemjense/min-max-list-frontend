@@ -1,15 +1,16 @@
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 .context-menu {
     position: absolute;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #1C1C1C;
     z-index: 1000;
-    border-radius: 8px;
+    border-radius: 4px;
+    border: 1.5px solid #333333;
     padding: 0;
     overflow: hidden;
     transition: opacity 0.3s ease;
-    color: black;
+    color: #ffffff;
 }
 
 .context-menu ul {
@@ -61,7 +62,7 @@
 
 /* Hover effects */
 .context-menu li:hover {
-    background-color: #f0f0f0;
+    background-color: #3AA7FA;
 }
 
 .context-menu li.edit:hover {

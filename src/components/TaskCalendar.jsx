@@ -14,12 +14,13 @@ const Calendar = ({ taskCounts }) => {
   const startDate = new Date(currentDate);
   startDate.setDate(currentDate.getDate() - 101); // 30 days before today
   const endDate = new Date(currentDate);
-  endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+  endDate.setDate(endDate.getDate());
 
   return (
     <div className="calendar-heatmap-container">
       <CalendarHeatmap
 
+      //propertries for calendar 
       startDate={startDate}
       endDate={endDate}
       showWeekdayLabels= {true}
@@ -28,8 +29,10 @@ const Calendar = ({ taskCounts }) => {
       gutterSize={3}
       showMonthLabels={true}
       values={taskCounts}
+      viewbox = "0 10 100 10"
 
 
+      //color customization
       classForValue={(value) => {
         if (!value) {
           return 'color-empty';
@@ -41,6 +44,7 @@ const Calendar = ({ taskCounts }) => {
       }}
 
 
+      //hover tooltips
       tooltipDataAttrs={(value) => {
         if (!value || !value.date) {
           return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };

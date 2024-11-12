@@ -9,9 +9,12 @@
 .task{
     position: relative;
     border-radius: 100px;
-    padding: 10px;
-    background-color: #333333; /* Green background */
+    padding: 4px;
+    background-color: #292929; /* Green background */
     z-index: 2; /* Keeps the green rectangle on top */
+    min-height: 40px;
+      display: flex; /* Enable flexbox */
+    align-items: center; /* Vertically center the content */
 }
 
 
@@ -41,18 +44,18 @@
 /* Pink shadow */
 .task-completed-overlay:has(.completed)::before {
     background-color: #e91e63; /* Pink color */
-    transform: translate(-4px, 6px); /* Bottom-left offset */
+    transform: translate(-8px, 5px); /* Bottom-left offset */
 }
 
 /* Yellow shadow */
 .task-completed-overlay:has(.completed)::after {
     background-color: #ffeb3b; /* Yellow color */
-    transform: translate(4px, -6px); /* Top-right offset */
+    transform: translate(5px, -8px); /* Top-right offset */
 }
 
 .hidden-datepicker {
     position: absolute;
-    transform: translate(-183px, 10px); /* Fine-tune horizontal and vertical position */
+    transform: translate(-157px, 10px); /* Fine-tune horizontal and vertical position */
     opacity: 0; /* Make input fully transparent */
     height: 0; 
     pointer-events: none; /* Prevent interaction */

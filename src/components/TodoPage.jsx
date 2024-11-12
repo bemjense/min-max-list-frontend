@@ -1,78 +1,109 @@
 ﻿import React, { useState, useEffect } from 'react';
 import TaskInput from './TaskInput';
-import TaskList from './TaskList';
+import TaskGrouping from './TaskGrouping';
 import ContextMenu from './ContextMenu';
-import { readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask } from '../services/api';
+import { readTaskAtId, readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID} from '../services/api';
 import Calendar from './TaskCalendar'
+import ListInterface from './ListInterface'
 import './TodoPage.css';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const auth = getAuth();
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // User is signed in, see docs for a list of available properties
-    // https://firebase.google.com/docs/reference/js/auth.user
-    const uid = user.uid;
-    console.log("uid: ", uid)
-  } else {
-    // User is signed out
-    // ...
-  }
-});
+
 
 const TodoPage = () => {
-    const [uncompletedTasks, setUncompletedTasks] = useState([]);
-    const [completedTasks, setCompletedTasks] = useState([]);
-    // Store userinput for creating a new task
+    // multipleToDoLists State
+    const [currentList, setCurrentList] = useState('main_list');
+    const [lists, setLists] = useState(['main_list']);
+
+    //Authetnication statesj
+    const [userUid, setUserUid] = useState(null);
+    const [userEmail, setUserEmail] = useState(null);
+    //tasks display
+    const [tasks, setTasks] = useState([]);
+    //task input
     const [newTask, setNewTask] = useState('');
-
-
-    const [editingIndexUncompleted, setEditingIndexUncompleted] = useState(null);
-    const [editingIndexCompleted, setEditingIndexCompleted] = useState(null);
-    const [editTextUncompleted, setEditTextUncompleted] = useState('');
-    const [editTextCompleted, setEditTextCompleted] = useState('');
-
-
-    const [showCompleted, setShowCompleted] = useState(false);
-
+    //task edit store input value temporarily
+    const [editText, setEditText] = useState('');
+    const [editID, setEditID] = useState(null);
+    //task edit alarm store input value temporarily
+    const [editAlarmID, setEditAlarmID] = useState('');
     const [alarmTime, setAlarmTime] = useState('');
     const [newAlarmVisible, setNewAlarmVisible] = useState(false);
+    //task edit Due Date store input value temporarily
+    const [editDueDateID, setEditDueDateID] = useState('');
+    const [dueDate, setDueDate] = useState('');
+    const [newDueDateVisible, setNewDueDateVisible] = useState(false);
+    //context menu functionality
+    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
 
-    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, taskIndex: null, taskCompleted: false });
 
+    // change logic later to take arugment for null
+    const handleReadTasks = async (uid) => {
+        if (currentList == "main_list") {
+            var loadedTasks = await readTasks(uid);
+        } else {
+            var loadedTasks = await readTasks(uid, currentList);
+        }
 
-    const handleReadUncompletedTasks = async () => {
-        const loadedTasks = await readUncompletedTasks();
-        setUncompletedTasks(loadedTasks);
+        setTasks(loadedTasks);
     };
-    const handleReadCompletedTasks = async () => {
-        const loadedTasks = await readCompletedTasks();
-        setCompletedTasks(loadedTasks);
-    };
 
-    const handleReadTasks = async() => {
-        handleReadCompletedTasks()
-        handleReadUncompletedTasks()
-    }
+    //update if list changes for multiple to dolists
+    useEffect(() => {
+        if (userUid) {
+            handleReadTasks(userUid);
+        }
+    }, [currentList, userUid]);
+
 
     useEffect(() => {
-        handleReadTasks()
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const userId = user.uid;
+                setUserUid(userId); // Set UID when user is authenticated
+                const userEmail = user.email;
+                setUserEmail(userEmail);
+
+            } else {
+                setUserUid(null); // Clear UID when the user is signed out
+                setUserEmail(null); 
+            }
+        });
+
+        return () => {
+            unsubscribe();  // Clean up the listener when component unmounts
+        };
     }, []);
 
+    useEffect(() => {
+        // mostly for dev work offlien
+        const isOnline = navigator.onLine;
+        if (!isOnline) {
+            setUserUid("dummy_uid")
+            setUserEmail("MatrixHunter101@ucsc.edu")
+        }
+        handleReadTasks(userUid);
+    }, [userUid]);
+
+
+
+    // used by graph fucntion. Modify this if you want to hcange how coloring works
     const getCompletedCountsByDate = () => {
         const taskCounts = {};
 
-        completedTasks.forEach((task) => {
-            const timeStamp = task.task_created_time_stamp;
-            const date = new Date(timeStamp.replace(' ', 'T')); 
-            date.setHours(0, 0, 0, 0);
-            console.log(date)
+        tasks.forEach((task) => {
+            if (task.task_is_completed) {
+                const timeStamp = task.task_created_time_stamp;
+                const date = new Date(timeStamp.replace(' ', 'T'));
+                date.setHours(0, 0, 0, 0);
 
-            if (!taskCounts[date]) {
-                taskCounts[date] = 0;
+                if (!taskCounts[date]) {
+                    taskCounts[date] = 0;
+                }
+                taskCounts[date]++;
             }
-            taskCounts[date]++;
         });
 
         return Object.entries(taskCounts).map(([date, count]) => ({
@@ -85,200 +116,157 @@ const TodoPage = () => {
 
     const handleCreateTask = async () => {
         if (newTask.trim()) {
-            const createdTask = await createTask(newTask,alarmTime);
-            //setUncompletedTasks((prev) => [...prev, createdTask].sort((a, b) => a.task_id - b.task_id));
-            handleReadTasks()
+            await createTask(userUid, currentList,newTask, alarmTime,dueDate);
+            handleReadTasks(userUid)
             setNewTask('');
         }
     };
 
-    const handleDeleteUncompleted = async (index) => {
-        const task = uncompletedTasks[index];
-        await deleteTask(task.task_id);
-        handleReadTasks()
-    };
-    const handleDeleteCompleted = async (index) => {
-        const task = completedTasks[index];
-        await deleteTask(task.task_id);
-        handleReadTasks()
+    const handleDelete = async (task_id) => {
+        await deleteTask(task_id);
+        handleReadTasks(userUid)
     };
 
-    const handleToggleUncompleted = async (index) => {
-        console.log(uncompletedTasks)
-        
-        const task = uncompletedTasks[index];
-        await updateTask(task.task_id, { ...task, task_is_completed: !task.task_is_completed });
-        handleReadTasks();
+    const handleToggleStatus = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        await updateTask(task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed});
+        handleReadTasks(userUid);
     };
 
-    const handleToggleCompleted = async (index) => {
-        console.log(index)
-        const task = completedTasks[index];
-        await updateTask(task.task_id, { ...task, task_is_completed: !task.task_is_completed });
-        handleReadTasks();
+
+    const handleUpdateInContextMenu = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        setEditID(task.task_id)
+        setEditText(task.task_desc)
+
     };
 
-    const handleUpdateUncompleted = async (index) => {
-        const task = uncompletedTasks[index];
-        await updateTask(task.task_id, { ...task, task_desc: editTextUncompleted });
-        handleReadUncompletedTasks();
-        setEditingIndexUncompleted(null);
-        setEditTextUncompleted('');
-    };
-    const handleUpdateCompleted = async (index) => {
-        const task = completedTasks[index];
-        await updateTask(task.task_id, { ...task, task_desc: editTextCompleted });
-        handleReadCompletedTasks();
-        setEditingIndexCompleted(null);
-        setEditTextCompleted('');
+    const handleUpdateAlarmInContextMenu = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        console.log(task.task_alarm_time)
+        setEditAlarmID(task.task_id)
     };
 
-    const handleContextMenuUncompleted = (action) => {
-        const index = contextMenu.taskIndex;
-        if (action === 'edit') setEditingIndexUncompleted(index);
-        else if (action === 'delete') handleDeleteUncompleted(index);
-        else if (action === 'toggle') handleToggleUncompleted(index);
-    };
-    const handleContextMenuCompleted = (action) => {
-        const index = contextMenu.taskIndex;
-        if (action === 'edit') setEditingIndexCompleted(index);
-        else if (action === 'delete') handleDeleteCompleted(index);
-        else if (action === 'toggle') handleToggleCompleted(index);
+    const handleUpdateDesc = async (task_id, task_desc) => {
+        const task = await readTaskAtId(task_id)
+        await updateTask(task.task_id, task.task_uid, { ...task, task_desc: task_desc});
+        handleReadTasks(userUid);
     };
 
-    const handleUpdateAlarmCompleted = async (index,alarm) => {
-        const task = completedTasks[index];
-        await updateTask(task.task_id, { ...task, task_alarm_time: alarm });
-        handleReadCompletedTasks();
+    const handleUpdateAlarm = async (task_id, alarm) => {
+        const task = await readTaskAtId(task_id)
+        await updateTask(task.task_id, task.task_uid,{ ...task, task_alarm_time: alarm});
+        handleReadTasks(userUid);
     };
 
-    const handleUpdateAlarmUncompleted = async (index,alarm) => {
-        const task = uncompletedTasks[index];
-        await updateTask(task.task_id, { ...task, task_alarm_time: alarm });
-        handleReadUncompletedTasks();
+    const handleUpdateDueDate = async (task_id, dueDate) => {
+        const task = await readTaskAtId(task_id)
+        await updateTask(task.task_id, task.task_uid,{ ...task, task_due_date: dueDate});
+        handleReadTasks(userUid);
     };
 
-    const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, taskIndex: null });
+    const handleUpdateDueDateInContextMenu = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        console.log(task.task_due_date)
+        setEditDueDateID(task.task_id)
+    };
+
+    const handleContextMenu = (action) => {
+        const task_id = contextMenu.task_id;
+
+        if (action === 'edit') handleUpdateInContextMenu(task_id);
+        else if (action === 'delete') handleDelete(task_id);
+        else if (action === 'toggle') handleToggleStatus(task_id);
+        else if (action === 'alarm') handleUpdateAlarmInContextMenu(task_id);
+        else if (action === 'due_date') handleUpdateDueDateInContextMenu(task_id);
+    };
+
+
+    const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, task_id: null });
 
     return (
 
         <div className="app-container" onClick={hideContextMenu}>
-            <div class ="grow-[1]"></div>
 
-            <div className ="flex-col bg-[#] grow-[3]">
+            <div class="flex flex-1 flex-col bg-[#161616] m-0 justify-between items-center">
+                <div class="text-2xl text-white mb-6 mt-6">{userEmail}</div>
+                <ListInterface 
+                    currentList={currentList}
+                    setCurrentList={setCurrentList}
+                    setLists={setLists}
+                    lists={lists}
+                >
+                </ListInterface>
+            </div>
 
-                <h1 class = "header-title">To-Do List</h1>
+
+
+            <div className="flex-col bg-[#] flex-[3_2_0%] relative">
+                <div className="flex gap-2">
+                    <img src="/assets/star.svg" width="30" height="30" />
+                    <h1 class="text-white text-2xl text-left mb-6 mt-6">{currentList}</h1>
+                </div>
                 {/*Component where user enters information */}
                 {/*3 Arguments/ props */}
 
                 {/*Component Tasklist*/}
-                <div className='text-[#ffffff] semi-bold'>
-                <TaskList className = "task-list"
-                    tasks={uncompletedTasks}
-                    editingIndex={editingIndexUncompleted}
-                    editTaskText={editTextUncompleted}
-                    setEditTaskText={setEditTextUncompleted}
-                    setEditingIndex={setEditingIndexUncompleted}
-                    onEditTask={handleUpdateUncompleted}
-                    onAlarmUpdate={handleUpdateAlarmUncompleted}
-                    onRightClick={(e, index) => {
-                        e.preventDefault();
-                        setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index, taskCompleted: false });
-                    }}
+                <TaskGrouping className="task-list"
+                    tasks={tasks}
+                    handleUpdateAlarm={handleUpdateAlarm}
+                    setContextMenu={setContextMenu}
+                    editID={editID}
+                    setEditID={setEditID}
+                    editText={editText}
+                    setEditText={setEditText}
+                    setEditAlarmID={setEditAlarmID}
+                    editAlarmID={editAlarmID}
+                    handleUpdateDesc={handleUpdateDesc}
+                    handleUpdateDueDate={handleUpdateDueDate}
+                    editDueDateID={editDueDateID}
+                    setEditDueDateID={setEditDueDateID}
+
                 />
 
-                </div>
 
-                <hr className="h-2 bg-[#3AA7FA] border-0 rounded md:my-5" />
-
-
-
-
-
-                {/*Toggle button*/}
-                <div class="mt-5 mb-5 flex">
-                    <div class="rounded-full bg-[#8CC63F] flex ">
-                        <label class="inline-flex items-center cursor-pointer m-1">
-                            <input type="checkbox" value="" class="sr-only peer"
-                                checked={showCompleted}
-                                onChange={() => setShowCompleted(!showCompleted)}>
-                            </input>
-                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-border-600"></div>
-
-                            <span class="ms-3 text-[#333333] mr-5 select-none">Completed</span>
-                        </label>
-                    </div>
-                </div>
-
-
-
-
-
-
-                {showCompleted && (
-                    <div className="line-through text-[#333333]">
-                        <TaskList className="task-list"
-                            tasks={completedTasks}
-                            editingIndex={editingIndexCompleted}
-                            editTaskText={editTextCompleted}
-                            setEditTaskText={setEditTextCompleted}
-                            setEditingIndex={setEditingIndexCompleted}
-                            onEditTask={handleUpdateCompleted}
-                            onAlarmUpdate={handleUpdateAlarmCompleted}
-                            onRightClick={(e, index) => {
-                                e.preventDefault();
-                                setContextMenu({ visible: true, x: e.pageX, y: e.pageY, taskIndex: index, taskCompleted: true });
-                            }}
-                        />
-                    </div>
-                )}
-
-
-                {contextMenu.visible && (
-                    <ContextMenu
-                        top={contextMenu.y}
-                        left={contextMenu.x}
-                        onAction={(action) => {
-                            if (contextMenu.taskCompleted) {
-                                handleContextMenuCompleted(action);
-                            } else {
-                                handleContextMenuUncompleted(action);
-                            }
-                        }}
-                        isCompleted={contextMenu.taskCompleted}
+            <div className="absolute bottom-0 left-0 right-0">
+                    <TaskInput
+                        newTask={newTask}
+                        setNewTask={setNewTask}
+                        onAddTask={handleCreateTask}
+                        alarmTime={alarmTime}
+                        setAlarmTime={setAlarmTime}
+                        newAlarmVisible={newAlarmVisible}
+                        setNewAlarmVisible={setNewAlarmVisible}
+                        dueDate={dueDate}
+                        setDueDate={setDueDate}
+                        newDueDateVisible={newDueDateVisible}
+                        setNewDueDateVisible={setNewDueDateVisible}
                     />
-                )}
-
-                <TaskInput
-                    newTask={newTask}
-                    setNewTask={setNewTask}
-                    onAddTask={handleCreateTask}
-                    alarmTime={alarmTime}
-                    setAlarmTime={setAlarmTime}
-                    newAlarmVisible={newAlarmVisible}
-                    setNewAlarmVisible={setNewAlarmVisible}
-                />
+                </div>
 
             </div>
 
+            {contextMenu.visible && (
+                <ContextMenu
+                    top={contextMenu.y}
+                    left={contextMenu.x}
+                    onAction={(action) => {
+                        handleContextMenu(action);
 
-            <div class="grow-[1] flex">
-                <div class="task-calendar">
+                    }}
+                    isCompleted={contextMenu.task_is_completed}
+                />
+            )}
+
+
+            <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
+                <div className="text-white mt-6 text-2xl ">Graph View</div>
+                <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
+                <div className="text-white mt-6 text-2xl ">Graph View</div>
+                <div class="task-calendar mb-0">
                     <Calendar taskCounts={getCompletedCountsByDate()} />
                 </div>
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         </div>
