@@ -6,14 +6,22 @@ import axios from 'axios';
 const baseurl = "http://localhost:8000"
 
 
-export const readTasks = async (uid, taskList = null) => {
+// make it so can now filter read tasks
+export const readTasks = async (uid, task_list = null, task_created_time_stamp = null, task_is_completed = null, ) => {
     try {
         // Create an object for query parameters
         const task_params = { task_uid: uid };
 
         // Add task_list to params if provided
-        if (taskList !== null) {
-            task_params.task_list = taskList;
+        if (task_list !== null) {
+            task_params.task_list = task_list;
+
+        }
+        if (task_is_completed !== null) {
+            task_params.task_is_completed = task_is_completed;
+        }
+        if (task_created_time_stamp !== null) {
+            task_params.task_created_time_stamp = task_created_time_stamp;
         }
 
         // Send the GET request with the query parameters

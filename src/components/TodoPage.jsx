@@ -39,12 +39,24 @@ const TodoPage = () => {
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
 
 
-    // change logic later to take arugment for null
+
+
+
+
+
+
+
+
+
+
+    //states for reading tasks
+    const [readTasksByCreatedTimeStamp, setReadTasksByCreatedTimeStamp] = useState(null)
     const handleReadTasks = async (uid) => {
+
         if (currentList == "Tasks") {
-            var loadedTasks = await readTasks(uid);
+            var loadedTasks = await readTasks(uid, null, readTasksByCreatedTimeStamp);
         } else {
-            var loadedTasks = await readTasks(uid, currentList);
+            var loadedTasks = await readTasks(uid, currentList,  readTasksByCreatedTimeStamp);
         }
         setTasks(loadedTasks);
     };
