@@ -12,13 +12,14 @@ const Calendar = ({ taskCounts }) => {
 
   const currentDate= new Date();
   const startDate = new Date(currentDate);
-  startDate.setDate(currentDate.getDate() - 101); // 30 days before today
+  startDate.setDate(currentDate.getDate() - 131); // 30 days before today
   const endDate = new Date(currentDate);
   endDate.setDate(endDate.getDate());
 
   return (
-    <div className="calendar-heatmap-container">
+    <div className="calendar-heatmap-container flex-1">
       <CalendarHeatmap
+      className = "flex-1"
 
       //propertries for calendar 
       startDate={startDate}
