@@ -2,7 +2,7 @@
 import TaskInput from './TaskInput';
 import TaskGrouping from './TaskGrouping';
 import ContextMenu from './ContextMenu';
-import { readTaskAtId, readLists,readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID} from '../services/api';
+import { readTaskAtId, readLists,readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID, deleteAlarm,deleteDueDate} from '../services/api';
 import Calendar from './TaskCalendar'
 import ListInterface from './ListInterface'
 import './TodoPage.css';
@@ -205,6 +205,18 @@ const TodoPage = () => {
         const task = await readTaskAtId(task_id)
         setEditDueDateID(task.task_id)
     };
+    
+    const handleDeleteAlarm = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        await deleteAlarm(task.task_id, task.task_uid,{ ...task, task_id: task_id});
+        handleReadTasks(userUid);
+    };
+
+    const handleDeleteDueDate = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        await deleteDueDate(task.task_id, task.task_uid,{ ...task, task_id: task_id});
+        handleReadTasks(userUid);
+    };
 
     const handleContextMenu = (action) => {
         const task_id = contextMenu.task_id;
@@ -259,7 +271,8 @@ const TodoPage = () => {
                     handleUpdateDueDate={handleUpdateDueDate}
                     editDueDateID={editDueDateID}
                     setEditDueDateID={setEditDueDateID}
-
+                    handleDeleteAlarm={handleDeleteAlarm}
+                    handleDeleteDueDate={handleDeleteDueDate}
                 />
 
 
@@ -276,6 +289,8 @@ const TodoPage = () => {
                         setDueDate={setDueDate}
                         newDueDateVisible={newDueDateVisible}
                         setNewDueDateVisible={setNewDueDateVisible}
+                        handleDeleteAlarm={handleDeleteAlarm}
+                        handleDeleteDueDate={handleDeleteDueDate}
                     />
                 </div>
 

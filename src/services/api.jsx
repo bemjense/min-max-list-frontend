@@ -129,3 +129,19 @@ export const updateTask = async (task_id, task_uid, task_data) => {
         console.error('Error updating task:', error);
     }
 };
+
+export const deleteAlarm = async (task_id, task_uid, task_data) => {
+    try {
+        await axios.put(baseurl + `/tasks/delete_alarm/${task_id}`, task_data, task_uid);
+    } catch (error) {
+        console.error('Error deleting alarm:', error);
+    }
+};
+
+export const deleteDueDate = async (task_id, task_uid, task_data) => {
+    try {
+        await axios.put(baseurl + `/tasks/delete_due_date/${task_id}`, task_data, task_uid);
+    } catch (error) {
+        console.error('Error deleting due date:', error);
+    }
+};
