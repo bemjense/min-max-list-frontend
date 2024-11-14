@@ -5,6 +5,7 @@ import ContextMenu from './ContextMenu';
 import { readTaskAtId, readLists,readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID, deleteAlarm,deleteDueDate} from '../services/api';
 import Calendar from './TaskCalendar'
 import ListInterface from './ListInterface'
+import TaskFilter from './TaskFilter';
 import './TodoPage.css';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -50,19 +51,19 @@ const TodoPage = () => {
     //states and filters for reading tasks
     const [currentList, setCurrentList] = useState('Tasks');
     const [lists, setLists] = useState(['Tasks']);
-    const [filterTaskTimeStamp, setFilterTaskTimeStamp] = useState(null)
+    const [filterTaskCreatedTimeStamp, setFilterTaskCreatedTimeStamp] = useState(null)
     const handleReadTasks = async (uid) => {
         if (currentList == "Tasks") {
-            var loadedTasks = await readTasks(uid, null, filterTaskTimeStamp);
+            var loadedTasks = await readTasks(uid, null, filterTaskCreatedTimeStamp);
         } else {
-            var loadedTasks = await readTasks(uid, currentList,  filterTaskTimeStamp);
+            var loadedTasks = await readTasks(uid, currentList,  filterTaskCreatedTimeStamp);
         }
         console.log(new Date().toISOString())
         setTasks(loadedTasks);
     };
     //filter fucntion that modifies how hamdle Readtasks works 
     const handleSetFilterTaskTimeStamp = async(timeStampFilter) => {
-        setFilterTaskTimeStamp(timeStampFilter)
+        setFilterTaskCreatedTimeStamp(timeStampFilter)
     };
 
 
@@ -72,7 +73,7 @@ const TodoPage = () => {
         if (userUid) {
             handleReadTasks(userUid);
         }
-    }, [currentList, userUid, filterTaskTimeStamp]);
+    }, [currentList, userUid, filterTaskCreatedTimeStamp]);
 
     useEffect(() => {
         handleReadLists(userUid)
@@ -249,9 +250,14 @@ const TodoPage = () => {
 
 
             <div className="flex-col bg-[#] flex-[3_2_0%] relative">
-                <div className="flex gap-2">
+                <div className="flex gap-3 items-center">
                     <img src="/assets/star.svg" width="30" height="30" />
                     <h1 class="text-white text-2xl text-left mb-6 mt-6">{currentList}</h1>
+                    <TaskFilter 
+                    filterTaskCreatedTimeStamp={filterTaskCreatedTimeStamp}
+                    setFilterTaskCreatedTimeStamp={setFilterTaskCreatedTimeStamp}
+                    ></TaskFilter>
+
                 </div>
                 {/*Component where user enters information */}
                 {/*3 Arguments/ props */}
