@@ -14,8 +14,6 @@ const auth = getAuth();
 
 const TodoPage = () => {
     // multipleToDoLists State
-    const [currentList, setCurrentList] = useState('Tasks');
-    const [lists, setLists] = useState(['Tasks']);
 
     //Authetnication statesj
     const [userUid, setUserUid] = useState(null);
@@ -49,17 +47,21 @@ const TodoPage = () => {
 
 
 
-    //states for reading tasks
-    const [readTasksByCreatedTimeStamp, setReadTasksByCreatedTimeStamp] = useState(null)
+    //states and filters for reading tasks
+    const [currentList, setCurrentList] = useState('Tasks');
+    const [lists, setLists] = useState(['Tasks']);
+    const [filterTaskTimeStamp, setFilterTaskTimeStamp] = useState(null)
     const handleReadTasks = async (uid) => {
-
         if (currentList == "Tasks") {
-            var loadedTasks = await readTasks(uid, null, readTasksByCreatedTimeStamp);
+            var loadedTasks = await readTasks(uid, null, filterTaskTimeStamp);
         } else {
-            var loadedTasks = await readTasks(uid, currentList,  readTasksByCreatedTimeStamp);
+            var loadedTasks = await readTasks(uid, currentList,  filterTaskTimeStamp);
         }
+        console.log(new Date().toISOString())
         setTasks(loadedTasks);
     };
+
+
 
     //update if list changes for multiple to dolists
     useEffect(() => {
@@ -189,11 +191,18 @@ const TodoPage = () => {
         const task = await readTaskAtId(task_id)
         await updateTask(task.task_id, task.task_uid,{ ...task, task_due_date: dueDate});
         handleReadTasks(userUid);
+        console.log(task.task_due_date)
+    };
+
+
+
+    const handleSetFilterTaskTimeStamp = async(timeStampFilter) => {
+        setFilterTaskTimeStamp(timeStampFilter)
+        handleReadTasks(userUid);
     };
 
     const handleUpdateDueDateInContextMenu = async (task_id) => {
         const task = await readTaskAtId(task_id)
-        console.log(task.task_due_date)
         setEditDueDateID(task.task_id)
     };
 
@@ -290,7 +299,7 @@ const TodoPage = () => {
                 <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
                 <div className="text-white mt-6 text-2xl ">Graph View</div>
                 <div class="task-calendar mb-0">
-                    <Calendar taskCounts={getCompletedCountsByDate()} />
+                    <Calendar    handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} taskCounts={getCompletedCountsByDate()} />
                 </div>
             </div>
 

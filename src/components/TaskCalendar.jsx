@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Tooltip } from 'react-tooltip';
 
 
-const Calendar = ({ taskCounts }) => {
+const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp}) => {
 
 
   const [hoverInfo, setHoverInfo] = useState(null); // State to store hover information
@@ -31,33 +31,37 @@ const Calendar = ({ taskCounts }) => {
       showMonthLabels={true}
       values={taskCounts}
       viewbox = "0 10 100 10"
-
-
-      //color customization
-      classForValue={(value) => {
-        if (!value) {
-          return 'color-empty';
-        }
-        if (value.count > 3) {
-          return `color-scale-3`;
-        }
-        return `color-scale-${value.count}`;
+      onClick={(value) => {
+        const date = value.date ? new Date(value.date) : null;
+        handleSetFilterTaskTimeStamp(date.toISOString());
       }}
 
 
-      //hover tooltips
-      tooltipDataAttrs={(value) => {
-        if (!value || !value.date) {
-          return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };
-        }
+        //color customization
+        classForValue={(value) => {
+          if (!value) {
+            return 'color-empty';
+          }
+          if (value.count > 3) {
+            return `color-scale-3`;
+          }
+          return `color-scale-${value.count}`;
+        }}
+
+
+        //hover tooltips
+        tooltipDataAttrs={(value) => {
+          if (!value || !value.date) {
+            return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };
+          }
 
 
 
-        return {
-          'data-tooltip-id': 'task-tooltip',
-          'data-tooltip-content': `${value.date.toLocaleString().slice(0, 10)}: ${value.count} tasks completed`,
-        };
-      }}
+          return {
+            'data-tooltip-id': 'task-tooltip',
+            'data-tooltip-content': `${value.date.toLocaleString().slice(0, 10)}: ${value.count} tasks completed`,
+          };
+        }}
 
 
       />
