@@ -268,7 +268,7 @@ const TaskItem = ({
                             <button onClick={handleEditButton} className='ml-2'>
                                 <FaEdit size = {10} style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
                             </button>
-                            <div className="absolute bottom-2 right-2 text-[0.6rem] mr-6 text-gray-400"> {helperGetTaskDate(task)}</div>
+                            <div className={`absolute bottom-2 right-2 text-[0.6rem] mr-6 ${task.task_is_completed ? 'text-[#292929]' : 'text-gray-400'}`}> {helperGetTaskDate(task)}</div>
                         </div>
                     )}
 
