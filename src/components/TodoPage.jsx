@@ -60,6 +60,11 @@ const TodoPage = () => {
         console.log(new Date().toISOString())
         setTasks(loadedTasks);
     };
+    //filter fucntion that modifies how hamdle Readtasks works 
+    const handleSetFilterTaskTimeStamp = async(timeStampFilter) => {
+        setFilterTaskTimeStamp(timeStampFilter)
+        handleReadTasks(userUid);
+    };
 
 
 
@@ -196,10 +201,6 @@ const TodoPage = () => {
 
 
 
-    const handleSetFilterTaskTimeStamp = async(timeStampFilter) => {
-        setFilterTaskTimeStamp(timeStampFilter)
-        handleReadTasks(userUid);
-    };
 
     const handleUpdateDueDateInContextMenu = async (task_id) => {
         const task = await readTaskAtId(task_id)
