@@ -63,7 +63,6 @@ const TodoPage = () => {
     //filter fucntion that modifies how hamdle Readtasks works 
     const handleSetFilterTaskTimeStamp = async(timeStampFilter) => {
         setFilterTaskTimeStamp(timeStampFilter)
-        handleReadTasks(userUid);
     };
 
 
@@ -73,7 +72,7 @@ const TodoPage = () => {
         if (userUid) {
             handleReadTasks(userUid);
         }
-    }, [currentList, userUid]);
+    }, [currentList, userUid, filterTaskTimeStamp]);
 
     useEffect(() => {
         handleReadLists(userUid)
@@ -90,7 +89,7 @@ const TodoPage = () => {
 
             } else {
                 setUserUid(null); // Clear UID when the user is signed out
-                setUserEmail(null); 
+                setUserEmail(null);
             }
         });
 
@@ -110,7 +109,7 @@ const TodoPage = () => {
     }, [userUid]);
 
 
-    const handleReadLists = async(uid) => {
+    const handleReadLists = async (uid) => {
         const fetchedLists = await readLists(uid);
         if (!fetchedLists.includes("Tasks")) {
             fetchedLists.push("Tasks");
@@ -149,7 +148,7 @@ const TodoPage = () => {
 
     const handleCreateTask = async () => {
         if (newTask.trim()) {
-            await createTask(userUid, currentList,newTask, alarmTime,dueDate);
+            await createTask(userUid, currentList, newTask, alarmTime, dueDate);
             handleReadTasks(userUid)
             setNewTask('');
         }
@@ -162,7 +161,7 @@ const TodoPage = () => {
 
     const handleToggleStatus = async (task_id) => {
         const task = await readTaskAtId(task_id)
-        await updateTask(task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed});
+        await updateTask(task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed });
         handleReadTasks(userUid);
     };
 
@@ -182,19 +181,19 @@ const TodoPage = () => {
 
     const handleUpdateDesc = async (task_id, task_desc) => {
         const task = await readTaskAtId(task_id)
-        await updateTask(task.task_id, task.task_uid, { ...task, task_desc: task_desc});
+        await updateTask(task.task_id, task.task_uid, { ...task, task_desc: task_desc });
         handleReadTasks(userUid);
     };
 
     const handleUpdateAlarm = async (task_id, alarm) => {
         const task = await readTaskAtId(task_id)
-        await updateTask(task.task_id, task.task_uid,{ ...task, task_alarm_time: alarm});
+        await updateTask(task.task_id, task.task_uid, { ...task, task_alarm_time: alarm });
         handleReadTasks(userUid);
     };
 
     const handleUpdateDueDate = async (task_id, dueDate) => {
         const task = await readTaskAtId(task_id)
-        await updateTask(task.task_id, task.task_uid,{ ...task, task_due_date: dueDate});
+        await updateTask(task.task_id, task.task_uid, { ...task, task_due_date: dueDate });
         handleReadTasks(userUid);
         console.log(task.task_due_date)
     };
@@ -226,7 +225,7 @@ const TodoPage = () => {
 
             <div class="flex flex-1 flex-col bg-[#161616] m-0 justify-between items-center">
                 <div class="text-2xl text-white mb-6 mt-6">{userEmail}</div>
-                <ListInterface 
+                <ListInterface
                     currentList={currentList}
                     setCurrentList={setCurrentList}
                     setLists={setLists}
@@ -264,7 +263,7 @@ const TodoPage = () => {
                 />
 
 
-            <div className="absolute bottom-0 left-0 right-0">
+                <div className="absolute bottom-0 left-0 right-0">
                     <TaskInput
                         newTask={newTask}
                         setNewTask={setNewTask}
@@ -300,7 +299,7 @@ const TodoPage = () => {
                 <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
                 <div className="text-white mt-6 text-2xl ">Graph View</div>
                 <div class="task-calendar mb-0">
-                    <Calendar    handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} taskCounts={getCompletedCountsByDate()} />
+                    <Calendar handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} taskCounts={getCompletedCountsByDate()} />
                 </div>
             </div>
 
