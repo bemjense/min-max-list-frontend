@@ -31,8 +31,11 @@
 
 
 .react-calendar-heatmap .color-empty {
+  fill: none;
+}
+.react-calendar-heatmap .color-scale-0 { 
   fill: #333;
-  stroke-width: 1px;    
+
 }
 
 .react-calendar-heatmap .color-filled {

@@ -19,8 +19,10 @@ const TodoPage = () => {
     //Authetnication statesj
     const [userUid, setUserUid] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
-    //tasks display
+    //tasks display has filters effect it through handle read
     const [tasks, setTasks] = useState([]);
+    // contains all tasks in current state used for graph wihtout any filters effecting it
+    const [globalTasks, setGlobalTasks] = useState([]);
     //task input
     const [newTask, setNewTask] = useState('');
     //task edit store input value temporarily
@@ -60,6 +62,7 @@ const TodoPage = () => {
         }
         console.log(new Date().toISOString())
         setTasks(loadedTasks);
+        setGlobalTasks(await readTasks(uid))
     };
     //filter fucntion that modifies how hamdle Readtasks works 
     const handleSetFilterTaskTimeStamp = async(timeStampFilter) => {
@@ -126,7 +129,7 @@ const TodoPage = () => {
     const getCompletedCountsByDate = () => {
         const taskCounts = {};
 
-        tasks.forEach((task) => {
+        globalTasks.forEach((task) => {
             if (task.task_is_completed) {
                 const timeStamp = task.task_created_time_stamp;
                 const date = new Date(timeStamp.replace(' ', 'T'));
