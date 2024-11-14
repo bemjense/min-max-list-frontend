@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './ContextMenu.css';
 import { FaFolderOpen } from "react-icons/fa6";
+import { SiHomeassistant } from "react-icons/si";
 
 const ListInterface = ({currentList, setCurrentList, lists, setLists}) => {
     const [newListName, setNewListName] = useState("");
@@ -13,29 +14,26 @@ const ListInterface = ({currentList, setCurrentList, lists, setLists}) => {
     };
 
     return (
-        <div className="flex flex-col p-5 text-white  font-semibold text-2xl">
+        <div className="flex flex-col text-white  font-medium text-2xl">
 
-            <div>
+            <div className='flex flex-col '>
                 {lists.map((list) => (
                     list !== 'Tasks' && (
-                        <div className='flex'>
-                            <FaFolderOpen className="mr-3 mt-[5px]" />
+                        <div className='flex transition-all duration-300 hover:bg-[#3AA7FA] p-[6px]'>
+                            <FaFolderOpen className="ml-5 mr-3 mt-[5px]" />
                             <button onClick={() => setCurrentList(list)}>{list}</button>
                         </div>
                     )
                 ))}
                 {/*Ensure that main list is bottom*/}
-                <div className='flex'>
-                    <FaFolderOpen className="mr-3 mt-[5px]" />
+                <div className='flex transition-all duration-300 hover:bg-[#3AA7FA] p-[6px]'>
+                    <SiHomeassistant className="ml-5 mr-3 mt-[5px]" />
                     <button onClick={() => setCurrentList("Tasks")}>Tasks</button>
                 </div>
             </div>
 
 
 
-            <div className="text-3xl text-white flex p-5 bg-yellow-900 mt-4">
-                <FaFolderOpen className="mr-3" /> {currentList}
-            </div>
 
             <div className="flex mt-4 text-black">
                 <input

@@ -235,7 +235,7 @@ const TodoPage = () => {
 
         <div className="app-container" onClick={hideContextMenu}>
 
-            <div class="flex flex-1 flex-col bg-[#161616] m-0 justify-between items-center">
+            <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between ">
                 <div class="text-2xl text-white mb-6 mt-6">{userEmail}</div>
                 <ListInterface
                     currentList={currentList}

@@ -229,7 +229,7 @@ const TaskItem = ({
     };
 
     return (
-        <div className="flex-1 text-[0.8rem] font-medium w-full ">
+        <div className="flex-1 text-[0.8rem] w-full ">
 
             {/*then return userinput prompt else return normal render */}
             <div
