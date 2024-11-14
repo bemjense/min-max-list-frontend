@@ -322,6 +322,7 @@ const TodoPage = () => {
                 <div className="text-white mt-6 text-2xl ">Graph View</div>
                 <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
                 <div className="text-white mt-6 text-2xl ">Graph View</div>
+                <hr className="w-[50%] h-1 bg-[#ffffff] border-0 rounded md:my-5" />
                 <div class="task-calendar mb-0">
                     <Calendar handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} taskCounts={getCompletedCountsByDate()} />
                 </div>
