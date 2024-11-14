@@ -88,7 +88,7 @@ const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp}) => {
 
           return {
             'data-tooltip-id': 'task-tooltip',
-            'data-tooltip-content': `${value.date.toLocaleString().slice(0, 10)}: ${value.count} tasks completed`,
+            'data-tooltip-content': `${new Date(value.date).toLocaleDateString().slice(0, 10)}: ${value.count} tasks completed`,
           };
         }}
 
