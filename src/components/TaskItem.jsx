@@ -18,7 +18,9 @@ const TaskItem = ({
     editAlarmID,
     handleUpdateDueDate,
     editDueDateID,
-    setEditDueDateID
+    setEditDueDateID,
+    handleDeleteAlarm,
+    handleDeleteDueDate
 }) => {
     const [isEditingAlarm, setIsEditingAlarm] = useState(false); // Track alarm editing state
     const [isEditingDueDate, setIsEditingDueDate] = useState(false); // Track alarm editing state
@@ -117,6 +119,12 @@ const TaskItem = ({
                             }
                         },
                     },
+                    {
+                        content: 'Delete',
+                        onClick: () => {
+                            handleDeleteAlarm(task.task_id);
+                        },
+                    },
                 ],
                 position: hasSpaceAbove ? 'top right' : 'bottom right',
 
@@ -160,6 +168,12 @@ const TaskItem = ({
                             if (selectedDate) {
                                 handleUpdateDueDate(task.task_id, selectedDate); // Call function to update alarm
                             }
+                        },
+                    },
+                    {
+                        content: 'Delete',
+                        onClick: () => {
+                            handleDeleteDueDate(task.task_id);
                         },
                     },
                 ],
