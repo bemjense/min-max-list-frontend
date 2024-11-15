@@ -52,7 +52,7 @@ const TaskGrouping = ({
         ))}
       </div>
 
-      <hr className="h-1 bg-[#3AA7FA] border-0 rounded md:my-5" />
+      <hr className="h-1 bg-[#3AA7FA] border-0 rounded mt-0" />
 
       {/* Toggle Completed Tasks */}
       <div className="ml-[10px] mt-5 mb-[1px] flex">

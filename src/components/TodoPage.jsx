@@ -230,7 +230,7 @@ const TodoPage = () => {
             </div>
 
             <div className="flex-col bg-[#] flex-[3_2_0%] relative">
-                <div className="flex gap-3 items-center">
+                <div className="flex gap-3 items-center mb-0">
                     <img src="/assets/star.svg" width="30" height="30" />
                     <h1 class="text-white text-2xl text-left mb-6 mt-6">{currentList}</h1>
                     <TaskFilter

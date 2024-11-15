@@ -14,26 +14,28 @@ const ListInterface = ({currentList, setCurrentList, lists, setLists}) => {
     };
 
     return (
-        <div className="flex flex-col text-white  font-medium text-2xl">
+        <div className="flex flex-col text-white font-medium text-2xl">
 
-            <div className='flex flex-col '>
+            <div className='flex flex-col'>
                 {lists.map((list) => (
                     list !== 'Tasks' && (
-                        <div className='flex transition-all duration-300 hover:bg-[#3AA7FA] p-[6px]'>
+                        <div 
+                            className='flex transition-all duration-300 hover:bg-[#3AA7FA] p-[6px] cursor-pointer'
+                            onClick={() => setCurrentList(list)} 
+                        >
                             <FaFolderOpen className="ml-5 mr-3 mt-[5px]" />
-                            <button onClick={() => setCurrentList(list)}>{list}</button>
+                            <span>{list}</span>  
                         </div>
                     )
                 ))}
-                {/*Ensure that main list is bottom*/}
-                <div className='flex transition-all duration-300 hover:bg-[#3AA7FA] p-[6px]'>
+                <div 
+                    className='flex transition-all duration-300 hover:bg-[#3AA7FA] p-[6px] cursor-pointer' 
+                    onClick={() => setCurrentList("Tasks")}
+                >
                     <SiHomeassistant className="ml-5 mr-3 mt-[5px]" />
-                    <button onClick={() => setCurrentList("Tasks")}>Tasks</button>
+                    <span>Tasks</span> 
                 </div>
             </div>
-
-
-
 
             <div className="flex mt-4 text-black">
                 <input
@@ -44,7 +46,7 @@ const ListInterface = ({currentList, setCurrentList, lists, setLists}) => {
                     className="p-2 text-lg"
                     onKeyPress={(e) => {
                         if (e.key === 'Enter') {
-                            addList()
+                            addList();
                         }
                     }}
                 />
