@@ -18,7 +18,9 @@ const TaskItem = ({
     editAlarmID,
     handleUpdateDueDate,
     editDueDateID,
-    setEditDueDateID
+    setEditDueDateID,
+    handleDeleteAlarm,
+    handleDeleteDueDate
 }) => {
     const [isEditingAlarm, setIsEditingAlarm] = useState(false); // Track alarm editing state
     const [isEditingDueDate, setIsEditingDueDate] = useState(false); // Track alarm editing state
@@ -117,6 +119,12 @@ const TaskItem = ({
                             }
                         },
                     },
+                    {
+                        content: 'Delete',
+                        onClick: () => {
+                            handleDeleteAlarm(task.task_id);
+                        },
+                    },
                 ],
                 position: hasSpaceAbove ? 'top right' : 'bottom right',
 
@@ -160,6 +168,12 @@ const TaskItem = ({
                             if (selectedDate) {
                                 handleUpdateDueDate(task.task_id, selectedDate); // Call function to update alarm
                             }
+                        },
+                    },
+                    {
+                        content: 'Delete',
+                        onClick: () => {
+                            handleDeleteDueDate(task.task_id);
                         },
                     },
                 ],
@@ -215,7 +229,7 @@ const TaskItem = ({
     };
 
     return (
-        <div className="flex-1 text-[0.8rem] font-medium w-full ">
+        <div className="flex-1 text-[0.8rem] w-full ">
 
             {/*then return userinput prompt else return normal render */}
             <div
@@ -254,15 +268,15 @@ const TaskItem = ({
                             <button onClick={handleEditButton} className='ml-2'>
                                 <FaEdit size = {10} style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
                             </button>
-                            <div className="absolute bottom-2 right-2 text-[0.6rem] mr-6 text-gray-400"> {helperGetTaskDate(task)}</div>
+                            <div className={`absolute bottom-2 right-2 text-[0.6rem] mr-6 ${task.task_is_completed ? 'text-[#292929]' : 'text-gray-400'}`}> {helperGetTaskDate(task)}</div>
                         </div>
                     )}
 
 
 
-                    <div className="flex">
+                    <div className="flex ml-2">
                         {task.task_due_date && (
-                            <div className="dueDate-edit-button ml-4 mt-0.5">
+                            <div className="dueDate-edit-button ml-2 mt-0.5">
                                 <FaCalendarAlt size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
                             </div>
                         )}
@@ -281,11 +295,8 @@ const TaskItem = ({
                                 {new Date(task.task_due_date).toLocaleString()}
                             </span>
                         )}
-                    </div>
-
-                    <div className="flex">
                         {task.task_alarm_time && (
-                            <div className="alarm-edit-button ml-4 mt-0.5">
+                            <div className="alarm-edit-button ml-2 mt-0.5">
                                 <FaBell size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
                             </div>
                         )}
@@ -304,6 +315,9 @@ const TaskItem = ({
                                 {new Date(task.task_alarm_time).toLocaleString()}
                             </span>
                         )}
+                    </div>
+
+                    <div className="flex">
                     </div>
 
                     

@@ -2,9 +2,10 @@
 import TaskInput from './TaskInput';
 import TaskGrouping from './TaskGrouping';
 import ContextMenu from './ContextMenu';
-import { readTaskAtId, readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID} from '../services/api';
+import { readTaskAtId, readLists,readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID, deleteAlarm,deleteDueDate} from '../services/api';
 import Calendar from './TaskCalendar'
 import ListInterface from './ListInterface'
+import TaskFilter from './TaskFilter';
 import './TodoPage.css';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -14,14 +15,14 @@ const auth = getAuth();
 
 const TodoPage = () => {
     // multipleToDoLists State
-    const [currentList, setCurrentList] = useState('main_list');
-    const [lists, setLists] = useState(['main_list']);
 
     //Authetnication statesj
     const [userUid, setUserUid] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
-    //tasks display
+    //tasks display has filters effect it through handle read
     const [tasks, setTasks] = useState([]);
+    // contains all tasks in current state used for graph wihtout any filters effecting it
+    const [globalTasks, setGlobalTasks] = useState([]);
     //task input
     const [newTask, setNewTask] = useState('');
     //task edit store input value temporarily
@@ -40,11 +41,15 @@ const TodoPage = () => {
 
     
     // change logic later to take arugment for null
+    //states and filters for reading tasks
+    const [currentList, setCurrentList] = useState('Tasks');
+    const [lists, setLists] = useState(['Tasks']);
+    const [filterTaskCreatedTimeStamp, setFilterTaskCreatedTimeStamp] = useState(null)
     const handleReadTasks = async (uid) => {
-        if (currentList == "main_list") {
-            var loadedTasks = await readTasks(uid);
+        if (currentList == "Tasks") {
+            var loadedTasks = await readTasks(uid, null, filterTaskCreatedTimeStamp);
         } else {
-            var loadedTasks = await readTasks(uid, currentList);
+            var loadedTasks = await readTasks(uid, currentList,  filterTaskCreatedTimeStamp);
         }
 
         // Mark tasks as overdue if the due date is in the past
@@ -59,15 +64,24 @@ const TodoPage = () => {
         });
 
         setTasks(tasksWithOverdueStatus);
+        console.log(new Date().toLocaleString())
+        setTasks(loadedTasks);
+        setGlobalTasks(await readTasks(uid))
     };
-
+    //filter fucntion that modifies how hamdle Readtasks works 
+    const handleSetFilterTaskTimeStamp = async(timeStampFilter) => {
+        setFilterTaskCreatedTimeStamp(timeStampFilter)
+    };
     //update if list changes for multiple to dolists
     useEffect(() => {
         if (userUid) {
             handleReadTasks(userUid);
         }
-    }, [currentList, userUid]);
+    }, [currentList, userUid, filterTaskCreatedTimeStamp]);
 
+    useEffect(() => {
+        handleReadLists(userUid)
+    }, [tasks, userUid]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -79,10 +93,9 @@ const TodoPage = () => {
 
             } else {
                 setUserUid(null); // Clear UID when the user is signed out
-                setUserEmail(null); 
+                setUserEmail(null);
             }
         });
-
         return () => {
             unsubscribe();  // Clean up the listener when component unmounts
         };
@@ -98,13 +111,19 @@ const TodoPage = () => {
         handleReadTasks(userUid);
     }, [userUid]);
 
-
+    const handleReadLists = async (uid) => {
+        const fetchedLists = await readLists(uid);
+        if (!fetchedLists.includes("Tasks")) {
+            fetchedLists.push("Tasks");
+        }
+        setLists(fetchedLists);
+    }
 
     // used by graph fucntion. Modify this if you want to hcange how coloring works
     const getCompletedCountsByDate = () => {
         const taskCounts = {};
 
-        tasks.forEach((task) => {
+        globalTasks.forEach((task) => {
             if (task.task_is_completed) {
                 const timeStamp = task.task_created_time_stamp;
                 const date = new Date(timeStamp.replace(' ', 'T'));
@@ -123,11 +142,9 @@ const TodoPage = () => {
         }));
     };
 
-
-
     const handleCreateTask = async () => {
         if (newTask.trim()) {
-            await createTask(userUid, currentList,newTask, alarmTime,dueDate);
+            await createTask(userUid, currentList, newTask, alarmTime, dueDate);
             handleReadTasks(userUid)
             setNewTask('');
         }
@@ -138,10 +155,17 @@ const TodoPage = () => {
         handleReadTasks(userUid)
     };
 
+    const [isUpdating, setIsUpdating] = useState(false);
+
     const handleToggleStatus = async (task_id) => {
-        const task = await readTaskAtId(task_id)
-        await updateTask(task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed});
-        handleReadTasks(userUid);
+        if (isUpdating) return; // Prevent simultaneous updates
+        setIsUpdating(true);
+    
+        const task = await readTaskAtId(task_id);
+        await updateTask(task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed });
+        await handleReadTasks(userUid);
+    
+        setIsUpdating(false);
     };
 
 
@@ -160,26 +184,38 @@ const TodoPage = () => {
 
     const handleUpdateDesc = async (task_id, task_desc) => {
         const task = await readTaskAtId(task_id)
-        await updateTask(task.task_id, task.task_uid, { ...task, task_desc: task_desc});
+        await updateTask(task.task_id, task.task_uid, { ...task, task_desc: task_desc });
         handleReadTasks(userUid);
     };
 
     const handleUpdateAlarm = async (task_id, alarm) => {
         const task = await readTaskAtId(task_id)
-        await updateTask(task.task_id, task.task_uid,{ ...task, task_alarm_time: alarm});
+        await updateTask(task.task_id, task.task_uid, { ...task, task_alarm_time: alarm });
         handleReadTasks(userUid);
     };
 
     const handleUpdateDueDate = async (task_id, dueDate) => {
         const task = await readTaskAtId(task_id)
-        await updateTask(task.task_id, task.task_uid,{ ...task, task_due_date: dueDate});
+        await updateTask(task.task_id, task.task_uid, { ...task, task_due_date: dueDate });
         handleReadTasks(userUid);
+        console.log(task.task_due_date)
     };
 
     const handleUpdateDueDateInContextMenu = async (task_id) => {
         const task = await readTaskAtId(task_id)
-        console.log(task.task_due_date)
         setEditDueDateID(task.task_id)
+    };
+    
+    const handleDeleteAlarm = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        await deleteAlarm(task.task_id, task.task_uid,{ ...task, task_id: task_id});
+        handleReadTasks(userUid);
+    };
+
+    const handleDeleteDueDate = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        await deleteDueDate(task.task_id, task.task_uid,{ ...task, task_id: task_id});
+        handleReadTasks(userUid);
     };
 
     const handleContextMenu = (action) => {
@@ -192,16 +228,15 @@ const TodoPage = () => {
         else if (action === 'due_date') handleUpdateDueDateInContextMenu(task_id);
     };
 
-
     const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, task_id: null });
 
     return (
 
         <div className="app-container" onClick={hideContextMenu}>
 
-            <div class="flex flex-1 flex-col bg-[#161616] m-0 justify-between items-center">
+            <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between ">
                 <div class="text-2xl text-white mb-6 mt-6">{userEmail}</div>
-                <ListInterface 
+                <ListInterface
                     currentList={currentList}
                     setCurrentList={setCurrentList}
                     setLists={setLists}
@@ -210,36 +245,43 @@ const TodoPage = () => {
                 </ListInterface>
             </div>
 
-
-
             <div className="flex-col bg-[#] flex-[3_2_0%] relative">
-                <div className="flex gap-2">
+                <div className="flex gap-3 items-center">
                     <img src="/assets/star.svg" width="30" height="30" />
                     <h1 class="text-white text-2xl text-left mb-6 mt-6">{currentList}</h1>
+                    <TaskFilter
+                        filterTaskCreatedTimeStamp={filterTaskCreatedTimeStamp}
+                        setFilterTaskCreatedTimeStamp={setFilterTaskCreatedTimeStamp}
+                    ></TaskFilter>
+
                 </div>
                 {/*Component where user enters information */}
                 {/*3 Arguments/ props */}
 
                 {/*Component Tasklist*/}
-                <TaskGrouping className="task-list"
-                    tasks={tasks}
-                    handleUpdateAlarm={handleUpdateAlarm}
-                    setContextMenu={setContextMenu}
-                    editID={editID}
-                    setEditID={setEditID}
-                    editText={editText}
-                    setEditText={setEditText}
-                    setEditAlarmID={setEditAlarmID}
-                    editAlarmID={editAlarmID}
-                    handleUpdateDesc={handleUpdateDesc}
-                    handleUpdateDueDate={handleUpdateDueDate}
-                    editDueDateID={editDueDateID}
-                    setEditDueDateID={setEditDueDateID}
+                <div className="task-list-container">
+                    <TaskGrouping
+                        tasks={tasks}
+                        handleToggleStatus={handleToggleStatus}
+                        handleUpdateAlarm={handleUpdateAlarm}
+                        setContextMenu={setContextMenu}
+                        editID={editID}
+                        setEditID={setEditID}
+                        editText={editText}
+                        setEditText={setEditText}
+                        setEditAlarmID={setEditAlarmID}
+                        editAlarmID={editAlarmID}
+                        handleUpdateDesc={handleUpdateDesc}
+                        handleUpdateDueDate={handleUpdateDueDate}
+                        editDueDateID={editDueDateID}
+                        setEditDueDateID={setEditDueDateID}
+                        handleDeleteAlarm={handleDeleteAlarm}
+                        handleDeleteDueDate={handleDeleteDueDate}
+                    />
+                </div>
 
-                />
-
-
-            <div className="absolute bottom-0 left-0 right-0">
+                {/* Ensure this is not inside the scrolling container */}
+                <div className="task-input-container">
                     <TaskInput
                         newTask={newTask}
                         setNewTask={setNewTask}
@@ -252,6 +294,8 @@ const TodoPage = () => {
                         setDueDate={setDueDate}
                         newDueDateVisible={newDueDateVisible}
                         setNewDueDateVisible={setNewDueDateVisible}
+                        handleDeleteAlarm={handleDeleteAlarm}
+                        handleDeleteDueDate={handleDeleteDueDate}
                     />
                 </div>
 
@@ -269,17 +313,15 @@ const TodoPage = () => {
                 />
             )}
 
-
             <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
                 <div className="text-white mt-6 text-2xl ">Graph View</div>
                 <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
                 <div className="text-white mt-6 text-2xl ">Graph View</div>
+                <hr className="w-[50%] h-1 bg-[#ffffff] border-0 rounded md:my-5" />
                 <div class="task-calendar mb-0">
-                    <Calendar taskCounts={getCompletedCountsByDate()} />
+                    <Calendar handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} taskCounts={getCompletedCountsByDate()} />
                 </div>
             </div>
-
-
         </div>
     );
 };

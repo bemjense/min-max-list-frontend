@@ -8,7 +8,9 @@ import localeEn from 'air-datepicker/locale/en';
 
 const TaskInput = ({ newTask, setNewTask, onAddTask, 
     alarmTime, setAlarmTime, newAlarmVisible, setNewAlarmVisible, 
-    dueDate, setDueDate, newDueDateVisible, setNewDueDateVisible}) => {
+    dueDate, setDueDate, newDueDateVisible, setNewDueDateVisible,
+    handleDeleteAlarm,handleDeleteDueDate
+    }) => {
     
     // alarm datepicker calendar
     const dateTimePickerRef = useRef(null);
@@ -31,6 +33,12 @@ const TaskInput = ({ newTask, setNewTask, onAddTask,
                                 setAlarmTime(selectedDate);
                                 setNewAlarmVisible(false);
                             }
+                        },
+                    },
+                    {
+                        content: 'Delete',
+                        onClick: () => {
+                            setAlarmTime('')
                         },
                     },
                 ],
@@ -67,6 +75,12 @@ const TaskInput = ({ newTask, setNewTask, onAddTask,
                             }
                         },
                     },
+                    {
+                        content: 'Delete',
+                        onClick: () => {
+                            setDueDate('')
+                        },
+                    },
                 ],
                 position:"top right"
             });
@@ -95,7 +109,7 @@ const TaskInput = ({ newTask, setNewTask, onAddTask,
                     onClick={() => setNewAlarmVisible(!newAlarmVisible)}
                     title="Set an alarm"
                 >
-                    <FaBell style={{ color: newAlarmVisible ? 'blue' : 'white' }} />
+                    <FaBell style={{ color: newAlarmVisible ? 'gray' : 'white' }} />
                 </button>
                 {newAlarmVisible && (
                     <input
