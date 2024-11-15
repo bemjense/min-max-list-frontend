@@ -48,7 +48,7 @@ const TodoPage = () => {
         } else {
             var loadedTasks = await readTasks(uid, currentList,  filterTaskCreatedTimeStamp);
         }
-        console.log(new Date().toISOString())
+        console.log(new Date().toLocaleString())
         setTasks(loadedTasks);
         setGlobalTasks(await readTasks(uid))
     };
