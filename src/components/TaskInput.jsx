@@ -78,6 +78,10 @@ const TaskInput = ({ newTask, setNewTask, onAddTask,
     }, [newDueDateVisible, setDueDate]);
 
 
+    // Check if the due date is past and task is incomplete
+    const isTaskPastDue =
+        dueDate && !newTask && new Date(dueDate) < new Date();
+
     // render 
     return (
     
@@ -126,7 +130,12 @@ const TaskInput = ({ newTask, setNewTask, onAddTask,
                     </div>}
             </div>
 
-            <div className="border-[3px] border-white p-[16]  bg-[#161616] rounded-full mb-10 ">
+            {/* Task input box */}
+            <div
+                className={`border-[3px] border-white p-[16] bg-[#161616] rounded-full mb-10 ${
+                isTaskPastDue ? 'task-past-due' : ''
+                }`}
+            >
 
                 {/*Basic text input*/}
                 <div className='flex'>

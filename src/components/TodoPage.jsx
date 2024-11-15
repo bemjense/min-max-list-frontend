@@ -38,7 +38,7 @@ const TodoPage = () => {
     //context menu functionality
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
 
-
+    
     // change logic later to take arugment for null
     const handleReadTasks = async (uid) => {
         if (currentList == "main_list") {
@@ -47,7 +47,18 @@ const TodoPage = () => {
             var loadedTasks = await readTasks(uid, currentList);
         }
 
-        setTasks(loadedTasks);
+        // Mark tasks as overdue if the due date is in the past
+        const currentDate = new Date();
+        const tasksWithOverdueStatus = loadedTasks.map(task => {
+            if (task.task_due_date && new Date(task.task_due_date) < currentDate && !task.task_is_completed) {
+                task.is_overdue = true; // Add overdue status
+            } else {
+                task.is_overdue = false;
+            }
+            return task;
+        });
+
+        setTasks(tasksWithOverdueStatus);
     };
 
     //update if list changes for multiple to dolists
