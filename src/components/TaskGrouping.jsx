@@ -55,7 +55,7 @@ const TaskGrouping = ({
       <hr className="h-1 bg-[#3AA7FA] border-0 rounded md:my-5" />
 
       {/* Toggle Completed Tasks */}
-      <div className="mt-5 mb-5 flex">
+      <div className="ml-[10px] mt-5 mb-[1px] flex">
         <div className="rounded-full bg-[#8CC63F] flex hover:bg-[#AFDD66] transition-all duration-300">
           <label className="inline-flex items-center cursor-pointer m-1">
             <input

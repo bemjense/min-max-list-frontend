@@ -233,9 +233,9 @@ const TodoPage = () => {
                 <div className="flex gap-3 items-center">
                     <img src="/assets/star.svg" width="30" height="30" />
                     <h1 class="text-white text-2xl text-left mb-6 mt-6">{currentList}</h1>
-                    <TaskFilter 
-                    filterTaskCreatedTimeStamp={filterTaskCreatedTimeStamp}
-                    setFilterTaskCreatedTimeStamp={setFilterTaskCreatedTimeStamp}
+                    <TaskFilter
+                        filterTaskCreatedTimeStamp={filterTaskCreatedTimeStamp}
+                        setFilterTaskCreatedTimeStamp={setFilterTaskCreatedTimeStamp}
                     ></TaskFilter>
 
                 </div>
@@ -244,43 +244,43 @@ const TodoPage = () => {
 
                 {/*Component Tasklist*/}
                 <div className="task-list-container">
-                <TaskGrouping
-                    tasks={tasks}
-                    handleToggleStatus={handleToggleStatus}
-                    handleUpdateAlarm={handleUpdateAlarm}
-                    setContextMenu={setContextMenu}
-                    editID={editID}
-                    setEditID={setEditID}
-                    editText={editText}
-                    setEditText={setEditText}
-                    setEditAlarmID={setEditAlarmID}
-                    editAlarmID={editAlarmID}
-                    handleUpdateDesc={handleUpdateDesc}
-                    handleUpdateDueDate={handleUpdateDueDate}
-                    editDueDateID={editDueDateID}
-                    setEditDueDateID={setEditDueDateID}
-                    handleDeleteAlarm={handleDeleteAlarm}
-                    handleDeleteDueDate={handleDeleteDueDate}
-                />
+                    <TaskGrouping
+                        tasks={tasks}
+                        handleToggleStatus={handleToggleStatus}
+                        handleUpdateAlarm={handleUpdateAlarm}
+                        setContextMenu={setContextMenu}
+                        editID={editID}
+                        setEditID={setEditID}
+                        editText={editText}
+                        setEditText={setEditText}
+                        setEditAlarmID={setEditAlarmID}
+                        editAlarmID={editAlarmID}
+                        handleUpdateDesc={handleUpdateDesc}
+                        handleUpdateDueDate={handleUpdateDueDate}
+                        editDueDateID={editDueDateID}
+                        setEditDueDateID={setEditDueDateID}
+                        handleDeleteAlarm={handleDeleteAlarm}
+                        handleDeleteDueDate={handleDeleteDueDate}
+                    />
                 </div>
 
                 {/* Ensure this is not inside the scrolling container */}
                 <div className="task-input-container">
-                <TaskInput
-                    newTask={newTask}
-                    setNewTask={setNewTask}
-                    onAddTask={handleCreateTask}
-                    alarmTime={alarmTime}
-                    setAlarmTime={setAlarmTime}
-                    newAlarmVisible={newAlarmVisible}
-                    setNewAlarmVisible={setNewAlarmVisible}
-                    dueDate={dueDate}
-                    setDueDate={setDueDate}
-                    newDueDateVisible={newDueDateVisible}
-                    setNewDueDateVisible={setNewDueDateVisible}
-                    handleDeleteAlarm={handleDeleteAlarm}
-                    handleDeleteDueDate={handleDeleteDueDate}
-                />
+                    <TaskInput
+                        newTask={newTask}
+                        setNewTask={setNewTask}
+                        onAddTask={handleCreateTask}
+                        alarmTime={alarmTime}
+                        setAlarmTime={setAlarmTime}
+                        newAlarmVisible={newAlarmVisible}
+                        setNewAlarmVisible={setNewAlarmVisible}
+                        dueDate={dueDate}
+                        setDueDate={setDueDate}
+                        newDueDateVisible={newDueDateVisible}
+                        setNewDueDateVisible={setNewDueDateVisible}
+                        handleDeleteAlarm={handleDeleteAlarm}
+                        handleDeleteDueDate={handleDeleteDueDate}
+                    />
                 </div>
 
             </div>
@@ -296,7 +296,7 @@ const TodoPage = () => {
                     isCompleted={contextMenu.task_is_completed}
                 />
             )}
-            
+
             <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
                 <div className="text-white mt-6 text-2xl ">Graph View</div>
                 <div className="text-white mt-6 text-2xl ">Tasks Complete</div>

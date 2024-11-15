@@ -42,9 +42,6 @@
 .task-list-container {
   max-height: 70vh; /* Adjust this value as needed */
   overflow-y: auto; /* Enables vertical scrolling */
-  background-color: #292929; /* Matches your design */
-  border: 1px solid #333333; /* Subtle border to differentiate */
-  border-radius: 8px; /* Optional for rounded corners */
   padding: 16px; /* Adds spacing inside the container */
 }
 
