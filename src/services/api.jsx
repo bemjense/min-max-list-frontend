@@ -27,8 +27,19 @@ export const readTasks = async (uid, task_list = null, task_created_time_stamp =
         // Send the GET request with the query parameters
         const response = await axios.get(baseurl + `/tasks/`, { params: task_params });
 
-        // Sort the tasks by task_id
-        return response.data.sort((a, b) => a.task_id - b.task_id);
+        // Mark tasks as overdue if the due date is in the past
+        const currentDate = new Date();
+        const tasksWithOverdueStatus = response.data.map(task => {
+            if (task.task_due_date && new Date(task.task_due_date) < currentDate && !task.task_is_completed) {
+                task.is_overdue = true; // Add overdue status
+            } else {
+                task.is_overdue = false;
+            }
+            return task;
+        });
+
+        return tasksWithOverdueStatus.sort((a, b) => a.task_id - b.task_id);
+
     } catch (error) {
         console.error('Error fetching tasks:', error);
         return [];

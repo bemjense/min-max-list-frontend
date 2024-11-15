@@ -38,6 +38,9 @@ const TodoPage = () => {
     const [newDueDateVisible, setNewDueDateVisible] = useState(false);
     //context menu functionality
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
+
+    
+    // change logic later to take arugment for null
     //states and filters for reading tasks
     const [currentList, setCurrentList] = useState('Tasks');
     const [lists, setLists] = useState(['Tasks']);
@@ -48,6 +51,19 @@ const TodoPage = () => {
         } else {
             var loadedTasks = await readTasks(uid, currentList,  filterTaskCreatedTimeStamp);
         }
+
+        // Mark tasks as overdue if the due date is in the past
+        const currentDate = new Date();
+        const tasksWithOverdueStatus = loadedTasks.map(task => {
+            if (task.task_due_date && new Date(task.task_due_date) < currentDate && !task.task_is_completed) {
+                task.is_overdue = true; // Add overdue status
+            } else {
+                task.is_overdue = false;
+            }
+            return task;
+        });
+
+        setTasks(tasksWithOverdueStatus);
         console.log(new Date().toLocaleString())
         setTasks(loadedTasks);
         setGlobalTasks(await readTasks(uid))
