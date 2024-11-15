@@ -4,45 +4,33 @@ import './TaskCalendar.css';
 import { useState } from 'react';
 import { Tooltip } from 'react-tooltip';
 
-
 const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp}) => {
 
   const generateDateRange = (startDate, endDate, taskCounts) => {
-
-    // use map as dicitonary for already existing values
     const dateMap = {};
     taskCounts.forEach((task) => {
-      const formattedDate = new Date(task.date).toISOString().split('T')[0];
+      const formattedDate = new Date(task.date).toLocaleDateString(); 
       dateMap[formattedDate] = task;
     });
 
     const dates = [];
     let currentDate = new Date(startDate);
 
-    // insert placeholder dates
     while (currentDate <= endDate) {
-      const dateString = currentDate.toISOString().split('T')[0];
+      const dateString = currentDate.toLocaleDateString();
       dates.push({
         date: dateString,
-        // if datemap contains key then use datempa count else set to 0
         count: dateMap[dateString] ? dateMap[dateString].count : 0,
       });
-      //add
       currentDate.setDate(currentDate.getDate() + 1);
     }
     return dates;
-};
-
-
-
-  const [hoverInfo, setHoverInfo] = useState(null); // State to store hover information
+  };
 
   const currentDate = new Date();
   const startDate = new Date(currentDate);
-  startDate.setDate(currentDate.getDate() - 131); // 30 days before today
+  startDate.setDate(currentDate.getDate() - 131);
   const endDate = new Date(currentDate);
-  endDate.setDate(endDate.getDate());
-
 
   const filledTaskCounts = generateDateRange(startDate, endDate, taskCounts);
 
@@ -50,8 +38,6 @@ const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp}) => {
     <div className="calendar-heatmap-container flex-1">
       <CalendarHeatmap
         className="flex-1"
-
-        //propertries for calendar 
         startDate={startDate}
         endDate={endDate}
         showWeekdayLabels={true}
@@ -61,12 +47,11 @@ const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp}) => {
         showMonthLabels={true}
         values={filledTaskCounts}
         onClick={(value) => {
-          const date = value.date ? new Date(value.date) : null;
-          handleSetFilterTaskTimeStamp(date.toISOString());
+          if (value && value.date) {
+            const date = new Date(value.date);
+            handleSetFilterTaskTimeStamp(date.toISOString());
+          }
         }}
-
-
-        //color customization
         classForValue={(value) => {
           if (!value) {
             return 'color-empty';
@@ -76,30 +61,20 @@ const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp}) => {
           }
           return `color-scale-${value.count}`;
         }}
-
-
-        //hover tooltips
         tooltipDataAttrs={(value) => {
           if (!value || !value.date) {
             return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };
           }
-
-
-
+          const localDate = new Date(value.date).toLocaleDateString(); // Tooltip in local date format
           return {
             'data-tooltip-id': 'task-tooltip',
-            'data-tooltip-content': `${new Date(value.date).toLocaleDateString().slice(0, 10)}: ${value.count} tasks completed`,
+            'data-tooltip-content': `${localDate}: ${value.count} tasks completed`,
           };
         }}
-
-
       />
       <Tooltip id="task-tooltip" />
     </div>
   );
 };
-
-
-
 
 export default Calendar;
