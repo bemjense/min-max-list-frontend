@@ -38,18 +38,6 @@ const TodoPage = () => {
     const [newDueDateVisible, setNewDueDateVisible] = useState(false);
     //context menu functionality
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
-
-
-
-
-
-
-
-
-
-
-
-
     //states and filters for reading tasks
     const [currentList, setCurrentList] = useState('Tasks');
     const [lists, setLists] = useState(['Tasks']);
@@ -68,9 +56,6 @@ const TodoPage = () => {
     const handleSetFilterTaskTimeStamp = async(timeStampFilter) => {
         setFilterTaskCreatedTimeStamp(timeStampFilter)
     };
-
-
-
     //update if list changes for multiple to dolists
     useEffect(() => {
         if (userUid) {
@@ -81,7 +66,6 @@ const TodoPage = () => {
     useEffect(() => {
         handleReadLists(userUid)
     }, [tasks, userUid]);
-
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -96,7 +80,6 @@ const TodoPage = () => {
                 setUserEmail(null);
             }
         });
-
         return () => {
             unsubscribe();  // Clean up the listener when component unmounts
         };
@@ -112,7 +95,6 @@ const TodoPage = () => {
         handleReadTasks(userUid);
     }, [userUid]);
 
-
     const handleReadLists = async (uid) => {
         const fetchedLists = await readLists(uid);
         if (!fetchedLists.includes("Tasks")) {
@@ -120,10 +102,6 @@ const TodoPage = () => {
         }
         setLists(fetchedLists);
     }
-
-
-
-
 
     // used by graph fucntion. Modify this if you want to hcange how coloring works
     const getCompletedCountsByDate = () => {
@@ -148,8 +126,6 @@ const TodoPage = () => {
         }));
     };
 
-
-
     const handleCreateTask = async () => {
         if (newTask.trim()) {
             await createTask(userUid, currentList, newTask, alarmTime, dueDate);
@@ -163,10 +139,17 @@ const TodoPage = () => {
         handleReadTasks(userUid)
     };
 
+    const [isUpdating, setIsUpdating] = useState(false);
+
     const handleToggleStatus = async (task_id) => {
-        const task = await readTaskAtId(task_id)
+        if (isUpdating) return; // Prevent simultaneous updates
+        setIsUpdating(true);
+    
+        const task = await readTaskAtId(task_id);
         await updateTask(task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed });
-        handleReadTasks(userUid);
+        await handleReadTasks(userUid);
+    
+        setIsUpdating(false);
     };
 
 
@@ -202,9 +185,6 @@ const TodoPage = () => {
         console.log(task.task_due_date)
     };
 
-
-
-
     const handleUpdateDueDateInContextMenu = async (task_id) => {
         const task = await readTaskAtId(task_id)
         setEditDueDateID(task.task_id)
@@ -232,7 +212,6 @@ const TodoPage = () => {
         else if (action === 'due_date') handleUpdateDueDateInContextMenu(task_id);
     };
 
-
     const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, task_id: null });
 
     return (
@@ -250,8 +229,6 @@ const TodoPage = () => {
                 </ListInterface>
             </div>
 
-
-
             <div className="flex-col bg-[#] flex-[3_2_0%] relative">
                 <div className="flex gap-3 items-center">
                     <img src="/assets/star.svg" width="30" height="30" />
@@ -266,8 +243,10 @@ const TodoPage = () => {
                 {/*3 Arguments/ props */}
 
                 {/*Component Tasklist*/}
-                <TaskGrouping className="task-list"
+                <div className="task-list-container">
+                <TaskGrouping
                     tasks={tasks}
+                    handleToggleStatus={handleToggleStatus}
                     handleUpdateAlarm={handleUpdateAlarm}
                     setContextMenu={setContextMenu}
                     editID={editID}
@@ -283,24 +262,25 @@ const TodoPage = () => {
                     handleDeleteAlarm={handleDeleteAlarm}
                     handleDeleteDueDate={handleDeleteDueDate}
                 />
+                </div>
 
-
-                <div className="absolute bottom-0 left-0 right-0">
-                    <TaskInput
-                        newTask={newTask}
-                        setNewTask={setNewTask}
-                        onAddTask={handleCreateTask}
-                        alarmTime={alarmTime}
-                        setAlarmTime={setAlarmTime}
-                        newAlarmVisible={newAlarmVisible}
-                        setNewAlarmVisible={setNewAlarmVisible}
-                        dueDate={dueDate}
-                        setDueDate={setDueDate}
-                        newDueDateVisible={newDueDateVisible}
-                        setNewDueDateVisible={setNewDueDateVisible}
-                        handleDeleteAlarm={handleDeleteAlarm}
-                        handleDeleteDueDate={handleDeleteDueDate}
-                    />
+                {/* Ensure this is not inside the scrolling container */}
+                <div className="task-input-container">
+                <TaskInput
+                    newTask={newTask}
+                    setNewTask={setNewTask}
+                    onAddTask={handleCreateTask}
+                    alarmTime={alarmTime}
+                    setAlarmTime={setAlarmTime}
+                    newAlarmVisible={newAlarmVisible}
+                    setNewAlarmVisible={setNewAlarmVisible}
+                    dueDate={dueDate}
+                    setDueDate={setDueDate}
+                    newDueDateVisible={newDueDateVisible}
+                    setNewDueDateVisible={setNewDueDateVisible}
+                    handleDeleteAlarm={handleDeleteAlarm}
+                    handleDeleteDueDate={handleDeleteDueDate}
+                />
                 </div>
 
             </div>
@@ -316,8 +296,7 @@ const TodoPage = () => {
                     isCompleted={contextMenu.task_is_completed}
                 />
             )}
-
-
+            
             <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
                 <div className="text-white mt-6 text-2xl ">Graph View</div>
                 <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
@@ -327,8 +306,6 @@ const TodoPage = () => {
                     <Calendar handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} taskCounts={getCompletedCountsByDate()} />
                 </div>
             </div>
-
-
         </div>
     );
 };

@@ -1,13 +1,16 @@
+ body {
+    justify-content: center;
+    background: #1c1a19;
+ }
+ 
  .container{
     display: flex;
     flex-direction: column;
-    margin: auto;
-    width: 600px;
+    justify-content: center;
+    height: 100vh;
     background: #1c1a19;
-    padding-top: 200px;
-    padding-bottom: 100%;
+    overflow: hidden;
     padding-left: 15%;
-    padding-right: 15%;
 }
 
 .header{
@@ -161,25 +164,3 @@
     font-weight: 700;
     cursor: pointer;
 }
-
-/* .submit {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 220px;
-    height: 59px;
-    color: #fff;
-    background: #a0d406;
-    border-style: solid;
-    border-radius: 50px;
-    border-width: 0px 0px 6px 6px;
-    border-color: #ffda08;
-    font-size: 19px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.gray{
-    background: #eaeaea;
-    color: #676767;
-} */

@@ -17,13 +17,9 @@
     align-items: center; /* Vertically center the content */
 }
 
-
 .task.completed {
     background-color: #8CC63F;
 }
-
-
-
 
 .task-completed-overlay{
     position: relative;
