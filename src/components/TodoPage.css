@@ -43,6 +43,7 @@
   max-height: 70vh; /* Adjust this value as needed */
   overflow-y: auto; /* Enables vertical scrolling */
   padding: 16px; /* Adds spacing inside the container */
+  overflow-x: hidden;
 }
 
 /* Custom scrollbar styling */
