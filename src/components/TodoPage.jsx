@@ -54,7 +54,9 @@ const TodoPage = () => {
 
         // Mark tasks as overdue if the due date is in the past
         const currentDate = new Date();
-        const tasksWithOverdueStatus = loadedTasks.map(task => {
+
+        //assigning due dates for each tasks
+        loadedTasks.map(task => {
             if (task.task_due_date && new Date(task.task_due_date) < currentDate && !task.task_is_completed) {
                 task.is_overdue = true; // Add overdue status
             } else {
@@ -63,8 +65,6 @@ const TodoPage = () => {
             return task;
         });
 
-        setTasks(tasksWithOverdueStatus);
-        console.log(new Date().toLocaleString())
         setTasks(loadedTasks);
         setGlobalTasks(await readTasks(uid))
     };
