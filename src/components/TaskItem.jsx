@@ -234,6 +234,7 @@ const TaskItem = ({
         const dueDate = new Date(task.task_due_date);
         return now > dueDate && !task.task_is_completed;
     };
+
     const isTaskAlarmOverdue = (task) => {
         if (!task.task_alarm_time) return false;
         const now = new Date();

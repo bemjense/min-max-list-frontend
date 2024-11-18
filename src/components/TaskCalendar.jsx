@@ -49,7 +49,7 @@ const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp}) => {
         onClick={(value) => {
           if (value && value.date) {
             const date = new Date(value.date);
-            handleSetFilterTaskTimeStamp(date.toISOString());
+            handleSetFilterTaskTimeStamp(date.toLocaleDateString());
           }
         }}
         classForValue={(value) => {

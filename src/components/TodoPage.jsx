@@ -45,11 +45,12 @@ const TodoPage = () => {
     const [currentList, setCurrentList] = useState('Tasks');
     const [lists, setLists] = useState(['Tasks']);
     const [filterTaskCreatedTimeStamp, setFilterTaskCreatedTimeStamp] = useState(null)
+    const [filterTaskDueDate, setFilterTaskDueDate] = useState(null)
     const handleReadTasks = async (uid) => {
         if (currentList == "Tasks") {
-            var loadedTasks = await readTasks(uid, null, filterTaskCreatedTimeStamp);
+            var loadedTasks = await readTasks(uid, null, filterTaskCreatedTimeStamp, null, filterTaskDueDate);
         } else {
-            var loadedTasks = await readTasks(uid, currentList,  filterTaskCreatedTimeStamp);
+            var loadedTasks = await readTasks(uid, currentList,  filterTaskCreatedTimeStamp, null, filterTaskDueDate);
         }
 
         setTasks(loadedTasks);
@@ -59,12 +60,16 @@ const TodoPage = () => {
     const handleSetFilterTaskTimeStamp = async(timeStampFilter) => {
         setFilterTaskCreatedTimeStamp(timeStampFilter)
     };
+    //filter fucntion that modifies how hamdle Readtasks works 
+    const handleSetFilterTaskDueDate = async(timeStampFilter) => {
+        setFilterTaskDueDate(timeStampFilter)
+    };
     //update if list changes for multiple to dolists
     useEffect(() => {
         if (userUid) {
             handleReadTasks(userUid);
         }
-    }, [currentList, userUid, filterTaskCreatedTimeStamp]);
+    }, [currentList, userUid, filterTaskCreatedTimeStamp, filterTaskDueDate]);
 
     useEffect(() => {
         handleReadLists(userUid)
@@ -215,6 +220,9 @@ const TodoPage = () => {
         else if (action === 'due_date') handleUpdateDueDateInContextMenu(task_id);
     };
 
+
+
+
     const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, task_id: null });
 
     return (
@@ -222,7 +230,30 @@ const TodoPage = () => {
         <div className="app-container" onClick={hideContextMenu}>
 
             <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between ">
-                <div class="text-2xl text-white mb-6 mt-6">{userEmail}</div>
+                <div class="text-2xl text-white mb-6 mt-6 flex flex-col gap-5">{userEmail}
+                    <div class = "flex transition-all duration-300 hover:bg-[#3AA7FA]" 
+                        onClick={() => {
+                            const today = new Date();
+                            const formattedDate = today.toLocaleDateString('en-CA'); 
+                            handleSetFilterTaskDueDate(formattedDate); 
+                        }}
+                    >
+                        <img src="/assets/star.svg"  className = "ml-5 mr-1" width="30" height="30" />
+                        <div className="flex flex-col text-white font-medium text-2xl">
+                            <div className='flex flex-col'>
+                                <div
+                                    className='flex  p-[6px] cursor-pointer'
+                                >
+                                <span>Due Today</span>  
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
                 <ListInterface
                     currentList={currentList}
                     setCurrentList={setCurrentList}
@@ -239,6 +270,8 @@ const TodoPage = () => {
                     <TaskFilter
                         filterTaskCreatedTimeStamp={filterTaskCreatedTimeStamp}
                         setFilterTaskCreatedTimeStamp={setFilterTaskCreatedTimeStamp}
+                        filterTaskDueDate={filterTaskDueDate}
+                        setFilterTaskDueDate={setFilterTaskDueDate}
                     ></TaskFilter>
 
                 </div>

@@ -7,7 +7,7 @@ const baseurl = "http://localhost:8000"
 
 
 // make it so can now filter read tasks
-export const readTasks = async (uid, task_list = null, task_created_time_stamp = null, task_is_completed = null, ) => {
+export const readTasks = async (uid, task_list = null, task_created_time_stamp = null, task_is_completed = null, task_due_date = null) => {
     try {
         // Create an object for query parameters
         const task_params = { task_uid: uid };
@@ -22,6 +22,9 @@ export const readTasks = async (uid, task_list = null, task_created_time_stamp =
         }
         if (task_created_time_stamp !== null) {
             task_params.task_created_time_stamp = task_created_time_stamp;
+        }
+        if (task_due_date !== null) {
+            task_params.task_due_date = task_due_date;
         }
 
         // Send the GET request with the query parameters
