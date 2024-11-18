@@ -1,11 +1,45 @@
+import React, { useState } from 'react';
 
 const FilterInterface = ({ 
     handleSetFilterTaskDueDate,
     handleSetFilterTaskTimeStamp
 }) => {
+    const [date, setDate] = useState(null);
+    
 
     return (
+
                     <div className='flex-col'>
+
+                        <div className = "button goes here">
+
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <div class="flex transition-all duration-300 hover:bg-[#3AA7FA]"
                         onClick={() => {
                             const today = new Date();
