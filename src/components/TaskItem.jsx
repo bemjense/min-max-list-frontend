@@ -234,6 +234,12 @@ const TaskItem = ({
         const dueDate = new Date(task.task_due_date);
         return now > dueDate && !task.task_is_completed;
     };
+    const isTaskAlarmOverdue = (task) => {
+        if (!task.task_alarm_time) return false;
+        const now = new Date();
+        const dueDate = new Date(task.task_alarm_time);
+        return now > dueDate && !task.task_is_completed;
+    };
     
 
     return (
@@ -248,10 +254,20 @@ const TaskItem = ({
                         : `uncompleted ${isEditing ? 'bg-[#161616]' : 'hover:bg-[#161616]'}`
                     }`}
             >
+                {/*
                 {isTaskOverdue(task) && (
                     <span className="absolute bottom-0 left-0 flex h-3 w-3">
                         <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-[#FF5C5C] opacity-75"></span>
                         <span className="absolute inline-flex rounded-full h-3 w-3 bg-[#FF1F1F]"></span>
+                    </span>
+                )}
+                */}
+
+
+                {isTaskOverdue(task) && (
+                    <span className="absolute top-0 left-0 flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-500 opacity-75"></span>
+                        <span className="absolute inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
                     </span>
                 )}
 
