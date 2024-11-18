@@ -57,6 +57,3 @@
     pointer-events: none; /* Prevent interaction */
 }
 
-.task.overdue {
-    background-color: #FF4D4D; /* Red background for overdue tasks */
-}

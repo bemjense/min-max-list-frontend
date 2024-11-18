@@ -246,7 +246,7 @@ const TaskItem = ({
                 ${task.task_is_completed
                         ? `completed ${isEditing ? 'bg-[#AFDD66]' : 'hover:bg-[#AFDD66]'}`
                         : isTaskOverdue(task)
-                        ? 'overdue'
+                        ? 'bg-[#D11111] transition-all duration-300 hover:bg-[#891212]'
                         : `uncompleted ${isEditing ? 'bg-[#161616]' : 'hover:bg-[#161616]'}`
                 }`}
             >
