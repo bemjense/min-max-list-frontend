@@ -107,7 +107,16 @@ const LoginSignup = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+      <div className="submit-container">
+        <div
+          className={action === "Sign Up" ? "sign-up-submit" : "login-submit"}
+          onClick={handleSubmit}
+        >
+          {action}
+        </div>
       </div>
+      </div>
+
       {action === "Sign Up" ? (
         <div></div>
       ) : (
@@ -124,14 +133,6 @@ const LoginSignup = () => {
           Don't have an account? <div className='underline-sign-up-switch'></div>
         </div>
       )}
-      <div className="submit-container">
-        <div
-          className={action === "Sign Up" ? "sign-up-submit" : "login-submit"}
-          onClick={handleSubmit}
-        >
-          {action}
-        </div>
-      </div>
       {/* Button to navigate to TodoList page */}
       <div className="todo-list-button">
         <Link to="/TodoPage">
