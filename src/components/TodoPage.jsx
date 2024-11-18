@@ -9,6 +9,7 @@ import TaskFilter from './TaskFilter';
 import './TodoPage.css';
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import FilterInterface from './FilterInterface';
 
 const auth = getAuth();
 
@@ -228,49 +229,9 @@ const TodoPage = () => {
     return (
 
         <div className="app-container" onClick={hideContextMenu}>
-
             <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between ">
                 <div class="text-2xl text-white mb-6 mt-6 flex flex-col gap-5">{userEmail}
-                    <div className='flex-col'>
-                    <div class="flex transition-all duration-300 hover:bg-[#3AA7FA]"
-                        onClick={() => {
-                            const today = new Date();
-                            const formattedDate = today.toLocaleDateString('en-CA');
-                            handleSetFilterTaskDueDate(formattedDate);
-                        }}
-                    >
-                        <img src="/assets/star.svg" className="ml-5 mr-1" width="30" height="30" />
-                        <div className="flex flex-col text-white font-medium text-2xl">
-                            <div className='flex flex-col'>
-                                <div
-                                    className='flex  p-[6px] cursor-pointer'
-                                >
-                                    <span>Due Today</span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="flex transition-all duration-300 hover:bg-[#3AA7FA]"
-                        onClick={() => {
-                            const today = new Date();
-                            const formattedDate = today.toLocaleDateString('en-CA');
-                            handleSetFilterTaskTimeStamp(formattedDate);
-                        }}
-                    >
-                        <img src="/assets/star.svg" className="ml-5 mr-1" width="30" height="30" />
-                        <div className="flex flex-col text-white font-medium text-2xl">
-                            <div className='flex flex-col'>
-                                <div
-                                    className='flex  p-[6px] cursor-pointer'
-                                >
-                                    <span>Created Today</span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    </div>
+                    <FilterInterface handleSetFilterTaskDueDate={handleSetFilterTaskDueDate} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp}></FilterInterface>
                 </div>
 
 
