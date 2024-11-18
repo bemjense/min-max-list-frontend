@@ -228,6 +228,14 @@ const TaskItem = ({
         setEditText(null)
     };
 
+    const isTaskOverdue = (task) => {
+        if (!task.task_due_date) return false;
+        const now = new Date();
+        const dueDate = new Date(task.task_due_date);
+        return now > dueDate && !task.task_is_completed;
+    };
+    
+
     return (
         <div className="flex-1 text-[0.8rem] w-full ">
 
@@ -237,6 +245,8 @@ const TaskItem = ({
                 className={`text-left task w-full transition-all duration-300 motion-duration-500 motion-preset-blur-left
                 ${task.task_is_completed
                         ? `completed ${isEditing ? 'bg-[#AFDD66]' : 'hover:bg-[#AFDD66]'}`
+                        : isTaskOverdue(task)
+                        ? 'overdue'
                         : `uncompleted ${isEditing ? 'bg-[#161616]' : 'hover:bg-[#161616]'}`
                 }`}
             >
