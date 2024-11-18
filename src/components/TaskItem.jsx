@@ -242,14 +242,18 @@ const TaskItem = ({
             {/*then return userinput prompt else return normal render */}
             <div
                 onContextMenu={handleRightClick}
-                className={`text-left task w-full transition-all duration-300 motion-duration-500 motion-preset-blur-left
-                ${task.task_is_completed
+                className={`relative text-left task w-full transition-all duration-300 motion-duration-500 motion-preset-blur-left
+    ${task.task_is_completed
                         ? `completed ${isEditing ? 'bg-[#AFDD66]' : 'hover:bg-[#AFDD66]'}`
-                        : isTaskOverdue(task)
-                        ? 'bg-[#D11111] transition-all duration-300 hover:bg-[#891212]'
                         : `uncompleted ${isEditing ? 'bg-[#161616]' : 'hover:bg-[#161616]'}`
-                }`}
+                    }`}
             >
+                {isTaskOverdue(task) && (
+                    <span className="absolute bottom-0 left-0 flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-[#FF5C5C] opacity-75"></span>
+                        <span className="absolute inline-flex rounded-full h-3 w-3 bg-[#FF1F1F]"></span>
+                    </span>
+                )}
 
 
 
@@ -276,7 +280,7 @@ const TaskItem = ({
                             <div className="task-text ml-4">{task.task_desc} </div>
 
                             <button onClick={handleEditButton} className='ml-2'>
-                                <FaEdit size = {10} style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
+                                <FaEdit size={10} style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
                             </button>
                             <div className={`absolute bottom-2 right-2 text-[0.6rem] mr-6 ${task.task_is_completed ? 'text-[#292929]' : 'text-gray-400'}`}> {helperGetTaskDate(task)}</div>
                         </div>
@@ -330,7 +334,7 @@ const TaskItem = ({
                     <div className="flex">
                     </div>
 
-                    
+
                 </div>
 
             </div>
