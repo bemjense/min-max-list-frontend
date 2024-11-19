@@ -4,22 +4,27 @@ import './TaskCalendar.css';
 import React, { useState, useEffect } from 'react';
 import { Tooltip } from 'react-tooltip';
 
-const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp, globalTasks}) => {
+const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
     const [globalTasksCompleted, setGlobalTasksCompleted] = useState([]);
-    const [globalTasksUncompleted, setGlobalTasksUncompleted] = useState([]);
+    const [calendarTasks, setCalendarTasks] = useState([]);
+    const [displayCompleted, setDisplayCompleted] = useState(false)
 
 
 
 
 
 
+    const currentDate = new Date();
+    const startDate = new Date(currentDate);
+    startDate.setDate(currentDate.getDate() - 131);
+    const endDate = new Date(currentDate);
 
     // used by graph fucntion. Modify this if you want to hcange how coloring works
-    const getCompletedCountsByDate = () => {
+    const getDictOfCountAndDate = () => {
         const taskCounts = {};
 
         globalTasks.forEach((task) => {
-            if (task.task_is_completed) {
+            if ( displayCompleted === task.task_is_completed) {
                 const timeStamp = task.task_created_time_stamp;
                 const date = new Date(timeStamp.replace(' ', 'T'));
                 date.setHours(0, 0, 0, 0);
@@ -36,14 +41,11 @@ const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp, globalTasks}) => {
             count,
         }));
 
-        setGlobalTasksCompleted(dateAndCount)
+        return dateAndCount
     };
-  useEffect(() => {
-    getCompletedCountsByDate()
-  }, [globalTasks]);
 
 
-  const generateDateRange = (startDate, endDate, taskCounts) => {
+  const generateEmptyCountForNullDates = (startDate, endDate, taskCounts) => {
     const dateMap = {};
     taskCounts.forEach((task) => {
       const formattedDate = new Date(task.date).toLocaleDateString(); 
@@ -64,12 +66,10 @@ const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp, globalTasks}) => {
     return dates;
   };
 
-  const currentDate = new Date();
-  const startDate = new Date(currentDate);
-  startDate.setDate(currentDate.getDate() - 131);
-  const endDate = new Date(currentDate);
+  useEffect(() => {
+    setCalendarTasks(generateEmptyCountForNullDates(startDate, endDate, getDictOfCountAndDate()))
+  }, [globalTasks]);
 
-  const filledTaskCounts = generateDateRange(startDate, endDate, globalTasksCompleted);
 
   return (
     <div className="calendar-heatmap-container flex-1">
@@ -82,7 +82,7 @@ const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp, globalTasks}) => {
         horizontal={false}
         gutterSize={3}
         showMonthLabels={true}
-        values={filledTaskCounts}
+        values={calendarTasks}
         onClick={(value) => {
           if (value && value.date) {
             const date = new Date(value.date);
