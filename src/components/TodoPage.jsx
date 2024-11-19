@@ -7,6 +7,8 @@ import Calendar from './TaskCalendar'
 import ListInterface from './ListInterface'
 import TaskFilter from './TaskFilter';
 import './TodoPage.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toastify
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import FilterInterface from './FilterInterface';
@@ -206,6 +208,7 @@ const TodoPage = () => {
     return (
 
         <div className="app-container" onClick={hideContextMenu}>
+            <ToastContainer position="top-right" />
             <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between ">
                 <div class="text-2xl text-white mb-6 mt-6 flex flex-col gap-5">{userEmail}
                     <FilterInterface handleSetFilterTaskDueDate={handleSetFilterTaskDueDate} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp}></FilterInterface>
@@ -304,6 +307,7 @@ const TodoPage = () => {
                 </div>
             </div>
         </div>
+        
     );
 };
 

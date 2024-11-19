@@ -4,6 +4,8 @@ import { FaBell, FaEdit, FaCalendarAlt} from 'react-icons/fa';
 import AirDatepicker from 'air-datepicker';
 import 'air-datepicker/air-datepicker.css';
 import localeEn from 'air-datepicker/locale/en';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TaskItem = ({
     task,
@@ -69,21 +71,38 @@ const TaskItem = ({
 
 
 
-    //useEffect(() => {
-    //    const checkAlarm = () => {
-    //      const now = new Date();
-    //      if (!task.task_alarm_time) return; // No alarm set
+    useEffect(() => {
+        const checkAlarm = () => {
+          const now = new Date();
+          if (!task.task_alarm_time) return; // No alarm set
     
-    //      const alarmTime = new Date(task.task_alarm_time);
-    //      if (now >= alarmTime) {
-    //        alert(`Alarm notification! Time: ${alarmTime.toLocaleTimeString()}`);
-    //        handleUpdateAlarm(task.task_id, null)
-    //      }
-    //    };
+          const alarmTime = new Date(task.task_alarm_time);
+          if (now >= alarmTime) {
+            // Show a toast notification
+            const toastId = toast.info(`${task.task_desc} Alarm Time for : ${alarmTime.toLocaleTimeString()}`, {
+              autoClose: false,
+            });
+            // Send a desktop notification
+            if (Notification.permission === "granted") {
+                new Notification("Task Alarm", {
+                body: `${task.task_desc} Alarm Time: ${alarmTime.toLocaleTimeString()}`,
+                });
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then((permission) => {
+                if (permission === "granted") {
+                    new Notification("Task Alarm", {
+                    body: `${task.task_desc} Alarm Time: ${alarmTime.toLocaleTimeString()}`,
+                    });
+                }
+                });
+            }
+            handleDeleteAlarm(task.task_id);
+          }
+        };
     
-    //    const intervalId = setInterval(checkAlarm, 60000); // Check every minute
-    //    return () => clearInterval(intervalId); // Cleanup on unmount
-    //  }, [task]); // Re-run when task or alarm changes
+        const intervalId = setInterval(checkAlarm, 60000); // Check every minute
+        return () => clearInterval(intervalId); // Cleanup on unmount
+        }, [task]); // Re-run when task or alarm changes
 
 
 
