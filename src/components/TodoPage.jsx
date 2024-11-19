@@ -112,29 +112,6 @@ const TodoPage = () => {
         setLists(fetchedLists);
     }
 
-    // used by graph fucntion. Modify this if you want to hcange how coloring works
-    const getCompletedCountsByDate = () => {
-        const taskCounts = {};
-
-        globalTasks.forEach((task) => {
-            if (task.task_is_completed) {
-                const timeStamp = task.task_created_time_stamp;
-                const date = new Date(timeStamp.replace(' ', 'T'));
-                date.setHours(0, 0, 0, 0);
-
-                if (!taskCounts[date]) {
-                    taskCounts[date] = 0;
-                }
-                taskCounts[date]++;
-            }
-        });
-
-        return Object.entries(taskCounts).map(([date, count]) => ({
-            date,
-            count,
-        }));
-    };
-
     const handleCreateTask = async () => {
         if (newTask.trim()) {
             await createTask(userUid, currentList, newTask, alarmTime, dueDate);
@@ -323,7 +300,7 @@ const TodoPage = () => {
                 <div className="text-white mt-6 text-2xl ">Graph View</div>
                 <hr className="w-[50%] h-1 bg-[#ffffff] border-0 rounded md:my-5" />
                 <div class="task-calendar mb-0">
-                    <Calendar handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} taskCounts={getCompletedCountsByDate()} />
+                    <Calendar globalTasks = {globalTasks} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} />
                 </div>
             </div>
         </div>

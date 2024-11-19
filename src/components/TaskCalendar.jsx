@@ -1,10 +1,47 @@
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import './TaskCalendar.css';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tooltip } from 'react-tooltip';
 
-const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp}) => {
+const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp, globalTasks}) => {
+    const [globalTasksCompleted, setGlobalTasksCompleted] = useState([]);
+    const [globalTasksUncompleted, setGlobalTasksUncompleted] = useState([]);
+
+
+
+
+
+
+
+    // used by graph fucntion. Modify this if you want to hcange how coloring works
+    const getCompletedCountsByDate = () => {
+        const taskCounts = {};
+
+        globalTasks.forEach((task) => {
+            if (task.task_is_completed) {
+                const timeStamp = task.task_created_time_stamp;
+                const date = new Date(timeStamp.replace(' ', 'T'));
+                date.setHours(0, 0, 0, 0);
+
+                if (!taskCounts[date]) {
+                    taskCounts[date] = 0;
+                }
+                taskCounts[date]++;
+            }
+        });
+
+        const dateAndCount = Object.entries(taskCounts).map(([date, count]) => ({
+            date,
+            count,
+        }));
+
+        setGlobalTasksCompleted(dateAndCount)
+    };
+  useEffect(() => {
+    getCompletedCountsByDate()
+  }, [globalTasks]);
+
 
   const generateDateRange = (startDate, endDate, taskCounts) => {
     const dateMap = {};
@@ -32,7 +69,7 @@ const Calendar = ({ taskCounts, handleSetFilterTaskTimeStamp}) => {
   startDate.setDate(currentDate.getDate() - 131);
   const endDate = new Date(currentDate);
 
-  const filledTaskCounts = generateDateRange(startDate, endDate, taskCounts);
+  const filledTaskCounts = generateDateRange(startDate, endDate, globalTasksCompleted);
 
   return (
     <div className="calendar-heatmap-container flex-1">
