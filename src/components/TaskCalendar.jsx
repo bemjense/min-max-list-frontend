@@ -66,50 +66,73 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
     return dates;
   };
 
+  // update when new task is created or when user toggles display
   useEffect(() => {
     setCalendarTasks(generateEmptyCountForNullDates(startDate, endDate, getDictOfCountAndDate()))
-  }, [globalTasks]);
+  }, [globalTasks, displayCompleted]);
 
 
   return (
-    <div className="calendar-heatmap-container flex-1">
-      <CalendarHeatmap
-        className="flex-1"
-        startDate={startDate}
-        endDate={endDate}
-        showWeekdayLabels={true}
-        showOutOfRangeDays={false}
-        horizontal={false}
-        gutterSize={3}
-        showMonthLabels={true}
-        values={calendarTasks}
-        onClick={(value) => {
-          if (value && value.date) {
-            const date = new Date(value.date);
-            handleSetFilterTaskTimeStamp(date.toLocaleDateString());
-          }
-        }}
-        classForValue={(value) => {
-          if (!value) {
-            return 'color-empty';
-          }
-          if (value.count > 3) {
-            return `color-scale-3`;
-          }
-          return `color-scale-${value.count}`;
-        }}
-        tooltipDataAttrs={(value) => {
-          if (!value || !value.date) {
-            return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };
-          }
-          const localDate = new Date(value.date).toLocaleDateString(); // Tooltip in local date format
-          return {
-            'data-tooltip-id': 'task-tooltip',
-            'data-tooltip-content': `${localDate}: ${value.count} tasks completed`,
-          };
-        }}
-      />
-      <Tooltip id="task-tooltip" />
+    <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
+      <div className="text-white mt-6 text-2xl ">Graph View</div>
+      <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
+
+      <div
+        class=" text-white mt-6 text-2xl flex transition-all duration-300 hover:bg-[#3AA7FA]"
+        onClick={() => setDisplayCompleted((prev) => !prev)}
+      >
+
+        {displayCompleted ? 'Show Completed' : 'Show Uncompleted'}
+      </div>
+      <hr className="w-[50%] h-1 bg-[#ffffff] border-0 rounded md:my-5" />
+      <div class="task-calendar mb-0"></div>
+      <div className="calendar-heatmap-container flex-1">
+
+        <CalendarHeatmap
+          className="flex-1 "
+          startDate={startDate}
+          endDate={endDate}
+          showWeekdayLabels={true}
+          showOutOfRangeDays={false}
+          horizontal={false}
+          gutterSize={3}
+          showMonthLabels={true}
+          values={calendarTasks}
+          onClick={(value) => {
+            if (value && value.date) {
+              const date = new Date(value.date);
+              handleSetFilterTaskTimeStamp(date.toLocaleDateString());
+            }
+          }}
+          classForValue={(value) => {
+            if (!value) {
+              return 'color-empty';
+            }
+            if (value.count > 3) {
+              if (displayCompleted){
+                return `color-scale-3`;
+
+              } else {
+                return `color-scale-6`;
+              }
+            }
+            //hard coded lmao
+            return displayCompleted  ?  `color-scale-${value.count}`: value.count ? `color-scale-${value.count + 3}` : `color-scale-${value.count}`;
+          }}
+          tooltipDataAttrs={(value) => {
+            if (!value || !value.date) {
+              return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };
+            }
+            const localDate = new Date(value.date).toLocaleDateString(); // Tooltip in local date format
+            return {
+              'data-tooltip-id': 'task-tooltip',
+              'data-tooltip-content': `${localDate}: ${value.count} ${displayCompleted ? 'Completed' : 'Incompleted'}`,
+            };
+          }}
+        />
+        <Tooltip id="task-tooltip" />
+
+      </div>
     </div>
   );
 };

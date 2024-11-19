@@ -9,11 +9,11 @@ const TaskFilter = ({
 }) => {
     // Format the dates for display
     const formattedCreatedDate = filterTaskCreatedTimeStamp 
-        ? new Date(filterTaskCreatedTimeStamp).toISOString().slice(0, 10) 
+        ? new Date(filterTaskCreatedTimeStamp).toLocaleDateString('en-us').slice(0, 10) 
         : null;
 
     const formattedDueDate = filterTaskDueDate 
-        ? new Date(filterTaskDueDate).toISOString().slice(0, 10) 
+        ? new Date(filterTaskDueDate).toLocaleDateString('en-us').slice(0, 10) 
         : null;
 
     if (!filterTaskCreatedTimeStamp && !filterTaskDueDate) return null;

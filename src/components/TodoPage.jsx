@@ -298,15 +298,7 @@ const TodoPage = () => {
             )}
             <ToastContainer position="top-right flex" />
 
-            <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
-                <div className="text-white mt-6 text-2xl ">Graph View</div>
-                <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
-                <div className="text-white mt-6 text-2xl ">Graph View</div>
-                <hr className="w-[50%] h-1 bg-[#ffffff] border-0 rounded md:my-5" />
-                <div class="task-calendar mb-0">
-                    <Calendar globalTasks = {globalTasks} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} />
-                </div>
-            </div>
+            <Calendar globalTasks = {globalTasks} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} />
         </div>
         
     );
