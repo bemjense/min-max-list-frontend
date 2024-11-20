@@ -18,13 +18,17 @@ const TaskItem = ({
     editAlarmID,
     handleUpdateDueDate,
     editDueDateID,
-    setEditDueDateID
+    setEditDueDateID,
+    handleToggleStatus // function passed for changing task completion status with checkmark
 }) => {
     const [isEditingAlarm, setIsEditingAlarm] = useState(false); // Track alarm editing state
     const [isEditingDueDate, setIsEditingDueDate] = useState(false); // Track alarm editing state
     const dateTimePickerRef = useRef(null);
     const dueDateTimePickerRef = useRef(null);
     const [isEditing, setIsEditing] =useState(false);
+    const handleCheckboxToggle = () => {
+        handleToggleStatus(task.task_id); // call the function passed to update completion status
+    };
 
     const handleRightClick = (e) => {
         e.preventDefault();
@@ -82,16 +86,6 @@ const TaskItem = ({
     //    const intervalId = setInterval(checkAlarm, 60000); // Check every minute
     //    return () => clearInterval(intervalId); // Cleanup on unmount
     //  }, [task]); // Re-run when task or alarm changes
-
-
-
-
-
-
-
-
-
-
 
 
     useEffect(() => {
@@ -226,11 +220,14 @@ const TaskItem = ({
                         : `uncompleted ${isEditing ? 'bg-[#161616]' : 'hover:bg-[#161616]'}`
                 }`}
             >
-
-
-
                 <div className='flex flex-col w-full'>
-
+                    {/* Checkbox for toggling task completion */}
+                    <input
+                        type="checkbox"
+                        checked={task.task_is_completed}
+                        onChange={handleCheckboxChange}
+                        className="mr-2"
+                    />
                     {/*if state of task is currently editing then return userinput prompt else return normal render */}
                     {isEditing ? (
                         <div class={`${task.task_is_completed ? 'text-[#292929] '

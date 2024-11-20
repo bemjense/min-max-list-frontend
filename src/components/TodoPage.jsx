@@ -238,6 +238,7 @@ const TodoPage = () => {
                     handleUpdateDueDate={handleUpdateDueDate}
                     editDueDateID={editDueDateID}
                     setEditDueDateID={setEditDueDateID}
+                    handleToggleStatus={handleToggleStatus}
 
                 />
 

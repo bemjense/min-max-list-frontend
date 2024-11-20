@@ -17,7 +17,8 @@ const TaskGrouping = ({
     editAlarmID,
     handleUpdateDueDate,
     editDueDateID,
-    setEditDueDateID
+    setEditDueDateID,
+    handleToggleStatus
 }) => {
     const [showCompleted, setShowCompleted] = useState(false);
 
@@ -47,6 +48,7 @@ const TaskGrouping = ({
                     handleUpdateDueDate={handleUpdateDueDate}
                     editDueDateID={editDueDateID}
                     setEditDueDateID={setEditDueDateID}
+                    handleToggleStatus={handleToggleStatus}
                 />
             ))}
         </div>
