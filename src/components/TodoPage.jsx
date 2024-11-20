@@ -2,26 +2,30 @@
 import TaskInput from './TaskInput';
 import TaskGrouping from './TaskGrouping';
 import ContextMenu from './ContextMenu';
-import { readTaskAtId, readLists,readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID} from '../services/api';
+import { readTaskAtId, readLists,readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID, deleteAlarm,deleteDueDate} from '../services/api';
 import Calendar from './TaskCalendar'
 import ListInterface from './ListInterface'
+import TaskFilter from './TaskFilter';
 import './TodoPage.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toastify
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import FilterInterface from './FilterInterface';
 
 const auth = getAuth();
 
 
 const TodoPage = () => {
     // multipleToDoLists State
-    const [currentList, setCurrentList] = useState('Tasks');
-    const [lists, setLists] = useState(['Tasks']);
 
     //Authetnication statesj
     const [userUid, setUserUid] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
-    //tasks display
+    //tasks display has filters effect it through handle read
     const [tasks, setTasks] = useState([]);
+    // contains all tasks in current state used for graph wihtout any filters effecting it
+    const [globalTasks, setGlobalTasks] = useState([]);
     //task input
     const [newTask, setNewTask] = useState('');
     //task edit store input value temporarily
@@ -38,28 +42,41 @@ const TodoPage = () => {
     //context menu functionality
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
 
-
+    
     // change logic later to take arugment for null
+    //states and filters for reading tasks
+    const [currentList, setCurrentList] = useState('Tasks');
+    const [lists, setLists] = useState(['Tasks']);
+    const [filterTaskCreatedTimeStamp, setFilterTaskCreatedTimeStamp] = useState(null)
+    const [filterTaskDueDate, setFilterTaskDueDate] = useState(null)
     const handleReadTasks = async (uid) => {
         if (currentList == "Tasks") {
-            var loadedTasks = await readTasks(uid);
+            var loadedTasks = await readTasks(uid, null, filterTaskCreatedTimeStamp, null, filterTaskDueDate);
         } else {
-            var loadedTasks = await readTasks(uid, currentList);
+            var loadedTasks = await readTasks(uid, currentList,  filterTaskCreatedTimeStamp, null, filterTaskDueDate);
         }
-        setTasks(loadedTasks);
-    };
 
+        setTasks(loadedTasks);
+        setGlobalTasks(await readTasks(uid))
+    };
+    //filter fucntion that modifies how hamdle Readtasks works 
+    const handleSetFilterTaskTimeStamp = async(timeStampFilter) => {
+        setFilterTaskCreatedTimeStamp(timeStampFilter)
+    };
+    //filter fucntion that modifies how hamdle Readtasks works 
+    const handleSetFilterTaskDueDate = async(timeStampFilter) => {
+        setFilterTaskDueDate(timeStampFilter)
+    };
     //update if list changes for multiple to dolists
     useEffect(() => {
         if (userUid) {
             handleReadTasks(userUid);
         }
-    }, [currentList, userUid]);
+    }, [currentList, userUid, filterTaskCreatedTimeStamp, filterTaskDueDate]);
 
     useEffect(() => {
         handleReadLists(userUid)
     }, [tasks, userUid]);
-
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -71,10 +88,9 @@ const TodoPage = () => {
 
             } else {
                 setUserUid(null); // Clear UID when the user is signed out
-                setUserEmail(null); 
+                setUserEmail(null);
             }
         });
-
         return () => {
             unsubscribe();  // Clean up the listener when component unmounts
         };
@@ -90,8 +106,7 @@ const TodoPage = () => {
         handleReadTasks(userUid);
     }, [userUid]);
 
-
-    const handleReadLists = async(uid) => {
+    const handleReadLists = async (uid) => {
         const fetchedLists = await readLists(uid);
         if (!fetchedLists.includes("Tasks")) {
             fetchedLists.push("Tasks");
@@ -99,38 +114,9 @@ const TodoPage = () => {
         setLists(fetchedLists);
     }
 
-
-
-
-
-    // used by graph fucntion. Modify this if you want to hcange how coloring works
-    const getCompletedCountsByDate = () => {
-        const taskCounts = {};
-
-        tasks.forEach((task) => {
-            if (task.task_is_completed) {
-                const timeStamp = task.task_created_time_stamp;
-                const date = new Date(timeStamp.replace(' ', 'T'));
-                date.setHours(0, 0, 0, 0);
-
-                if (!taskCounts[date]) {
-                    taskCounts[date] = 0;
-                }
-                taskCounts[date]++;
-            }
-        });
-
-        return Object.entries(taskCounts).map(([date, count]) => ({
-            date,
-            count,
-        }));
-    };
-
-
-
     const handleCreateTask = async () => {
         if (newTask.trim()) {
-            await createTask(userUid, currentList,newTask, alarmTime,dueDate);
+            await createTask(userUid, currentList, newTask, alarmTime, dueDate);
             handleReadTasks(userUid)
             setNewTask('');
         }
@@ -141,10 +127,17 @@ const TodoPage = () => {
         handleReadTasks(userUid)
     };
 
+    const [isUpdating, setIsUpdating] = useState(false);
+
     const handleToggleStatus = async (task_id) => {
-        const task = await readTaskAtId(task_id)
-        await updateTask(task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed});
-        handleReadTasks(userUid);
+        if (isUpdating) return; // Prevent simultaneous updates
+        setIsUpdating(true);
+    
+        const task = await readTaskAtId(task_id);
+        await updateTask(task_id, task.task_uid, { ...task, task_is_completed: !task.task_is_completed });
+        await handleReadTasks(userUid);
+    
+        setIsUpdating(false);
     };
 
 
@@ -163,26 +156,38 @@ const TodoPage = () => {
 
     const handleUpdateDesc = async (task_id, task_desc) => {
         const task = await readTaskAtId(task_id)
-        await updateTask(task.task_id, task.task_uid, { ...task, task_desc: task_desc});
+        await updateTask(task.task_id, task.task_uid, { ...task, task_desc: task_desc });
         handleReadTasks(userUid);
     };
 
     const handleUpdateAlarm = async (task_id, alarm) => {
         const task = await readTaskAtId(task_id)
-        await updateTask(task.task_id, task.task_uid,{ ...task, task_alarm_time: alarm});
+        await updateTask(task.task_id, task.task_uid, { ...task, task_alarm_time: alarm });
         handleReadTasks(userUid);
     };
 
     const handleUpdateDueDate = async (task_id, dueDate) => {
         const task = await readTaskAtId(task_id)
-        await updateTask(task.task_id, task.task_uid,{ ...task, task_due_date: dueDate});
+        await updateTask(task.task_id, task.task_uid, { ...task, task_due_date: dueDate });
         handleReadTasks(userUid);
+        console.log(task.task_due_date)
     };
 
     const handleUpdateDueDateInContextMenu = async (task_id) => {
         const task = await readTaskAtId(task_id)
-        console.log(task.task_due_date)
         setEditDueDateID(task.task_id)
+    };
+    
+    const handleDeleteAlarm = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        await deleteAlarm(task.task_id, task.task_uid,{ ...task, task_id: task_id});
+        handleReadTasks(userUid);
+    };
+
+    const handleDeleteDueDate = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        await deleteDueDate(task.task_id, task.task_uid,{ ...task, task_id: task_id});
+        handleReadTasks(userUid);
     };
 
     const handleContextMenu = (action) => {
@@ -196,15 +201,24 @@ const TodoPage = () => {
     };
 
 
+
+
     const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, task_id: null });
 
     return (
 
         <div className="app-container" onClick={hideContextMenu}>
 
-            <div class="flex flex-1 flex-col bg-[#161616] m-0 justify-between items-center">
-                <div class="text-2xl text-white mb-6 mt-6">{userEmail}</div>
-                <ListInterface 
+            <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between ">
+                <div class="text-2xl text-white mb-6 mt-6 flex flex-col gap-5">{userEmail}
+                    <FilterInterface handleSetFilterTaskDueDate={handleSetFilterTaskDueDate} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp}></FilterInterface>
+                </div>
+
+
+
+
+
+                <ListInterface
                     currentList={currentList}
                     setCurrentList={setCurrentList}
                     setLists={setLists}
@@ -213,37 +227,46 @@ const TodoPage = () => {
                 </ListInterface>
             </div>
 
-
-
             <div className="flex-col bg-[#] flex-[3_2_0%] relative">
-                <div className="flex gap-2">
+                <div className="flex gap-3 items-center mb-0">
                     <img src="/assets/star.svg" width="30" height="30" />
                     <h1 class="text-white text-2xl text-left mb-6 mt-6">{currentList}</h1>
+                    <TaskFilter
+                        filterTaskCreatedTimeStamp={filterTaskCreatedTimeStamp}
+                        setFilterTaskCreatedTimeStamp={setFilterTaskCreatedTimeStamp}
+                        filterTaskDueDate={filterTaskDueDate}
+                        setFilterTaskDueDate={setFilterTaskDueDate}
+                    ></TaskFilter>
+
                 </div>
                 {/*Component where user enters information */}
                 {/*3 Arguments/ props */}
 
                 {/*Component Tasklist*/}
-                <TaskGrouping className="task-list"
-                    tasks={tasks}
-                    handleUpdateAlarm={handleUpdateAlarm}
-                    setContextMenu={setContextMenu}
-                    editID={editID}
-                    setEditID={setEditID}
-                    editText={editText}
-                    setEditText={setEditText}
-                    setEditAlarmID={setEditAlarmID}
-                    editAlarmID={editAlarmID}
-                    handleUpdateDesc={handleUpdateDesc}
-                    handleUpdateDueDate={handleUpdateDueDate}
-                    editDueDateID={editDueDateID}
-                    setEditDueDateID={setEditDueDateID}
-                    handleToggleStatus={handleToggleStatus}
+                <div className="task-list-container">
+                    <TaskGrouping
+                        tasks={tasks}
+                        handleToggleStatus={handleToggleStatus}
+                        handleUpdateAlarm={handleUpdateAlarm}
+                        setContextMenu={setContextMenu}
+                        editID={editID}
+                        setEditID={setEditID}
+                        editText={editText}
+                        setEditText={setEditText}
+                        setEditAlarmID={setEditAlarmID}
+                        editAlarmID={editAlarmID}
+                        handleUpdateDesc={handleUpdateDesc}
+                        handleUpdateDueDate={handleUpdateDueDate}
+                        editDueDateID={editDueDateID}
+                        setEditDueDateID={setEditDueDateID}
+                        handleDeleteAlarm={handleDeleteAlarm}
+                        handleDeleteDueDate={handleDeleteDueDate}                    handleToggleStatus={handleToggleStatus}
 
-                />
+                    />
+                </div>
 
-
-            <div className="absolute bottom-0 left-0 right-0">
+                {/* Ensure this is not inside the scrolling container */}
+                <div className="task-input-container">
                     <TaskInput
                         newTask={newTask}
                         setNewTask={setNewTask}
@@ -256,6 +279,8 @@ const TodoPage = () => {
                         setDueDate={setDueDate}
                         newDueDateVisible={newDueDateVisible}
                         setNewDueDateVisible={setNewDueDateVisible}
+                        handleDeleteAlarm={handleDeleteAlarm}
+                        handleDeleteDueDate={handleDeleteDueDate}
                     />
                 </div>
 
@@ -272,19 +297,11 @@ const TodoPage = () => {
                     isCompleted={contextMenu.task_is_completed}
                 />
             )}
+            <ToastContainer position="top-right flex" />
 
-
-            <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
-                <div className="text-white mt-6 text-2xl ">Graph View</div>
-                <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
-                <div className="text-white mt-6 text-2xl ">Graph View</div>
-                <div class="task-calendar mb-0">
-                    <Calendar taskCounts={getCompletedCountsByDate()} />
-                </div>
-            </div>
-
-
+            <Calendar globalTasks = {globalTasks} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} />
         </div>
+        
     );
 };
 

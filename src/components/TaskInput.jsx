@@ -8,7 +8,9 @@ import localeEn from 'air-datepicker/locale/en';
 
 const TaskInput = ({ newTask, setNewTask, onAddTask, 
     alarmTime, setAlarmTime, newAlarmVisible, setNewAlarmVisible, 
-    dueDate, setDueDate, newDueDateVisible, setNewDueDateVisible}) => {
+    dueDate, setDueDate, newDueDateVisible, setNewDueDateVisible,
+    handleDeleteAlarm,handleDeleteDueDate
+    }) => {
     
     // alarm datepicker calendar
     const dateTimePickerRef = useRef(null);
@@ -31,6 +33,12 @@ const TaskInput = ({ newTask, setNewTask, onAddTask,
                                 setAlarmTime(selectedDate);
                                 setNewAlarmVisible(false);
                             }
+                        },
+                    },
+                    {
+                        content: 'Delete',
+                        onClick: () => {
+                            setAlarmTime('')
                         },
                     },
                 ],
@@ -67,6 +75,12 @@ const TaskInput = ({ newTask, setNewTask, onAddTask,
                             }
                         },
                     },
+                    {
+                        content: 'Delete',
+                        onClick: () => {
+                            setDueDate('')
+                        },
+                    },
                 ],
                 position:"top right"
             });
@@ -77,6 +91,10 @@ const TaskInput = ({ newTask, setNewTask, onAddTask,
         };
     }, [newDueDateVisible, setDueDate]);
 
+
+    // Check if the due date is past and task is incomplete
+    const isTaskPastDue =
+        dueDate && !newTask && new Date(dueDate) < new Date();
 
     // render 
     return (
@@ -91,7 +109,7 @@ const TaskInput = ({ newTask, setNewTask, onAddTask,
                     onClick={() => setNewAlarmVisible(!newAlarmVisible)}
                     title="Set an alarm"
                 >
-                    <FaBell style={{ color: newAlarmVisible ? 'blue' : 'white' }} />
+                    <FaBell style={{ color: newAlarmVisible ? 'gray' : 'white' }} />
                 </button>
                 {newAlarmVisible && (
                     <input
@@ -126,7 +144,12 @@ const TaskInput = ({ newTask, setNewTask, onAddTask,
                     </div>}
             </div>
 
-            <div className="border-[3px] border-white p-[16]  bg-[#161616] rounded-full mb-10 ">
+            {/* Task input box */}
+            <div
+                className={`border-[3px] border-white p-[16] bg-[#161616] rounded-full mb-10 ${
+                isTaskPastDue ? 'task-past-due' : ''
+                }`}
+            >
 
                 {/*Basic text input*/}
                 <div className='flex'>

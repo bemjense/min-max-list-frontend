@@ -6,14 +6,25 @@ import axios from 'axios';
 const baseurl = "http://localhost:8000"
 
 
-export const readTasks = async (uid, taskList = null) => {
+// make it so can now filter read tasks
+export const readTasks = async (uid, task_list = null, task_created_time_stamp = null, task_is_completed = null, task_due_date = null) => {
     try {
         // Create an object for query parameters
         const task_params = { task_uid: uid };
 
         // Add task_list to params if provided
-        if (taskList !== null) {
-            task_params.task_list = taskList;
+        if (task_list !== null) {
+            task_params.task_list = task_list;
+
+        }
+        if (task_is_completed !== null) {
+            task_params.task_is_completed = task_is_completed;
+        }
+        if (task_created_time_stamp !== null) {
+            task_params.task_created_time_stamp = task_created_time_stamp;
+        }
+        if (task_due_date !== null) {
+            task_params.task_due_date = task_due_date;
         }
 
         // Send the GET request with the query parameters
@@ -119,5 +130,21 @@ export const updateTask = async (task_id, task_uid, task_data) => {
         await axios.put(baseurl + `/tasks/${task_id}`, task_data, task_uid);
     } catch (error) {
         console.error('Error updating task:', error);
+    }
+};
+
+export const deleteAlarm = async (task_id, task_uid, task_data) => {
+    try {
+        await axios.put(baseurl + `/tasks/delete_alarm/${task_id}`, task_data, task_uid);
+    } catch (error) {
+        console.error('Error deleting alarm:', error);
+    }
+};
+
+export const deleteDueDate = async (task_id, task_uid, task_data) => {
+    try {
+        await axios.put(baseurl + `/tasks/delete_due_date/${task_id}`, task_data, task_uid);
+    } catch (error) {
+        console.error('Error deleting due date:', error);
     }
 };

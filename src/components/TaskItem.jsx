@@ -4,6 +4,8 @@ import { FaBell, FaEdit, FaCalendarAlt} from 'react-icons/fa';
 import AirDatepicker from 'air-datepicker';
 import 'air-datepicker/air-datepicker.css';
 import localeEn from 'air-datepicker/locale/en';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TaskItem = ({
     task,
@@ -19,6 +21,8 @@ const TaskItem = ({
     handleUpdateDueDate,
     editDueDateID,
     setEditDueDateID,
+    handleDeleteAlarm,
+    handleDeleteDueDate,
     handleToggleStatus // function passed for changing task completion status with checkmark
 }) => {
     const [isEditingAlarm, setIsEditingAlarm] = useState(false); // Track alarm editing state
@@ -71,21 +75,48 @@ const TaskItem = ({
 
 
 
-    //useEffect(() => {
-    //    const checkAlarm = () => {
-    //      const now = new Date();
-    //      if (!task.task_alarm_time) return; // No alarm set
+    useEffect(() => {
+        const checkAlarm = () => {
+          const now = new Date();
+          if (!task.task_alarm_time) return; // No alarm set
     
-    //      const alarmTime = new Date(task.task_alarm_time);
-    //      if (now >= alarmTime) {
-    //        alert(`Alarm notification! Time: ${alarmTime.toLocaleTimeString()}`);
-    //        handleUpdateAlarm(task.task_id, null)
-    //      }
-    //    };
+          const alarmTime = new Date(task.task_alarm_time);
+          if (now >= alarmTime) {
+            // Show a toast notification
+            const toastId = toast.info(`${task.task_desc} Alarm Time for : ${alarmTime.toLocaleTimeString()}`, {
+              autoClose: false,
+            });
+            // Send a desktop notification
+            if (Notification.permission === "granted") {
+                new Notification("Task Alarm", {
+                body: `${task.task_desc} Alarm Time: ${alarmTime.toLocaleTimeString()}`,
+                });
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then((permission) => {
+                if (permission === "granted") {
+                    new Notification("Task Alarm", {
+                    body: `${task.task_desc} Alarm Time: ${alarmTime.toLocaleTimeString()}`,
+                    });
+                }
+                });
+            }
+            handleDeleteAlarm(task.task_id);
+          }
+        };
     
-    //    const intervalId = setInterval(checkAlarm, 60000); // Check every minute
-    //    return () => clearInterval(intervalId); // Cleanup on unmount
-    //  }, [task]); // Re-run when task or alarm changes
+        const intervalId = setInterval(checkAlarm, 60000); // Check every minute
+        return () => clearInterval(intervalId); // Cleanup on unmount
+        }, [task]); // Re-run when task or alarm changes
+
+
+
+
+
+
+
+
+
+
 
 
     useEffect(() => {
@@ -109,6 +140,12 @@ const TaskItem = ({
                             if (selectedDate) {
                                 handleUpdateAlarm(task.task_id, selectedDate); // Call function to update alarm
                             }
+                        },
+                    },
+                    {
+                        content: 'Delete',
+                        onClick: () => {
+                            handleDeleteAlarm(task.task_id);
                         },
                     },
                 ],
@@ -154,6 +191,12 @@ const TaskItem = ({
                             if (selectedDate) {
                                 handleUpdateDueDate(task.task_id, selectedDate); // Call function to update alarm
                             }
+                        },
+                    },
+                    {
+                        content: 'Delete',
+                        onClick: () => {
+                            handleDeleteDueDate(task.task_id);
                         },
                     },
                 ],
@@ -208,18 +251,52 @@ const TaskItem = ({
         setEditText(null)
     };
 
+    const isTaskOverdue = (task) => {
+        if (!task.task_due_date) return false;
+        const now = new Date();
+        const dueDate = new Date(task.task_due_date);
+        return now > dueDate && !task.task_is_completed;
+    };
+
+    const isTaskAlarmOverdue = (task) => {
+        if (!task.task_alarm_time) return false;
+        const now = new Date();
+        const dueDate = new Date(task.task_alarm_time);
+        return now > dueDate && !task.task_is_completed;
+    };
+    
+
     return (
-        <div className="flex-1 text-[0.8rem] font-medium w-full ">
+        <div className="flex-1 text-[0.8rem] w-full ">
 
             {/*then return userinput prompt else return normal render */}
             <div
                 onContextMenu={handleRightClick}
-                className={`text-left task w-full transition-all duration-300 motion-duration-500 motion-preset-blur-left
-                ${task.task_is_completed
+                className={`relative text-left task w-full transition-all duration-300 motion-duration-500 motion-preset-blur-left
+    ${task.task_is_completed
                         ? `completed ${isEditing ? 'bg-[#AFDD66]' : 'hover:bg-[#AFDD66]'}`
                         : `uncompleted ${isEditing ? 'bg-[#161616]' : 'hover:bg-[#161616]'}`
-                }`}
+                    }`}
             >
+                {/*
+                {isTaskOverdue(task) && (
+                    <span className="absolute bottom-0 left-0 flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-[#FF5C5C] opacity-75"></span>
+                        <span className="absolute inline-flex rounded-full h-3 w-3 bg-[#FF1F1F]"></span>
+                    </span>
+                )}
+                */}
+
+
+                {isTaskOverdue(task) && (
+                    <span className="absolute top-0 left-0 flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-500 opacity-75"></span>
+                        <span className="absolute inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+                    </span>
+                )}
+
+
+
                 <div className='flex flex-col w-full'>
                     {/* Checkbox for toggling task completion */}
                     <input
@@ -249,9 +326,9 @@ const TaskItem = ({
                             <div className="task-text ml-4">{task.task_desc} </div>
 
                             <button onClick={handleEditButton} className='ml-2'>
-                                <FaEdit size = {10} style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
+                                <FaEdit size={10} style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
                             </button>
-                            <div className="absolute bottom-2 right-2 text-[0.6rem] mr-6 text-gray-400"> {helperGetTaskDate(task)}</div>
+                            <div className={`absolute bottom-2 right-2 text-[0.6rem] mr-6 ${task.task_is_completed ? 'text-[#292929]' : 'text-gray-400'}`}> {helperGetTaskDate(task)}</div>
                         </div>
                     )}
 
@@ -303,7 +380,7 @@ const TaskItem = ({
                     <div className="flex">
                     </div>
 
-                    
+
                 </div>
 
             </div>

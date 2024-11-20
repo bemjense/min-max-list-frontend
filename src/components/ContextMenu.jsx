@@ -32,9 +32,9 @@ const ContextMenu = ({ top, left, onAction, isCompleted }) => (
             </div>
 
             <div className='flex-col flex'>
-            <li onClick={() => onAction('due_date')}>
-                <FaCalendarAlt className = 'mr-2'/> Due Date
-            </li>
+                <li onClick={() => onAction('due_date')}>
+                    <FaCalendarAlt className = 'mr-2'/> Due Date
+                </li>
             </div>
 
         </ul>

@@ -1,71 +1,140 @@
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import './TaskCalendar.css';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tooltip } from 'react-tooltip';
 
+const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
+    const [globalTasksCompleted, setGlobalTasksCompleted] = useState([]);
+    const [calendarTasks, setCalendarTasks] = useState([]);
+    const [displayCompleted, setDisplayCompleted] = useState(false)
 
-const Calendar = ({ taskCounts }) => {
 
 
-  const [hoverInfo, setHoverInfo] = useState(null); // State to store hover information
 
-  const currentDate= new Date();
-  const startDate = new Date(currentDate);
-  startDate.setDate(currentDate.getDate() - 101); // 30 days before today
-  const endDate = new Date(currentDate);
-  endDate.setDate(endDate.getDate());
+
+
+    const currentDate = new Date();
+    const startDate = new Date(currentDate);
+    startDate.setDate(currentDate.getDate() - 131);
+    const endDate = new Date(currentDate);
+
+    // used by graph fucntion. Modify this if you want to hcange how coloring works
+    const getDictOfCountAndDate = () => {
+        const taskCounts = {};
+
+        globalTasks.forEach((task) => {
+            if ( displayCompleted === task.task_is_completed) {
+                const timeStamp = task.task_created_time_stamp;
+                const date = new Date(timeStamp.replace(' ', 'T'));
+                date.setHours(0, 0, 0, 0);
+
+                if (!taskCounts[date]) {
+                    taskCounts[date] = 0;
+                }
+                taskCounts[date]++;
+            }
+        });
+
+        const dateAndCount = Object.entries(taskCounts).map(([date, count]) => ({
+            date,
+            count,
+        }));
+
+        return dateAndCount
+    };
+
+
+  const generateEmptyCountForNullDates = (startDate, endDate, taskCounts) => {
+    const dateMap = {};
+    taskCounts.forEach((task) => {
+      const formattedDate = new Date(task.date).toLocaleDateString(); 
+      dateMap[formattedDate] = task;
+    });
+
+    const dates = [];
+    let currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      const dateString = currentDate.toLocaleDateString();
+      dates.push({
+        date: dateString,
+        count: dateMap[dateString] ? dateMap[dateString].count : 0,
+      });
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dates;
+  };
+
+  // update when new task is created or when user toggles display
+  useEffect(() => {
+    setCalendarTasks(generateEmptyCountForNullDates(startDate, endDate, getDictOfCountAndDate()))
+  }, [globalTasks, displayCompleted]);
+
 
   return (
-    <div className="calendar-heatmap-container">
-      <CalendarHeatmap
+    <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
+      <div className="text-white mt-6 text-2xl ">Graph View</div>
+      <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
 
-      //propertries for calendar 
-      startDate={startDate}
-      endDate={endDate}
-      showWeekdayLabels= {true}
-      showOutOfRangeDays = {true}
-      horizontal={false}
-      gutterSize={3}
-      showMonthLabels={true}
-      values={taskCounts}
-      viewbox = "0 10 100 10"
+      <div
+        class=" text-white mt-6 text-2xl flex transition-all duration-300 hover:bg-[#3AA7FA]"
+        onClick={() => setDisplayCompleted((prev) => !prev)}
+      >
 
+        {displayCompleted ? 'Show Completed' : 'Show Uncompleted'}
+      </div>
+      <hr className="w-[50%] h-1 bg-[#ffffff] border-0 rounded md:my-5" />
+      <div class="task-calendar mb-0"></div>
+      <div className="calendar-heatmap-container flex-1">
 
-      //color customization
-      classForValue={(value) => {
-        if (!value) {
-          return 'color-empty';
-        }
-        if (value.count > 3) {
-          return `color-scale-3`;
-        }
-        return `color-scale-${value.count}`;
-      }}
+        <CalendarHeatmap
+          className="flex-1 "
+          startDate={startDate}
+          endDate={endDate}
+          showWeekdayLabels={true}
+          showOutOfRangeDays={false}
+          horizontal={false}
+          gutterSize={3}
+          showMonthLabels={true}
+          values={calendarTasks}
+          onClick={(value) => {
+            if (value && value.date) {
+              const date = new Date(value.date);
+              handleSetFilterTaskTimeStamp(date.toLocaleDateString());
+            }
+          }}
+          classForValue={(value) => {
+            if (!value) {
+              return 'color-empty';
+            }
+            if (value.count > 3) {
+              if (displayCompleted){
+                return `color-scale-3`;
 
+              } else {
+                return `color-scale-6`;
+              }
+            }
+            //hard coded lmao
+            return displayCompleted  ?  `color-scale-${value.count}`: value.count ? `color-scale-${value.count + 3}` : `color-scale-${value.count}`;
+          }}
+          tooltipDataAttrs={(value) => {
+            if (!value || !value.date) {
+              return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };
+            }
+            const localDate = new Date(value.date).toLocaleDateString(); // Tooltip in local date format
+            return {
+              'data-tooltip-id': 'task-tooltip',
+              'data-tooltip-content': `${localDate}: ${value.count} ${displayCompleted ? 'Completed' : 'Incompleted'}`,
+            };
+          }}
+        />
+        <Tooltip id="task-tooltip" />
 
-      //hover tooltips
-      tooltipDataAttrs={(value) => {
-        if (!value || !value.date) {
-          return { 'data-tooltip-id': 'task-tooltip', 'data-tooltip-content': 'No data' };
-        }
-
-
-
-        return {
-          'data-tooltip-id': 'task-tooltip',
-          'data-tooltip-content': `${value.date.toLocaleString().slice(0, 10)}: ${value.count} tasks completed`,
-        };
-      }}
-
-
-      />
-      <Tooltip id="task-tooltip" />
+      </div>
     </div>
   );
 };
-
-
-
 
 export default Calendar;
