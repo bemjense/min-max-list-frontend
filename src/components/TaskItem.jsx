@@ -302,7 +302,7 @@ const TaskItem = ({
                     <input
                         type="checkbox"
                         checked={task.task_is_completed}
-                        onChange={handleCheckboxChange}
+                        onChange={handleCheckboxToggle}
                         className="mr-2"
                     />
                     {/*if state of task is currently editing then return userinput prompt else return normal render */}
