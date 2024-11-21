@@ -260,7 +260,7 @@ const TodoPage = () => {
                         editDueDateID={editDueDateID}
                         setEditDueDateID={setEditDueDateID}
                         handleDeleteAlarm={handleDeleteAlarm}
-                        handleDeleteDueDate={handleDeleteDueDate}                    handleToggleStatus={handleToggleStatus}
+                        handleDeleteDueDate={handleDeleteDueDate}                    
 
                     />
                 </div>

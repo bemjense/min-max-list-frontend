@@ -73,18 +73,18 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
 
 
   return (
-    <div class="flex flex-col items-center bg-[#161616] flex-1 m-0">
+    <div class="flex flex-col items-center bg-[#161616] flex-1 m-0 items-stretch">
       <div className="text-white mt-6 text-2xl ">Graph View</div>
       <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
 
       <div
-        class=" text-white mt-6 text-2xl flex transition-all duration-300 hover:bg-[#3AA7FA]"
+        className=" text-center text-white mt-6 text-2xl flex transition-all duration-300 hover:bg-[#3AA7FA]"
         onClick={() => setDisplayCompleted((prev) => !prev)}
       >
 
         {displayCompleted ? 'Show Completed' : 'Show Uncompleted'}
       </div>
-      <hr className="w-[50%] h-1 bg-[#ffffff] border-0 rounded md:my-5" />
+      <hr className="w-[100%] h-1 bg-[#ffffff] border-0 rounded md:my-5" />
       <div class="task-calendar mb-0"></div>
       <div className="calendar-heatmap-container flex-1">
 

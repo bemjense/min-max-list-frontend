@@ -299,86 +299,92 @@ const TaskItem = ({
 
                 <div className='flex flex-col w-full'>
                     {/* Checkbox for toggling task completion */}
-                    <input
-                        type="checkbox"
-                        checked={task.task_is_completed}
-                        onChange={handleCheckboxToggle}
-                        className="mr-2"
-                    />
-                    {/*if state of task is currently editing then return userinput prompt else return normal render */}
-                    {isEditing ? (
-                        <div class={`${task.task_is_completed ? 'text-[#292929] '
-                            : 'text-white'}`}>
-                            <input
-                                className="task-input bg-transparent  outline-none focus:outline-none w-full ml-5 placeholder-gray-500 pr-10"
-                                type="text"
-                                value={editText}
-                                onChange={handleUserInput}
-                                onKeyDown={handleKeyDown}
-                                onBlur={handleEditBlur}
-                                autoFocus
-                                placeholder="Type here"
-                            />
-                        </div>
-                    ) : (
-                        <div className="flex">
-                            {/*Normal Render description and text*/}
-                            <div className="task-text ml-4">{task.task_desc} </div>
-
-                            <button onClick={handleEditButton} className='ml-2'>
-                                <FaEdit size={10} style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
-                            </button>
-                            <div className={`absolute bottom-2 right-2 text-[0.6rem] mr-6 ${task.task_is_completed ? 'text-[#292929]' : 'text-gray-400'}`}> {helperGetTaskDate(task)}</div>
-                        </div>
-                    )}
 
 
 
-                    <div className="flex ml-2">
-                        {task.task_due_date && (
-                            <div className="dueDate-edit-button ml-2 mt-0.5">
-                                <FaCalendarAlt size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
+                    <div className = "flex">
+                        <input
+                            type="checkbox"
+                            checked={task.task_is_completed}
+                            onChange={handleCheckboxToggle}
+                            className="ml-3"
+                        />
+                        <div >
+
+                            {/*if state of task is currently editing then return userinput prompt else return normal render */}
+                            {isEditing ? (
+                                <div class={`${task.task_is_completed ? 'text-[#292929] '
+                                    : 'text-white'}`}>
+                                    <input
+                                        className="task-input bg-transparent  outline-none focus:outline-none w-full ml-5 placeholder-gray-500 pr-10"
+                                        type="text"
+                                        value={editText}
+                                        onChange={handleUserInput}
+                                        onKeyDown={handleKeyDown}
+                                        onBlur={handleEditBlur}
+                                        autoFocus
+                                        placeholder="Type here"
+                                    />
+                                </div>
+                            ) : (
+                                <div className="flex">
+                                    {/*Normal Render description and text*/}
+                                    <div className="task-text ml-4">{task.task_desc} </div>
+
+                                    <button onClick={handleEditButton} className='ml-2'>
+                                        <FaEdit size={10} style={{ color: task.task_is_completed ? '#292929' : 'white' }} />
+                                    </button>
+                                    <div className={`absolute bottom-2 right-2 text-[0.6rem] mr-6 ${task.task_is_completed ? 'text-[#292929]' : 'text-gray-400'}`}> {helperGetTaskDate(task)}</div>
+                                </div>
+                            )}
+
+
+
+                            <div className="flex ml-2">
+                                {task.task_due_date && (
+                                    <div className="dueDate-edit-button ml-2 mt-0.5">
+                                        <FaCalendarAlt size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
+                                    </div>
+                                )}
+
+                                {isEditingDueDate && (
+                                    <input
+                                        ref={dueDateTimePickerRef}
+                                        className="hidden-datepicker"
+                                    />
+                                )}
+                                {task.task_due_date && (
+                                    <span
+                                        className={`${task.task_is_completed ? "text-[#292929]" : "text-[#9CA3AF]"
+                                            } alarm-time ml-1 text-[0.6rem]`}
+                                    >
+                                        {new Date(task.task_due_date).toLocaleString()}
+                                    </span>
+                                )}
+                                {task.task_alarm_time && (
+                                    <div className="alarm-edit-button ml-2 mt-0.5">
+                                        <FaBell size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
+                                    </div>
+                                )}
+
+                                {isEditingAlarm && (
+                                    <input
+                                        ref={dateTimePickerRef}
+                                        className="hidden-datepicker"
+                                    />
+                                )}
+                                {task.task_alarm_time && (
+                                    <span
+                                        className={`${task.task_is_completed ? "text-[#292929]" : "text-[#9CA3AF]"
+                                            } alarm-time ml-1 text-[0.6rem]`}
+                                    >
+                                        {new Date(task.task_alarm_time).toLocaleString()}
+                                    </span>
+                                )}
                             </div>
-                        )}
-
-                        {isEditingDueDate && (
-                            <input
-                                ref={dueDateTimePickerRef}
-                                className="hidden-datepicker"
-                            />
-                        )}
-                        {task.task_due_date && (
-                            <span
-                                className={`${task.task_is_completed ? "text-[#292929]" : "text-[#9CA3AF]"
-                                    } alarm-time ml-1 text-[0.6rem]`}
-                            >
-                                {new Date(task.task_due_date).toLocaleString()}
-                            </span>
-                        )}
-                        {task.task_alarm_time && (
-                            <div className="alarm-edit-button ml-2 mt-0.5">
-                                <FaBell size={9} style={{ color: task.task_is_completed ? '#292929' : '#9CA3AF' }} />
-                            </div>
-                        )}
-
-                        {isEditingAlarm && (
-                            <input
-                                ref={dateTimePickerRef}
-                                className="hidden-datepicker"
-                            />
-                        )}
-                        {task.task_alarm_time && (
-                            <span
-                                className={`${task.task_is_completed ? "text-[#292929]" : "text-[#9CA3AF]"
-                                    } alarm-time ml-1 text-[0.6rem]`}
-                            >
-                                {new Date(task.task_alarm_time).toLocaleString()}
-                            </span>
-                        )}
+                        </div>
                     </div>
 
-                    <div className="flex">
-                    </div>
 
 
                 </div>
