@@ -94,6 +94,7 @@ const TaskGrouping = ({
               setEditDueDateID={setEditDueDateID}
               handleDeleteAlarm={handleDeleteAlarm}
               handleDeleteDueDate={handleDeleteDueDate}
+              handleToggleStatus={handleToggleStatus}
             />
           ))}
         </div>
