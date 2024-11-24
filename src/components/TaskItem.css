@@ -57,3 +57,23 @@
     pointer-events: none; /* Prevent interaction */
 }
 
+
+.checkbox-round {
+    width: 1.8em;
+    height: 1.8em;
+    border-radius: 50%;
+    vertical-align: middle;
+    border: 1.5px solid #ddd;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+}
+.checkbox-round:hover {
+    background-color: gray;
+}
+
+
+.checkbox-round:checked {
+    background-color: gray;
+}

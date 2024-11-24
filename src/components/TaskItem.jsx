@@ -302,12 +302,12 @@ const TaskItem = ({
 
 
 
-                    <div className = "flex">
+                    <div className = "flex items-center">
                         <input
                             type="checkbox"
                             checked={task.task_is_completed}
                             onChange={handleCheckboxToggle}
-                            className="ml-3"
+                            className="ml-2 checkbox-round"
                         />
                         <div >
 
