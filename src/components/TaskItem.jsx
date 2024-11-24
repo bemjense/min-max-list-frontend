@@ -290,8 +290,8 @@ const TaskItem = ({
 
                 {isTaskOverdue(task) && (
                     <span className="absolute top-0 left-0 flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-sky-500 opacity-75"></span>
-                        <span className="absolute inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+                        <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-red-600 opacity-100"></span>
+                        <span className="absolute inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                     </span>
                 )}
 
