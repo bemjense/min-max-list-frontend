@@ -104,7 +104,6 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
 
 
 
-      <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
 
       <div
         className=" justify-center text-white mt-6 text-2xl flex transition-all duration-300 hover:bg-[#3AA7FA]"
