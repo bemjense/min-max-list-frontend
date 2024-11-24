@@ -5,9 +5,10 @@ import React, { useState, useEffect } from 'react';
 import { Tooltip } from 'react-tooltip';
 
 const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
-    const [globalTasksCompleted, setGlobalTasksCompleted] = useState([]);
     const [calendarTasks, setCalendarTasks] = useState([]);
     const [displayCompleted, setDisplayCompleted] = useState(false)
+
+
 
 
 
@@ -18,6 +19,9 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
     const startDate = new Date(currentDate);
     startDate.setDate(currentDate.getDate() - 131);
     const endDate = new Date(currentDate);
+
+
+
 
     // used by graph fucntion. Modify this if you want to hcange how coloring works
     const getDictOfCountAndDate = () => {
@@ -67,24 +71,50 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
   };
 
   // update when new task is created or when user toggles display
+  const [completedDisplayRatio, setCompletedDisplayRatio] = useState();
   useEffect(() => {
     setCalendarTasks(generateEmptyCountForNullDates(startDate, endDate, getDictOfCountAndDate()))
-  }, [globalTasks, displayCompleted]);
+    const totalTasks = globalTasks.length; 
+    const completedTasks = globalTasks.filter(task => task.task_is_completed).length;
+    const uncompletedTasks = globalTasks.filter(task => task.task_is_completed).length;
 
+    const completionPercentage = totalTasks
+    ? parseFloat(((completedTasks / totalTasks) * 100).toFixed(2))
+    : 0;
+
+
+    setCompletedDisplayRatio(completionPercentage + "%")
+
+
+
+
+
+
+
+  }, [globalTasks, displayCompleted]);
 
   return (
     <div class="flex flex-col items-center bg-[#161616] flex-1 m-0 items-stretch">
-      <div className="text-white mt-6 text-2xl ">Graph View</div>
+
+      <div className='mt-6'>
+        <div className="text-[#AFDD66] text-1xl ">{completedDisplayRatio}</div>
+        <div className="text-[#AFDD66] text-1xl ">Tasks Completed</div>
+      </div>
+
+
+
+
       <div className="text-white mt-6 text-2xl ">Tasks Complete</div>
 
       <div
-        className=" text-center text-white mt-6 text-2xl flex transition-all duration-300 hover:bg-[#3AA7FA]"
+        className=" justify-center text-white mt-6 text-2xl flex transition-all duration-300 hover:bg-[#3AA7FA]"
         onClick={() => setDisplayCompleted((prev) => !prev)}
       >
 
-        {displayCompleted ? 'Show Completed' : 'Show Uncompleted'}
+        {displayCompleted ? 'Completed' : 'Uncompleted'}
       </div>
-      <hr className="w-[100%] h-1 bg-[#ffffff] border-0 rounded md:my-5" />
+
+      <hr className=" justify-center w-[80%] h-1 bg-[#ffffff] border-0 rounded md:my-5 mx-auto" />
       <div class="task-calendar mb-0"></div>
       <div className="calendar-heatmap-container flex-1">
 
