@@ -9,7 +9,7 @@ import TaskFilter from './TaskFilter';
 import './TodoPage.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toastify
-
+import SearchBar from './SearchBar';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import FilterInterface from './FilterInterface';
 
@@ -200,8 +200,20 @@ const TodoPage = () => {
         else if (action === 'due_date') handleUpdateDueDateInContextMenu(task_id);
     };
 
+    const [searchQuery, setSearchQuery] = useState(''); // State for the search query
 
-
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        // Optionally filter tasks by search query
+        if (query.trim()) {
+            const filteredTasks = globalTasks.filter(task => 
+                task.task_desc.toLowerCase().includes(query.toLowerCase())
+            );
+            setTasks(filteredTasks);
+        } else {
+            setTasks(globalTasks); // Reset to all tasks if query is empty
+        }
+    };
 
     const hideContextMenu = () => setContextMenu({ visible: false, x: 0, y: 0, task_id: null });
 
@@ -209,22 +221,24 @@ const TodoPage = () => {
 
         <div className="app-container" onClick={hideContextMenu}>
 
-            <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between ">
-                <div class="text-2xl text-white mb-6 mt-6 flex flex-col gap-5">{userEmail}
-                    <FilterInterface handleSetFilterTaskDueDate={handleSetFilterTaskDueDate} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp}></FilterInterface>
+            <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between">
+                <div class="text-2xl text-white mb-6 mt-6 flex flex-col gap-5">
+                    {userEmail}
+                    <FilterInterface
+                        handleSetFilterTaskDueDate={handleSetFilterTaskDueDate}
+                        handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp}
+                    />
                 </div>
 
-
-
-
+                {/* Add SearchBar component */}
+                <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
 
                 <ListInterface
                     currentList={currentList}
                     setCurrentList={setCurrentList}
                     setLists={setLists}
                     lists={lists}
-                >
-                </ListInterface>
+                />
             </div>
 
             <div className="flex-col bg-[#] flex-[3_2_0%] relative">
