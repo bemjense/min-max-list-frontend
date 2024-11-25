@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toastify
 import SearchBar from './SearchBar';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import FilterInterface from './FilterInterface';
+import axios from 'axios';
 
 const auth = getAuth();
 
@@ -41,6 +42,22 @@ const TodoPage = () => {
     const [newDueDateVisible, setNewDueDateVisible] = useState(false);
     //context menu functionality
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
+    // chat gpt stuff
+    const [aiInput, setaiInput] = useState('');
+    const [aiOutput, setaiOutput] = useState('');
+
+    // handle submit chat gpt request
+    const handleSubmitAi = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axios.post('http://localhost:8000/api/chat', { message: aiInput });
+            setaiOutput(res.data.reply);
+        } catch (error) {
+            console.error(error);
+            setaiOutput('Error: Unable to fetch response');
+        }
+    };
+
 
     
     // change logic later to take arugment for null
@@ -317,6 +334,18 @@ const TodoPage = () => {
             <ToastContainer position="top-right flex" />
 
             <Calendar globalTasks = {globalTasks} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} />
+            <div>
+                <p style={{color: "white"}}>Test chatgpt text box</p>
+                <form onSubmit={handleSubmitAi}>
+                    <input
+                        type="text"
+                        value={aiInput}
+                        onChange={(e) => setaiInput(e.target.value)}
+                    />
+                    <button type="submit" style={{color: "white"}}>Send</button>
+                </form>
+                <p style={{color: "white"}}>aiOutput: {aiOutput}</p>
+            </div>
         </div>
         
     );
