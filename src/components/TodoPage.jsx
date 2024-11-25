@@ -224,6 +224,10 @@ const TodoPage = () => {
             <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between">
                 <div class="text-2xl text-white mb-6 mt-6 flex flex-col gap-5">
                     {userEmail}
+
+                <div class = "mx-5">
+                    <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
+                </div>
                     <FilterInterface
                         handleSetFilterTaskDueDate={handleSetFilterTaskDueDate}
                         handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp}
@@ -231,7 +235,6 @@ const TodoPage = () => {
                 </div>
 
                 {/* Add SearchBar component */}
-                <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
 
                 <ListInterface
                     currentList={currentList}
