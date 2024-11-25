@@ -72,18 +72,24 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
 
   // update when new task is created or when user toggles display
   const [completedDisplayRatio, setCompletedDisplayRatio] = useState();
+  const [uncompletedDisplayRatio, setUncompletedDisplayRatio] = useState();
   useEffect(() => {
     setCalendarTasks(generateEmptyCountForNullDates(startDate, endDate, getDictOfCountAndDate()))
     const totalTasks = globalTasks.length; 
     const completedTasks = globalTasks.filter(task => task.task_is_completed).length;
-    const uncompletedTasks = globalTasks.filter(task => task.task_is_completed).length;
+    const uncompletedTasks = globalTasks.filter(task => !task.task_is_completed).length;
 
     const completionPercentage = totalTasks
     ? parseFloat(((completedTasks / totalTasks) * 100).toFixed(2))
     : 0;
 
+    const unCompletionPercentage = totalTasks
+    ? parseFloat(((uncompletedTasks / totalTasks) * 100).toFixed(2))
+    : 0;
+
 
     setCompletedDisplayRatio(completionPercentage + "%")
+    setUncompletedDisplayRatio(unCompletionPercentage + "%")
 
 
 
@@ -96,9 +102,16 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
   return (
     <div class="flex flex-col items-center bg-[#161616] flex-1 m-0 items-stretch">
 
-      <div className='mt-6'>
-        <div className="text-[#AFDD66] text-1xl transition-all duration-300 motion-duration-500 motion-preset-pop"  key={completedDisplayRatio}>{completedDisplayRatio}</div>
-        <div className="text-[#AFDD66] text-1xl ">Tasks Completed</div>
+      <div className='mt-6 flex justify-evenly'>
+        <div>
+          <div className="text-[#AFDD66] text-1xl transition-all duration-300 motion-duration-500 motion-preset-blur-left " key={completedDisplayRatio}>{completedDisplayRatio} Tasks</div>
+          <div className="text-[#AFDD66] text-1xl ">Complete</div>
+        </div>
+
+        <div>
+          <div className="text-[#D9E021] text-1xl transition-all duration-300 motion-duration-500 motion-preset-blur-left" key={uncompletedDisplayRatio}>{uncompletedDisplayRatio} Tasks</div>
+          <div className="text-[#D9E021] text-1xl ">Uncomplete</div>
+        </div>
       </div>
 
 
@@ -108,7 +121,7 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
       <div
         className=" justify-center text-white mt-6 text-2xl flex transition-all duration-300 transition-all duration-300 motion-duration-500 motion-preset-pop"
         onClick={() => setDisplayCompleted((prev) => !prev)}
-        key = {displayCompleted}
+        key={displayCompleted}
       >
         {displayCompleted ? 'Completed' : 'Uncompleted'}
       </div>
@@ -138,7 +151,7 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
               return 'color-empty';
             }
             if (value.count > 3) {
-              if (displayCompleted){
+              if (displayCompleted) {
                 return `color-scale-3`;
 
               } else {
@@ -146,7 +159,7 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
               }
             }
             //hard coded lmao
-            return displayCompleted  ?  `color-scale-${value.count}`: value.count ? `color-scale-${value.count + 3}` : `color-scale-${value.count}`;
+            return displayCompleted ? `color-scale-${value.count}` : value.count ? `color-scale-${value.count + 3}` : `color-scale-${value.count}`;
           }}
           tooltipDataAttrs={(value) => {
             if (!value || !value.date) {
