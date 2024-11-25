@@ -97,7 +97,7 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
     <div class="flex flex-col items-center bg-[#161616] flex-1 m-0 items-stretch">
 
       <div className='mt-6'>
-        <div className="text-[#AFDD66] text-1xl ">{completedDisplayRatio}</div>
+        <div className="text-[#AFDD66] text-1xl transition-all duration-300 motion-duration-500 motion-preset-pop"  key={completedDisplayRatio}>{completedDisplayRatio}</div>
         <div className="text-[#AFDD66] text-1xl ">Tasks Completed</div>
       </div>
 
@@ -106,10 +106,10 @@ const Calendar = ({ handleSetFilterTaskTimeStamp, globalTasks}) => {
 
 
       <div
-        className=" justify-center text-white mt-6 text-2xl flex transition-all duration-300 hover:bg-[#3AA7FA]"
+        className=" justify-center text-white mt-6 text-2xl flex transition-all duration-300 transition-all duration-300 motion-duration-500 motion-preset-pop"
         onClick={() => setDisplayCompleted((prev) => !prev)}
+        key = {displayCompleted}
       >
-
         {displayCompleted ? 'Completed' : 'Uncompleted'}
       </div>
 
