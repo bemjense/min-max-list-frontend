@@ -229,108 +229,108 @@ const TodoPage = () => {
     return (
 
         <div>
-        <DetailedView task={viewDetails}></DetailedView>
-        <div className="app-container" onClick={hideContextMenu}>
-
-            <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between">
-                <div class="text-2xl text-white mb-6 mt-6 flex flex-col gap-5">
-                    {userEmail}
-
-                <div class = "mx-5">
-                    <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
-                </div>
-                    <FilterInterface
-                        handleSetFilterTaskDueDate={handleSetFilterTaskDueDate}
-                        handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp}
-                    />
-                </div>
-
-                {/* Add SearchBar component */}
-
-                <ListInterface
-                    currentList={currentList}
-                    setCurrentList={setCurrentList}
-                    setLists={setLists}
-                    lists={lists}
-                />
-            </div>
-
-            <div className="flex-col bg-[#] flex-[3_2_0%] relative">
-                <div className="flex gap-3 items-center mb-0">
-                    <img src="/assets/star.svg" width="30" height="30" />
-                    <h1 class="text-white text-2xl text-left mb-6 mt-6">{currentList}</h1>
-                    <TaskFilter
-                        filterTaskCreatedTimeStamp={filterTaskCreatedTimeStamp}
-                        setFilterTaskCreatedTimeStamp={setFilterTaskCreatedTimeStamp}
-                        filterTaskDueDate={filterTaskDueDate}
-                        setFilterTaskDueDate={setFilterTaskDueDate}
-                    ></TaskFilter>
-
-                </div>
-                {/*Component where user enters information */}
-                {/*3 Arguments/ props */}
-
-                {/*Component Tasklist*/}
-                <div className="task-list-container">
-                    <TaskGrouping
-                        tasks={tasks}
-                        handleToggleStatus={handleToggleStatus}
-                        handleUpdateAlarm={handleUpdateAlarm}
-                        setContextMenu={setContextMenu}
-                        editID={editID}
-                        setEditID={setEditID}
-                        editText={editText}
-                        setEditText={setEditText}
-                        setEditAlarmID={setEditAlarmID}
-                        editAlarmID={editAlarmID}
-                        handleUpdateDesc={handleUpdateDesc}
-                        handleUpdateDueDate={handleUpdateDueDate}
-                        editDueDateID={editDueDateID}
-                        setEditDueDateID={setEditDueDateID}
-                        handleDeleteAlarm={handleDeleteAlarm}
-                        handleDeleteDueDate={handleDeleteDueDate}                    
-
-                    />
-                </div>
-
-                {/* Ensure this is not inside the scrolling container */}
-                <div className="task-input-container">
-                    <TaskInput
-                        newTask={newTask}
-                        setNewTask={setNewTask}
-                        onAddTask={handleCreateTask}
-                        alarmTime={alarmTime}
-                        setAlarmTime={setAlarmTime}
-                        newAlarmVisible={newAlarmVisible}
-                        setNewAlarmVisible={setNewAlarmVisible}
-                        dueDate={dueDate}
-                        setDueDate={setDueDate}
-                        newDueDateVisible={newDueDateVisible}
-                        setNewDueDateVisible={setNewDueDateVisible}
-                        handleDeleteAlarm={handleDeleteAlarm}
-                        handleDeleteDueDate={handleDeleteDueDate}
-                    />
-                </div>
-
-            </div>
-
-            {contextMenu.visible && (
-                <ContextMenu
-                    top={contextMenu.y}
-                    left={contextMenu.x}
-                    onAction={(action) => {
-                        handleContextMenu(action);
-
-                    }}
-                    isCompleted={contextMenu.task_is_completed}
-                />
-            )}
-
-            <Calendar globalTasks = {globalTasks} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} />
-        </div>
+            <DetailedView task={viewDetails}></DetailedView>
             <ToastContainer position="top-right flex" />
+            <div className="app-container" onClick={hideContextMenu}>
+
+                <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between">
+                    <div class="text-2xl text-white mb-6 mt-6 flex flex-col gap-5">
+                        {userEmail}
+
+                        <div class="mx-5">
+                            <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
+                        </div>
+                        <FilterInterface
+                            handleSetFilterTaskDueDate={handleSetFilterTaskDueDate}
+                            handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp}
+                        />
+                    </div>
+
+                    {/* Add SearchBar component */}
+
+                    <ListInterface
+                        currentList={currentList}
+                        setCurrentList={setCurrentList}
+                        setLists={setLists}
+                        lists={lists}
+                    />
+                </div>
+
+                <div className="flex-col bg-[#] flex-[3_2_0%] relative">
+                    <div className="flex gap-3 items-center mb-0">
+                        <img src="/assets/star.svg" width="30" height="30" />
+                        <h1 class="text-white text-2xl text-left mb-6 mt-6">{currentList}</h1>
+                        <TaskFilter
+                            filterTaskCreatedTimeStamp={filterTaskCreatedTimeStamp}
+                            setFilterTaskCreatedTimeStamp={setFilterTaskCreatedTimeStamp}
+                            filterTaskDueDate={filterTaskDueDate}
+                            setFilterTaskDueDate={setFilterTaskDueDate}
+                        ></TaskFilter>
+
+                    </div>
+                    {/*Component where user enters information */}
+                    {/*3 Arguments/ props */}
+
+                    {/*Component Tasklist*/}
+                    <div className="task-list-container">
+                        <TaskGrouping
+                            tasks={tasks}
+                            handleToggleStatus={handleToggleStatus}
+                            handleUpdateAlarm={handleUpdateAlarm}
+                            setContextMenu={setContextMenu}
+                            editID={editID}
+                            setEditID={setEditID}
+                            editText={editText}
+                            setEditText={setEditText}
+                            setEditAlarmID={setEditAlarmID}
+                            editAlarmID={editAlarmID}
+                            handleUpdateDesc={handleUpdateDesc}
+                            handleUpdateDueDate={handleUpdateDueDate}
+                            editDueDateID={editDueDateID}
+                            setEditDueDateID={setEditDueDateID}
+                            handleDeleteAlarm={handleDeleteAlarm}
+                            handleDeleteDueDate={handleDeleteDueDate}
+
+                        />
+                    </div>
+
+                    {/* Ensure this is not inside the scrolling container */}
+                    <div className="task-input-container">
+                        <TaskInput
+                            newTask={newTask}
+                            setNewTask={setNewTask}
+                            onAddTask={handleCreateTask}
+                            alarmTime={alarmTime}
+                            setAlarmTime={setAlarmTime}
+                            newAlarmVisible={newAlarmVisible}
+                            setNewAlarmVisible={setNewAlarmVisible}
+                            dueDate={dueDate}
+                            setDueDate={setDueDate}
+                            newDueDateVisible={newDueDateVisible}
+                            setNewDueDateVisible={setNewDueDateVisible}
+                            handleDeleteAlarm={handleDeleteAlarm}
+                            handleDeleteDueDate={handleDeleteDueDate}
+                        />
+                    </div>
+
+                </div>
+
+                {contextMenu.visible && (
+                    <ContextMenu
+                        top={contextMenu.y}
+                        left={contextMenu.x}
+                        onAction={(action) => {
+                            handleContextMenu(action);
+
+                        }}
+                        isCompleted={contextMenu.task_is_completed}
+                    />
+                )}
+
+                <Calendar globalTasks={globalTasks} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} />
+            </div>
         </div>
-        
+
     );
 };
 

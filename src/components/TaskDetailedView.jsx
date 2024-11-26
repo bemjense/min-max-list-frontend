@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
+import './TaskDetailedView.css';
 
 export default function DetailedView({task}) {
     const [viewDetails, setViewDetails] = useState(null);
@@ -12,7 +13,7 @@ export default function DetailedView({task}) {
 
     if (!viewDetails) return null;
     return (
-        <div>
+        <div className='font-display bg-black'>
             <Popup
                 open={viewDetails !== null}
                 modal
@@ -20,8 +21,8 @@ export default function DetailedView({task}) {
                 onClose={() => setViewDetails(null)}
             >
                 {close => (
-                    <div className='modal'>
-                        <div className='content'>
+                    <div>
+                        <div>
                             Task Details: {task.task_desc}
 
                         </div>
