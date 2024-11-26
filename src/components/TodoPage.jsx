@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toastify
 import SearchBar from './SearchBar';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import FilterInterface from './FilterInterface';
+import DetailedView from './TaskDetailedView';
 
 const auth = getAuth();
 
@@ -190,6 +191,13 @@ const TodoPage = () => {
         handleReadTasks(userUid);
     };
 
+
+    const [viewDetails, setViewDetails] = useState(null)
+    const handleViewDetailsInContextMenu = async (task_id) => {
+        const task = await readTaskAtId(task_id)
+        setViewDetails(task)
+    };
+
     const handleContextMenu = (action) => {
         const task_id = contextMenu.task_id;
 
@@ -198,6 +206,7 @@ const TodoPage = () => {
         else if (action === 'toggle') handleToggleStatus(task_id);
         else if (action === 'alarm') handleUpdateAlarmInContextMenu(task_id);
         else if (action === 'due_date') handleUpdateDueDateInContextMenu(task_id);
+        else if (action === 'details') handleViewDetailsInContextMenu(task_id);
     };
 
     const [searchQuery, setSearchQuery] = useState(''); // State for the search query
@@ -219,6 +228,8 @@ const TodoPage = () => {
 
     return (
 
+        <div>
+        <DetailedView task={viewDetails}></DetailedView>
         <div className="app-container" onClick={hideContextMenu}>
 
             <div class="flex flex-1 flex-col bg-[#161616] m-0 p-0 justify-between">
@@ -314,9 +325,10 @@ const TodoPage = () => {
                     isCompleted={contextMenu.task_is_completed}
                 />
             )}
-            <ToastContainer position="top-right flex" />
 
             <Calendar globalTasks = {globalTasks} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} />
+        </div>
+            <ToastContainer position="top-right flex" />
         </div>
         
     );
