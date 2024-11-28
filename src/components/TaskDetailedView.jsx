@@ -9,28 +9,35 @@ export default function DetailedView({task}) {
         setViewDetails(task);
     }, [task]);
 
+    const helperGetTaskDate = (taskDate) => {
+        const timeStamp = taskDate;
+        const date = new Date(timeStamp.replace(' ', 'T'));
+        // gets only day month year
+        const dateString = date.toLocaleDateString().slice(0, 10)
+
+        return dateString
+    };
 
 
     if (!viewDetails) return null;
     return (
-        <div className='font-display bg-black'>
+        <div className='bg-black'>
             <Popup
                 open={viewDetails !== null}
                 modal
                 nested
                 onClose={() => setViewDetails(null)}
+                class = ""
             >
                 {close => (
                     <div>
-                        <div>
-                            Task Details: {task.task_desc}
+                        {task.task_desc && <div>Description: {task.task_desc}</div>}
+                        {task.task_created_time_stamp && (
+                            <div>Date added: {helperGetTaskDate(task.task_created_time_stamp)}</div>
+                        )}
+                        {task.task_due_date && <div>Due Date: {helperGetTaskDate(task.task_due_date)}</div>}
+                        {task.task_alarm_time && <div>Alarm: {helperGetTaskDate(task.task_alarm_time)}</div>}
 
-                        </div>
-                        <div>
-                            <button onClick={() => close()}>
-                                Close modal
-                            </button>
-                        </div>
                     </div>
                 )}
             </Popup>
