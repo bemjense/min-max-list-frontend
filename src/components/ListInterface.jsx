@@ -43,7 +43,7 @@ const ListInterface = ({currentList, setCurrentList, lists, setLists}) => {
                     placeholder="Add new list"
                     value={newListName}
                     onChange={(e) => setNewListName(e.target.value)}
-                    className="p-2 text-lg"
+                    className="bg-transparent text-white p-2 outline-none focus:outline-none w-full ml-5"
                     onKeyPress={(e) => {
                         if (e.key === 'Enter') {
                             addList();

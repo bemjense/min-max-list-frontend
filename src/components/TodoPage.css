@@ -1,3 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.font-display {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-family: 'Manrope', sans-serif; /* Apply Manrope font */
+    background-color: #1C1C1C;
+
+}
+
 .app-container {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -16,6 +29,7 @@
     gap: 50px;
     overflow:auto;
 }
+
 
 .header-title {
   color: white;

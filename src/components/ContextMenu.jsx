@@ -5,6 +5,7 @@ import { FaBell , FaCalendarAlt} from 'react-icons/fa';
 import { FaEdit} from 'react-icons/fa';
 import { HiMiniTrash } from "react-icons/hi2";
 import { RiMarkPenFill } from "react-icons/ri";
+import { TbListDetails } from "react-icons/tb";
 
 const ContextMenu = ({ top, left, onAction, isCompleted }) => (
     <div className="context-menu fade-in" style={{ position: 'absolute', top, left }}>
@@ -34,6 +35,9 @@ const ContextMenu = ({ top, left, onAction, isCompleted }) => (
             <div className='flex-col flex'>
                 <li onClick={() => onAction('due_date')}>
                     <FaCalendarAlt className = 'mr-2'/> Due Date
+                </li>
+                <li onClick={() => onAction('details')}>
+                    <TbListDetails  className = 'mr-2'/> Details
                 </li>
             </div>
 
