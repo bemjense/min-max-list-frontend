@@ -10,9 +10,12 @@ import './TodoPage.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toastify
 import SearchBar from './SearchBar';
+import ChatBox from './Chatbox';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import FilterInterface from './FilterInterface';
+import axios from 'axios';
 import DetailedView from './TaskDetailedView';
+
 
 const auth = getAuth();
 
@@ -42,7 +45,13 @@ const TodoPage = () => {
     const [newDueDateVisible, setNewDueDateVisible] = useState(false);
     //context menu functionality
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
+    // chat gpt stuff
+    const [isChatVisible, setIsChatVisible] = useState(false);
 
+    // toggles AI chat visible
+    const toggleChat = () => {
+        setIsChatVisible(!isChatVisible);
+    };
     
     // change logic later to take arugment for null
     //states and filters for reading tasks
@@ -256,6 +265,44 @@ const TodoPage = () => {
                     />
                 </div>
 
+
+                <div>
+                    <button onClick={toggleChat} className='
+                        flex 
+                        transition-all 
+                        duration-300 
+                        hover:bg-[#3AA7FA] 
+                        p-[6px] 
+                        cursor-pointer 
+                        text-white 
+                        text-2xl
+                        '>
+                        {isChatVisible ? "Close AI Chat" : "Open AI Chat"}
+                    </button>
+                    {isChatVisible && <ChatBox />}
+                </div>
+                
+                {/* Add SearchBar component */}
+
+                <ListInterface
+                    currentList={currentList}
+                    setCurrentList={setCurrentList}
+                    setLists={setLists}
+                    lists={lists}
+                />
+            </div>
+
+            <div className="flex-col bg-[#] flex-[3_2_0%] relative">
+                <div className="flex gap-3 items-center mb-0">
+                    <img src="/assets/star.svg" width="30" height="30" />
+                    <h1 class="text-white text-2xl text-left mb-6 mt-6">{currentList}</h1>
+                    <TaskFilter
+                        filterTaskCreatedTimeStamp={filterTaskCreatedTimeStamp}
+                        setFilterTaskCreatedTimeStamp={setFilterTaskCreatedTimeStamp}
+                        filterTaskDueDate={filterTaskDueDate}
+                        setFilterTaskDueDate={setFilterTaskDueDate}
+                    ></TaskFilter>
+
                 <div className="flex-col bg-[#] flex-[3_2_0%] relative">
                     <div className="flex gap-3 items-center mb-0">
                         <img src="/assets/star.svg" width="30" height="30" />
@@ -312,6 +359,7 @@ const TodoPage = () => {
                             handleDeleteDueDate={handleDeleteDueDate}
                         />
                     </div>
+
 
                 </div>
 
