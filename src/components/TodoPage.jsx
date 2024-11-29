@@ -10,6 +10,7 @@ import './TodoPage.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toastify
 import SearchBar from './SearchBar';
+import ChatBox from './Chatbox';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import FilterInterface from './FilterInterface';
 import axios from 'axios';
@@ -43,22 +44,12 @@ const TodoPage = () => {
     //context menu functionality
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
     // chat gpt stuff
-    const [aiInput, setaiInput] = useState('');
-    const [aiOutput, setaiOutput] = useState('');
+    const [isChatVisible, setIsChatVisible] = useState(false);
 
-    // handle submit chat gpt request
-    const handleSubmitAi = async (e) => {
-        e.preventDefault();
-        try {
-            const res = await axios.post('http://localhost:8000/api/chat', { message: aiInput });
-            setaiOutput(res.data.reply);
-        } catch (error) {
-            console.error(error);
-            setaiOutput('Error: Unable to fetch response');
-        }
+    // toggles AI chat visible
+    const toggleChat = () => {
+        setIsChatVisible(!isChatVisible);
     };
-
-
     
     // change logic later to take arugment for null
     //states and filters for reading tasks
@@ -251,6 +242,22 @@ const TodoPage = () => {
                     />
                 </div>
 
+                <div>
+                    <button onClick={toggleChat} className='
+                        flex 
+                        transition-all 
+                        duration-300 
+                        hover:bg-[#3AA7FA] 
+                        p-[6px] 
+                        cursor-pointer 
+                        text-white 
+                        text-2xl
+                        '>
+                        {isChatVisible ? "Close AI Chat" : "Open AI Chat"}
+                    </button>
+                    {isChatVisible && <ChatBox />}
+                </div>
+                
                 {/* Add SearchBar component */}
 
                 <ListInterface
@@ -334,18 +341,6 @@ const TodoPage = () => {
             <ToastContainer position="top-right flex" />
 
             <Calendar globalTasks = {globalTasks} handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp} />
-            <div>
-                <p style={{color: "white"}}>Test chatgpt text box</p>
-                <form onSubmit={handleSubmitAi}>
-                    <input
-                        type="text"
-                        value={aiInput}
-                        onChange={(e) => setaiInput(e.target.value)}
-                    />
-                    <button type="submit" style={{color: "white"}}>Send</button>
-                </form>
-                <p style={{color: "white"}}>aiOutput: {aiOutput}</p>
-            </div>
         </div>
         
     );
