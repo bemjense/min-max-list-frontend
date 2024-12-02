@@ -4,16 +4,39 @@ import './Chatbox.css'; // Import the CSS file
 
 import './TodoPage.css'; // Add styles for the search bar if needed
 
-const ChatBox = () => {
+const ChatBox = ({ 
+    handleCreateTaskAi,
+    setCurrentList, 
+    lists, 
+    setLists
+    }) => {
+    // stuff for chatgpt
+    const [taskList, setTaskList] = useState([]);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [loading, setLoading] = useState(false);
-  
+    // stuff to create new list
+    const [newListName, setNewListName] = useState("");
+
+    const addList = () => {
+        if (newListName.trim() !== "") {
+            setLists(prevLists => [...prevLists, newListName]);
+            setNewListName("");
+        }
+    };
+
+    // sends a message to chatgpt and returns a response
     const sendMessage = async () => {
         // if empty message return nothing
         if (!newMessage.trim()) return;
-    
-        // Add the user's message to the chat
+        // if message does not start with how do i
+        if(!newMessage.toLocaleLowerCase().startsWith("how do i")){
+            const startErrorMsg = { sender: "AI", text: 'You must start your question with "How do i" '};
+            setMessages((prev) => [...prev, startErrorMsg]);
+            return;
+        }
+            
+        // Adds the user's message to the chat
         const userMessage = { sender: "You", text: newMessage };
         // concats onto messages the users input
         setMessages((prev) => [...prev, userMessage]);
@@ -26,15 +49,49 @@ const ChatBox = () => {
             {
                 message: newMessage,
             });
-    
+
+            const tasks = response.data.tasks || [];
+
+            setTaskList(tasks);
+            if (taskList.length > 0) {
+                console.log("There are tasks in the task list:", taskList);
+            } else {
+                console.log("The task list is empty.");
+            }
+            // create a new list and add tasks to it based on the chatgpt response
+            const listMsg = "List For: " + newMessage;
+            setNewListName(listMsg);
+
+            addList();
+            setCurrentList(listMsg);
+            for (const curList of lists) {
+                console.log("List: ", curList)
+            }
+            
+
+            for (const task of tasks) {
+                try {
+                    // Call handleCreateTaskAi for each task
+                    // console.log("Task:",task);
+                    // const thirdElement = task[2];
+                    // console.log("Third Element: ", thirdElement);
+                    const concatenatedString = task.join(" ");
+                    // console.log("concatenatedString: ", concatenatedString);
+                    await handleCreateTaskAi(concatenatedString);
+                } catch (error) {
+                    console.error("Error going through tasks", error)
+                }
+            }
+            
             // add ai reply to chat
-            const aiReply = { sender: "AI", text: response.data.reply };
-            setMessages((prev) => [...prev, aiReply]);
+            //const aiReply = { sender: "AI", text: response.data.reply };
+            //setMessages((prev) => [...prev, aiReply]);
             // if error output console error and input error text into messages
         } catch (error) {
             console.error("Error communicating with AI:", error);
-            const errorMessage = { sender: "AI", text: "Something went wrong. Please try again." };
+            const errorMessage = { sender: "AI", text: "Error please try again:" + error };
             setMessages((prev) => [...prev, errorMessage]);
+            // Reset tasks in case of an error
             // no matter what set loading to false at end
         } finally {
             setLoading(false);
@@ -47,17 +104,29 @@ const ChatBox = () => {
         <div>
             {messages.map((msg, index) => (
                 <div key={index} className="message">
-                <strong>{msg.sender}: </strong> {msg.text}
+                <b>{msg.sender}: </b> {msg.text}
                 </div>
             ))}
         </div>
+
+        {taskList.length > 0 && (
+            <div className="task-list">
+                <h2>Tasks:</h2>
+                <ul>
+                    {taskList.map((task, index) => (
+                        <li key={index}>{task}</li> // Render each task
+                    ))}
+                </ul>
+            </div>
+        )}
     
         <div className="input-container">
+        <p>split into numbered tasks:</p>
         <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type your message..."
+            placeholder="How do I..."
             disabled={loading}
         />
         

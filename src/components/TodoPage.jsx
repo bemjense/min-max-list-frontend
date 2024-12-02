@@ -47,6 +47,7 @@ const TodoPage = () => {
     const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, task_id: null, task_is_completed: false});
     // chat gpt stuff
     const [isChatVisible, setIsChatVisible] = useState(false);
+    const [newAiTask, setNewAiTask] = useState('');
 
     // toggles AI chat visible
     const toggleChat = () => {
@@ -129,6 +130,15 @@ const TodoPage = () => {
             await createTask(userUid, currentList, newTask, alarmTime, dueDate);
             handleReadTasks(userUid)
             setNewTask('');
+        }
+    };
+
+    const handleCreateTaskAi = async (taskDesc) => {
+        if (taskDesc.trim()) {
+            setAlarmTime('');
+            setDueDate('');
+            await createTask(userUid, currentList, taskDesc, alarmTime, dueDate);
+            handleReadTasks(userUid);
         }
     };
 
@@ -268,7 +278,15 @@ return (
                             '>
                             {isChatVisible ? "Close AI Chat" : "Open AI Chat"}
                         </button>
-                        {isChatVisible && <ChatBox />}
+                        {isChatVisible && <ChatBox 
+                            newAiTask={newAiTask}
+                            setNewAiTask={setNewAiTask}
+                            handleCreateTaskAi={handleCreateTaskAi}
+                            currentList={currentList}
+                            setCurrentList={setCurrentList}
+                            setLists={setLists}
+                            lists={lists}
+                        />}
                 </div>
 
                 <ListInterface

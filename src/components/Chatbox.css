@@ -71,3 +71,19 @@
   .chat-container::-webkit-scrollbar-thumb:hover {
     background-color: #767676; /* Lighter on hover for interactivity */
   }
+
+  /* Ensure task-list container starts from the left */
+.task-list {
+  text-align: left;
+}
+
+/* Ensure the unordered list aligns its items to the left */
+.task-list ul {
+  list-style-position: inside; /* Make sure bullets or numbers are aligned with the text */
+  padding-left: 0; /* Remove any left padding */
+}
+
+/* If using numbered tasks, ensure proper left alignment of the list items */
+.task-list li {
+  text-align: left; /* Align text to the left inside list items */
+}
