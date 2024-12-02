@@ -25,10 +25,8 @@ const ChatBox = ({
             "AI", 
             text: 
             `
-            Hi! I'm your task assistant. 
-            \nAsk me how to do something by starting your question with 
-            \n'How do I...'.
-            ` 
+            Hi! 
+            `
         };
         setMessages([instructions]); // Initialize messages with the default AI message
         const moreInstructions = 
@@ -44,12 +42,7 @@ const ChatBox = ({
         setMessages((prev) => [...prev, moreInstructions]);
     }, []);
 
-    const addList = () => {
-        if (newListName.trim() !== "") {
-            setLists(prevLists => [...prevLists, newListName]);
-            setNewListName("");
-        }
-    };
+    
 
     // sends a message to chatgpt and returns a response
     const sendMessage = async () => {
@@ -84,17 +77,14 @@ const ChatBox = ({
             } else {
                 console.log("The task list is empty.");
             }
-            // create a new list and add tasks to it based on the chatgpt response
-            const listMsg = "List For: " + newMessage;
-            setNewListName(listMsg);
+            
 
-            addList();
-            setCurrentList(listMsg);
             for (const curList of lists) {
                 console.log("List: ", curList)
             }
             
-
+            // create a new list and add tasks to it based on the chatgpt response
+            const listMsg = "List For: " + newMessage;
             for (const task of tasks) {
                 try {
                     // Call handleCreateTaskAi for each task
@@ -103,11 +93,12 @@ const ChatBox = ({
                     // console.log("Third Element: ", thirdElement);
                     const concatenatedString = task.join(" ");
                     // console.log("concatenatedString: ", concatenatedString);
-                    await handleCreateTaskAi(concatenatedString);
+                    await handleCreateTaskAi(concatenatedString, listMsg);
                 } catch (error) {
                     console.error("Error going through tasks", error)
                 }
             }
+            setCurrentList(listMsg)
             
             // add ai reply to chat
             //const aiReply = { sender: "AI", text: response.data.reply };

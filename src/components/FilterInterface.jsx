@@ -78,10 +78,10 @@ const FilterInterface = ({
                     >
                         {date.toLocaleDateString()}
                     </div> :
+                    
                     <div className="date text-white"
                         onClick={() => setCalendarVisible(!calendarVisible)}
                     >
-                        Meow
                     </div>
                 }
             </div>

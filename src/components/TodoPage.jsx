@@ -133,11 +133,11 @@ const TodoPage = () => {
         }
     };
 
-    const handleCreateTaskAi = async (taskDesc) => {
+    const handleCreateTaskAi = async (taskDesc, list) => {
         if (taskDesc.trim()) {
             setAlarmTime('');
             setDueDate('');
-            await createTask(userUid, currentList, taskDesc, alarmTime, dueDate);
+            await createTask(userUid, list, taskDesc, alarmTime, dueDate);
             handleReadTasks(userUid);
         }
     };
@@ -266,6 +266,7 @@ return (
 
                 {/* Add SearchBar component */}
                 <div>
+                <div>
                         <button onClick={toggleChat} className='
                             flex 
                             transition-all 
@@ -275,6 +276,7 @@ return (
                             cursor-pointer 
                             text-white 
                             text-2xl
+                            ml-10
                             '>
                             {isChatVisible ? "Close AI Chat" : "Open AI Chat"}
                         </button>
@@ -295,6 +297,7 @@ return (
                     setLists={setLists}
                     lists={lists}
                 />
+                </div>
             </div>
 
             <div className="flex-col bg-[#] flex-[3_2_0%] relative">
