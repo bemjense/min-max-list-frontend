@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import './Chatbox.css'; // Import the CSS file
 
@@ -17,6 +17,32 @@ const ChatBox = ({
     const [loading, setLoading] = useState(false);
     // stuff to create new list
     const [newListName, setNewListName] = useState("");
+
+    //on startup explain how to use the ai chat
+    useEffect(() => {
+        const instructions = 
+        {   sender: 
+            "AI", 
+            text: 
+            `
+            Hi! I'm your task assistant. 
+            \nAsk me how to do something by starting your question with 
+            \n'How do I...'.
+            ` 
+        };
+        setMessages([instructions]); // Initialize messages with the default AI message
+        const moreInstructions = 
+        {
+            sender:
+            "AI",
+            text:
+            `
+            \nThen I will create a new list based off of that.
+            \nI will also create all steps of that task split into numbered segments
+            `
+        }
+        setMessages((prev) => [...prev, moreInstructions]);
+    }, []);
 
     const addList = () => {
         if (newListName.trim() !== "") {
