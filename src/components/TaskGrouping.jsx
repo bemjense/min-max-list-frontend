@@ -1,6 +1,7 @@
 import React, { useState } from 'react';  // Add useState here
 import TaskItem from './TaskItem';
 import './TaskGrouping.css';
+import TaskCompletionRateForDays from './TaskCompletionRateForDays';
 
 const TaskGrouping = ({
   tasks,
@@ -27,6 +28,7 @@ const TaskGrouping = ({
   const uncompletedTasks = tasks.filter(task => !task.task_is_completed);
 
   return (
+
     <div className="text-white">
       {/* Task List (Uncompleted Tasks) */}
       <div className="task-list">
@@ -99,6 +101,7 @@ const TaskGrouping = ({
           ))}
         </div>
       )}
+
     </div>
   );
 };

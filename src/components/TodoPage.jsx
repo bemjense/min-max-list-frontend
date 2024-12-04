@@ -2,7 +2,7 @@
 import TaskInput from './TaskInput';
 import TaskGrouping from './TaskGrouping';
 import ContextMenu from './ContextMenu';
-import { readTaskAtId, readLists,readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID, deleteAlarm,deleteDueDate} from '../services/api';
+import { readTaskAtId, readLists,readCompletedTasks, readUncompletedTasks, readTasks, createTask, deleteTask, updateTask , updateUID, deleteAlarm,deleteDueDate} from '../api';
 import Calendar from './TaskCalendar'
 import ListInterface from './ListInterface'
 import TaskFilter from './TaskFilter';
@@ -15,6 +15,9 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import FilterInterface from './FilterInterface';
 import axios from 'axios';
 import DetailedView from './TaskDetailedView';
+import TaskCompletionRateForDays from './TaskCompletionRateForDays';
+
+
 
 
 const auth = getAuth();
@@ -60,11 +63,12 @@ const TodoPage = () => {
     const [lists, setLists] = useState(['Tasks']);
     const [filterTaskCreatedTimeStamp, setFilterTaskCreatedTimeStamp] = useState(null)
     const [filterTaskDueDate, setFilterTaskDueDate] = useState(null)
+    const [filterTaskAlarm, setFilterTaskAlarm] = useState(null);
     const handleReadTasks = async (uid) => {
         if (currentList == "Tasks") {
-            var loadedTasks = await readTasks(uid, null, filterTaskCreatedTimeStamp, null, filterTaskDueDate);
+            var loadedTasks = await readTasks(uid, null, filterTaskCreatedTimeStamp, null, filterTaskDueDate, filterTaskAlarm);
         } else {
-            var loadedTasks = await readTasks(uid, currentList,  filterTaskCreatedTimeStamp, null, filterTaskDueDate);
+            var loadedTasks = await readTasks(uid, currentList,  filterTaskCreatedTimeStamp, null, filterTaskDueDate, filterTaskAlarm);
         }
 
         setTasks(loadedTasks);
@@ -78,12 +82,16 @@ const TodoPage = () => {
     const handleSetFilterTaskDueDate = async(timeStampFilter) => {
         setFilterTaskDueDate(timeStampFilter)
     };
+    //filter fucntion that modifies how hamdle Readtasks works 
+    const handleSetFilterTaskAlarm = async(timeStampFilter) => {
+        setFilterTaskAlarm(timeStampFilter)
+    };
     //update if list changes for multiple to dolists
     useEffect(() => {
         if (userUid) {
             handleReadTasks(userUid);
         }
-    }, [currentList, userUid, filterTaskCreatedTimeStamp, filterTaskDueDate]);
+    }, [currentList, userUid, filterTaskCreatedTimeStamp, filterTaskDueDate, filterTaskAlarm]);
 
     useEffect(() => {
         handleReadLists(userUid)
@@ -247,6 +255,7 @@ const TodoPage = () => {
 
 return (
     <div>
+
         <DetailedView task={viewDetails}></DetailedView>
         <ToastContainer position="top-right flex" />
         <div className="app-container" onClick={hideContextMenu}>
@@ -261,6 +270,7 @@ return (
                     <FilterInterface
                         handleSetFilterTaskDueDate={handleSetFilterTaskDueDate}
                         handleSetFilterTaskTimeStamp={handleSetFilterTaskTimeStamp}
+                        handleSetFilterTaskAlarm={handleSetFilterTaskAlarm}
                     />
                 </div>
 
@@ -309,6 +319,8 @@ return (
                         setFilterTaskCreatedTimeStamp={setFilterTaskCreatedTimeStamp}
                         filterTaskDueDate={filterTaskDueDate}
                         setFilterTaskDueDate={setFilterTaskDueDate}
+                        filterTaskAlarm={filterTaskAlarm}
+                        setFilterTaskAlarm={setFilterTaskAlarm}
                     ></TaskFilter>
 
                 </div>
