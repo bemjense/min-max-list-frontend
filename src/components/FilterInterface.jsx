@@ -93,7 +93,7 @@ const FilterInterface = ({
             <div class="flex transition-all duration-300 hover:bg-[#3AA7FA]"
                 onClick={() => {
                     const today = new Date();
-                    const formattedDate = today.toLocaleDateString('en-CA');
+                    const formattedDate = today.toLocaleDateString();
                     handleSetFilterTaskDueDate(formattedDate);
                 }}
             >
@@ -112,7 +112,7 @@ const FilterInterface = ({
             <div class="flex transition-all duration-300 hover:bg-[#3AA7FA]"
                 onClick={() => {
                     const today = new Date();
-                    const formattedDate = today.toLocaleDateString('en-CA');
+                    const formattedDate = today.toLocaleDateString();
                     handleSetFilterTaskTimeStamp(formattedDate);
                 }}
             >
@@ -131,7 +131,7 @@ const FilterInterface = ({
             <div class="flex transition-all duration-300 hover:bg-[#3AA7FA]"
                 onClick={() => {
                     const today = new Date();
-                    const formattedDate = today.toLocaleDateString('en-CA');
+                    const formattedDate = today.toLocaleDateString();
                     handleSetFilterTaskAlarm(formattedDate);
                 }}
             >
