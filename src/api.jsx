@@ -6,8 +6,37 @@ import axios from 'axios';
 const baseurl = "http://localhost:8000"
 
 
+export const readTasksByDay = async (uid, day) => {
+    try {
+        // Create an object for query parameters
+        const task_params = {
+            task_uid: uid,
+            task_due_date: day, // Filter by due date
+        };
+
+        // Send the GET request with the query parameters
+        const response = await axios.get(baseurl + '/tasks/', { params: task_params });
+
+        // Filter tasks that are completed
+        const completedTasks = response.data.filter(task => task.task_is_completed);
+        
+        // Check if all tasks for that day are completed
+        const allTasksCompleted = response.data.length === completedTasks.length;
+
+        return {
+            allTasksCompleted,
+            totalTasks: response.data.length,
+            completedTasks: completedTasks.length,
+        };
+    } catch (error) {
+        console.error('Error fetching tasks for the day:', error);
+        return { allTasksCompleted: false, totalTasks: 0, completedTasks: 0 };
+    }
+};
+
+
 // make it so can now filter read tasks
-export const readTasks = async (uid, task_list = null, task_created_time_stamp = null, task_is_completed = null, task_due_date = null) => {
+export const readTasks = async (uid, task_list = null, task_created_time_stamp = null, task_is_completed = null, task_due_date = null, task_alarm_time = null) => {
     try {
         // Create an object for query parameters
         const task_params = { task_uid: uid };
@@ -25,6 +54,9 @@ export const readTasks = async (uid, task_list = null, task_created_time_stamp =
         }
         if (task_due_date !== null) {
             task_params.task_due_date = task_due_date;
+        }
+        if (task_alarm_time !== null) {
+            task_params.task_alarm_time = task_alarm_time;
         }
 
         // Send the GET request with the query parameters
