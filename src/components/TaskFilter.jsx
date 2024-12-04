@@ -18,6 +18,10 @@ const TaskFilter = ({
         ? new Date(filterTaskDueDate).toLocaleDateString('en-us').slice(0, 10) 
         : null;
 
+    const formattedAlarm = filterTaskAlarm
+        ? new Date(filterTaskAlarm).toLocaleDateString('en-us').slice(0, 10) 
+        : null;
+
         if (!filterTaskCreatedTimeStamp && !filterTaskDueDate && !filterTaskAlarm) return null;
 
     return (
@@ -55,17 +59,18 @@ const TaskFilter = ({
             {filterTaskAlarm !== null && (
                 <button
                     className="text-white text-[0.8rem] bg-transparent hover:text-gray-300"
-                    onClick={() => setFilterTaskAlarm(null)}
+                    onClick={() => setFilterTaskAlarm(null)} 
                     aria-label="Clear alarm filter"
                 >
                     <div className='flex items-center max-h-8 rounded-full bg-[#3aa7fa] mt-[0.2rem] p-[0.4rem] gap-1 motion-duration-500 motion-preset-blur-left'>
                         <FaXmark className="mt-[1px]" />
                         <div className="text-white text-[0.8rem] text-left">
-                            Alarm: {filterTaskAlarm ? 'With Alarm' : 'No Alarm'}
+                            Alarm: {formattedAlarm}
                         </div>
                     </div>
                 </button>
             )}
+
         </div>
     );
 };
